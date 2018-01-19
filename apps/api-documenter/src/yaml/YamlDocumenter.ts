@@ -140,7 +140,7 @@ export class YamlDocumenter {
 
     const tocFilePath: string = path.join(this._outputFolder, 'toc.yml');
     console.log('Writing ' + tocFilePath);
-    this._writeYamlFile(tocFile, tocFilePath, 'TableOfContent', undefined);
+    this._writeYamlFile(tocFile, tocFilePath, '', undefined);
   }
 
   private _buildTocItems(docItems: DocItem[]): IYamlTocItem[] {
