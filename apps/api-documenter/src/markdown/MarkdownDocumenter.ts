@@ -3,6 +3,7 @@
 
 import * as fsx from 'fs-extra';
 import * as path from 'path';
+import yaml = require('js-yaml');
 
 import {
   IApiClass,
@@ -24,6 +25,11 @@ import {
 } from '@microsoft/api-extractor';
 
 import {
+  IYamlTocFile,
+  IYamlTocItem
+} from './IYamlTocFile';
+
+import {
   DocItemSet,
   DocItem,
   DocItemKind,
@@ -31,6 +37,7 @@ import {
 } from '../utils/DocItemSet';
 import { Utilities } from '../utils/Utilities';
 import { MarkdownRenderer, IMarkdownRenderApiLinkArgs } from '../utils/MarkdownRenderer';
+import { normalize } from 'path';
 
 /**
  * Renders API documentation in the Markdown file format.
@@ -54,6 +61,89 @@ export class MarkdownDocumenter {
       this._writePackagePage(docPackage);
     }
 
+    this._writeTocFile(this._docItemSet.docPackages);
+
+  }
+
+  /**
+   * Write the table of contents
+   */
+  private _writeTocFile(docItems: DocItem[]): void {
+    const tocFile: IYamlTocFile = {
+      items: [ ]
+    };
+
+    tocFile.items!.push(...this._buildTocItems(docItems));
+    const tocFilePath: string = path.join(this._outputFolder, 'toc.yml');
+    console.log('Writing ' + tocFilePath);
+    this._writeYamlFile(tocFile, tocFilePath, '');
+  }
+
+  private _buildTocItems(docItems: DocItem[]): IYamlTocItem[] {
+    const tocItems: IYamlTocItem[] = [];
+    for(const docItem of docItems) {
+      let tocItem: IYamlTocItem;
+
+      if (docItem.kind === DocItemKind.Namespace) {
+        tocItem = {
+          name: Utilities.getUnscopedPackageName(docItem.name)
+        };
+      } else {
+        if(this._shouldEmbed(docItem.kind)) {
+          continue;
+        }
+
+        tocItem = {
+          name: Utilities.getUnscopedPackageName(docItem.name),
+          uid: this._getUid(docItem)
+        };
+      }
+
+      tocItems.push(tocItem);
+
+      const childItems: IYamlTocItem[] = this._buildTocItems(docItem.children);
+      if (childItems.length > 0) {
+        tocItem.items = childItems;
+      }
+    }
+    return tocItems;
+  }
+
+  private _shouldEmbed(docItemKind: DocItemKind): boolean {
+    switch(docItemKind) {
+      case DocItemKind.Class:
+      case DocItemKind.Package:
+      case DocItemKind.Interface:
+      case DocItemKind.Enum:
+      return false;
+    }
+    return true;
+  }
+
+  private _getUid(docItem: DocItem): string {
+    let result: string = '';
+    for(const current of docItem.getHierarchy()) {
+      switch (current.kind) {
+        case DocItemKind.Package:
+          result += Utilities.getUnscopedPackageName(current.name);
+          break;
+        default:
+          result += '.';
+          result += current.name;
+          break;
+      }
+    }
+    return result;
+  }
+
+  private _writeYamlFile(dataObject: {}, filePath: string, yamlMimeType: string) {
+    let stringified: string = yaml.safeDump(dataObject, {
+      lineWidth: 120
+    });
+
+    const normalized: string = stringified.split('\n').join('\r\n');
+    fsx.mkdirsSync(path.dirname(filePath));
+    fsx.writeFileSync(filePath, normalized);
   }
 
   /**
@@ -65,7 +155,6 @@ export class MarkdownDocumenter {
     const unscopedPackageName: string = Utilities.getUnscopedPackageName(docPackage.name);
 
     const markupPage: IMarkupPage = Markup.createPage(`${unscopedPackageName} package`);
-    this._writeBreadcrumb(markupPage, docPackage);
 
     const apiPackage: IApiPackage = docPackage.apiItem as IApiPackage;
 
@@ -186,7 +275,6 @@ export class MarkdownDocumenter {
 
     // TODO: Show concise generic parameters with class name
     const markupPage: IMarkupPage = Markup.createPage(`${docClass.name} class`);
-    this._writeBreadcrumb(markupPage, docClass);
 
     if (apiClass.isBeta) {
       this._writeBetaWarning(markupPage.elements);
@@ -295,7 +383,6 @@ export class MarkdownDocumenter {
 
     // TODO: Show concise generic parameters with class name
     const markupPage: IMarkupPage = Markup.createPage(`${docInterface.name} interface`);
-    this._writeBreadcrumb(markupPage, docInterface);
 
     if (apiInterface.isBeta) {
       this._writeBetaWarning(markupPage.elements);
@@ -381,7 +468,6 @@ export class MarkdownDocumenter {
 
     // TODO: Show concise generic parameters with class name
     const markupPage: IMarkupPage = Markup.createPage(`${docEnum.name} enumeration`);
-    this._writeBreadcrumb(markupPage, docEnum);
 
     if (apiEnum.isBeta) {
       this._writeBetaWarning(markupPage.elements);
@@ -428,7 +514,6 @@ export class MarkdownDocumenter {
     const fullProperyName: string = docProperty.parent!.name + '.' + docProperty.name;
 
     const markupPage: IMarkupPage = Markup.createPage(`${fullProperyName} property`);
-    this._writeBreadcrumb(markupPage, docProperty);
 
     if (apiProperty.isBeta) {
       this._writeBetaWarning(markupPage.elements);
@@ -457,7 +542,6 @@ export class MarkdownDocumenter {
     const fullMethodName: string = docMethod.parent!.name + '.' + docMethod.name;
 
     const markupPage: IMarkupPage = Markup.createPage(`${fullMethodName} method`);
-    this._writeBreadcrumb(markupPage, docMethod);
 
     if (apiMethod.isBeta) {
       this._writeBetaWarning(markupPage.elements);
@@ -512,7 +596,6 @@ export class MarkdownDocumenter {
     const apiFunction: IApiFunction = docFunction.apiItem as IApiFunction;
 
     const markupPage: IMarkupPage = Markup.createPage(`${docFunction.name} function`);
-    this._writeBreadcrumb(markupPage, docFunction);
 
     if (apiFunction.isBeta) {
       this._writeBetaWarning(markupPage.elements);
@@ -558,16 +641,6 @@ export class MarkdownDocumenter {
     }
 
     this._writePage(markupPage, docFunction);
-  }
-
-  private _writeBreadcrumb(markupPage: IMarkupPage, docItem: DocItem): void {
-    markupPage.breadcrumb.push(Markup.createWebLinkFromText('Home', './index'));
-
-    for (const hierarchyItem of docItem.getHierarchy()) {
-      markupPage.breadcrumb.push(...Markup.createTextElements(' > '));
-      markupPage.breadcrumb.push(Markup.createApiLinkFromText(
-        hierarchyItem.name, hierarchyItem.getApiReference()));
-    }
   }
 
   private _writeBetaWarning(elements: MarkupStructuredElement[]): void {
