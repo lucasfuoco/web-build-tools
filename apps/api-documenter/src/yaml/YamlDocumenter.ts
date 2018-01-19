@@ -56,14 +56,6 @@ export class YamlDocumenter {
     this._writeTocFile(this._docItemSet.docPackages);
   }
 
-  protected onGetTocRoot(): IYamlTocItem {  // virtual
-    return {
-      name: 'SharePoint Framework reference',
-      href: '~/overview/sharepoint.md',
-      items: [ ]
-    };
-  }
-
   protected onCustomizeYamlItem(yamlItem: IYamlItem): void { // virtual
     // (overridden by child class)
   }
@@ -144,14 +136,11 @@ export class YamlDocumenter {
       items: [ ]
     };
 
-    const rootItem: IYamlTocItem = this.onGetTocRoot();
-    tocFile.items.push(rootItem);
-
-    rootItem.items!.push(...this._buildTocItems(docItems));
+    tocFile.items!.push(...this._buildTocItems(docItems));
 
     const tocFilePath: string = path.join(this._outputFolder, 'toc.yml');
     console.log('Writing ' + tocFilePath);
-    this._writeYamlFile(tocFile, tocFilePath, '', undefined);
+    this._writeYamlFile(tocFile, tocFilePath, 'TableOfContent', undefined);
   }
 
   private _buildTocItems(docItems: DocItem[]): IYamlTocItem[] {
@@ -424,16 +413,12 @@ export class YamlDocumenter {
           result += Utilities.getUnscopedPackageName(current.name);
           break;
         default:
-          if (current.parent && current.parent.kind === DocItemKind.Package) {
-            result += '/';
-          } else {
-            result += '.';
-          }
+          result += '.';
           result += current.name;
           break;
       }
     }
-    return path.join(this._outputFolder, result.toLowerCase() + '.yml');
+    return path.join(this._outputFolder, result + '.yml');
   }
 
   private _deleteOldOutputFiles(): void {
