@@ -59,9 +59,9 @@ export class MarkdownDocumenter {
 
     for (const docPackage of this._docItemSet.docPackages) {
       this._writePackagePage(docPackage);
+      this._writeTocFile(docPackage.children);
+      
     }
-
-    this._writeTocFile(this._docItemSet.docPackages);
 
   }
 
@@ -83,24 +83,16 @@ export class MarkdownDocumenter {
     const tocItems: IYamlTocItem[] = [];
     for(const docItem of docItems) {
       let tocItem: IYamlTocItem;
-
-      if (docItem.kind === DocItemKind.Namespace) {
-        tocItem = {
-          name: Utilities.getUnscopedPackageName(docItem.name)
-        };
-      } else {
-        if(this._shouldEmbed(docItem.kind)) {
-          continue;
-        }
-
-        tocItem = {
-          name: Utilities.getUnscopedPackageName(docItem.name),
-          uid: this._getUid(docItem)
-        };
+      if(this._shouldEmbed(docItem.kind)) {
+        continue;
       }
 
-      tocItems.push(tocItem);
+      tocItem = {
+        name: Utilities.getUnscopedPackageName(docItem.name),
+        href: this._getUid(docItem).toLowerCase() + ".md"
+      };
 
+      tocItems.push(tocItem);
       const childItems: IYamlTocItem[] = this._buildTocItems(docItem.children);
       if (childItems.length > 0) {
         tocItem.items = childItems;
@@ -115,6 +107,11 @@ export class MarkdownDocumenter {
       case DocItemKind.Package:
       case DocItemKind.Interface:
       case DocItemKind.Enum:
+      case DocItemKind.Function:
+      case DocItemKind.Property:
+      case DocItemKind.Method:
+      case DocItemKind.Constructor:
+      case DocItemKind.Namespace:
       return false;
     }
     return true;
