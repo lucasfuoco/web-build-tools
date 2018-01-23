@@ -22,7 +22,8 @@ import {
   IMarkupText,
   Markup,
   MarkupBasicElement,
-  MarkupStructuredElement
+  MarkupStructuredElement,
+  IMarkupParagraph
 } from '@microsoft/api-extractor';
 
 import {
@@ -60,8 +61,7 @@ export class MarkdownDocumenter {
 
     for (const docPackage of this._docItemSet.docPackages) {
       this._writePackagePage(docPackage);
-      this._writeTocFile(docPackage.children);
-      
+      this._writeTocFile(docPackage.children);   
     }
 
   }
@@ -99,7 +99,6 @@ export class MarkdownDocumenter {
       }
       return 0;
     });
-    console.log(JSON.stringify(tocFile));
     return tocFile;
   }
 
@@ -563,11 +562,13 @@ export class MarkdownDocumenter {
 
     const markupPage: IMarkupPage = Markup.createPage(`${fullMethodName} method`);
 
+    const summaryParagraph = {kind: Markup.PARAGRAPH.kind} as IMarkupParagraph;
+    apiMethod.summary.map((value: IMarkupText) => summaryParagraph['text'] = value.text);
+
     if (apiMethod.isBeta) {
       this._writeBetaWarning(markupPage.elements);
     }
-
-    markupPage.elements.push(...apiMethod.summary);
+    markupPage.elements.push(summaryParagraph);
 
     markupPage.elements.push(Markup.PARAGRAPH);
     markupPage.elements.push(...Markup.createTextElements('Signature:', { bold: true }));
@@ -605,7 +606,6 @@ export class MarkdownDocumenter {
         );
       }
     }
-
     this._writePage(markupPage, docMethod);
   }
 
@@ -620,7 +620,6 @@ export class MarkdownDocumenter {
     if (apiFunction.isBeta) {
       this._writeBetaWarning(markupPage.elements);
     }
-
     markupPage.elements.push(...apiFunction.summary);
 
     markupPage.elements.push(Markup.PARAGRAPH);

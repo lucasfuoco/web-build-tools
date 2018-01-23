@@ -168,6 +168,7 @@ export class MarkdownRenderer {
     for (const element of mergedElements) {
       switch (element.kind) {
         case 'text':
+
           let normalizedContent: string = element.text;
           if (context.insideTable) {
             normalizedContent = normalizedContent.replace('\n', ' ');
@@ -264,6 +265,11 @@ export class MarkdownRenderer {
           writer.write(`](${element.targetUrl})`);
           break;
         case 'paragraph':
+          if(element['text']) {
+            writer.write('<div class="summary">');
+            writer.write('<p>'+element['text']+'</p>');
+            writer.write('</div>');
+          }
           if (context.insideTable) {
             writer.write('<p/>');
           } else {
