@@ -266,7 +266,7 @@ export class MarkdownRenderer {
           break;
         case 'paragraph':
           if(element['text']) {
-            writer.write('<div class="summary">');
+            writer.write('<div class="markdown level0 summary">');
             writer.write('<p>'+element['text']+'</p>');
             writer.write('</div>');
           }
