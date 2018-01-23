@@ -19,6 +19,7 @@ import {
   IApiMethod,
   IMarkupPage,
   IMarkupTable,
+  IMarkupText,
   Markup,
   MarkupBasicElement,
   MarkupStructuredElement
@@ -76,7 +77,30 @@ export class MarkdownDocumenter {
     tocFile.items!.push(...this._buildTocItems(docItems));
     const tocFilePath: string = path.join(this._outputFolder, 'toc.yml');
     console.log('Writing ' + tocFilePath);
-    this._writeYamlFile(tocFile, tocFilePath, '');
+    this._writeYamlFile(this._sortTocItems(tocFile), tocFilePath, '');
+  }
+
+  private _sortTocItems(tocFile: IYamlTocFile): IYamlTocFile {
+    const items: IYamlTocItem[] = tocFile.items;
+    items.sort((a, b) => {
+      if(b.items && a.items) {
+        if(a.name < b.name) return -1;
+        if(a.name > b.name) return 1;
+      }
+      if(!b.items && !a.items) {
+        if(a.name < b.name) return -1;
+        if(a.name > b.name) return 1;
+      }
+      if(b.items) {
+        return 1;
+      }
+      if(!b.items) {
+        return -1;
+      }
+      return 0;
+    });
+    console.log(JSON.stringify(tocFile));
+    return tocFile;
   }
 
   private _buildTocItems(docItems: DocItem[]): IYamlTocItem[] {
@@ -276,7 +300,6 @@ export class MarkdownDocumenter {
     if (apiClass.isBeta) {
       this._writeBetaWarning(markupPage.elements);
     }
-
     markupPage.elements.push(...apiClass.summary);
 
     const propertiesTable: IMarkupTable = Markup.createTable([
