@@ -258,11 +258,16 @@ interface IMarkupHeading1 {
   text: string;
 }
 
-// @public
+// @public (undocumented)
 interface IMarkupHeading2 {
   kind: 'heading2';
   text: string;
 }
+
+// @internal (preapproved)
+interface IMarkupHeading3 {
+}
+
 
 // @public
 interface IMarkupHighlightedText {
@@ -275,6 +280,21 @@ interface IMarkupHighlightedText {
 interface IMarkupLineBreak {
   kind: 'break';
 }
+
+// @internal (preapproved)
+interface IMarkupList {
+}
+
+
+// @internal (preapproved)
+interface IMarkupListCell {
+}
+
+
+// @internal (preapproved)
+interface IMarkupListRow {
+}
+
 
 // @public
 interface IMarkupNoteBox {
@@ -298,6 +318,11 @@ interface IMarkupPage {
 interface IMarkupParagraph {
   kind: 'paragraph';
 }
+
+// @internal (preapproved)
+interface IMarkupSection {
+}
+
 
 // @public
 interface IMarkupTable {
@@ -345,9 +370,13 @@ class Markup {
   static createCodeBox(code: string, highlighter: MarkupHighlighter): IMarkupCodeBox;
   static createHeading1(text: string): IMarkupHeading1;
   static createHeading2(text: string): IMarkupHeading2;
+  static createHeading3(arg: string | MarkupBasicElement[]): IMarkupHeading3;
+  static createList(): IMarkupList;
+  static createListRow(cellValues?: MarkupBasicElement[][] | undefined): IMarkupListRow;
   static createNoteBox(textElements: MarkupBasicElement[]): IMarkupNoteBox;
   static createNoteBoxFromText(text: string): IMarkupNoteBox;
   static createPage(title: string): IMarkupPage;
+  static createSection(elements: MarkupBasicElement[]): IMarkupSection;
   static createTable(headerCellValues?: MarkupBasicElement[][] | undefined): IMarkupTable;
   static createTableRow(cellValues?: MarkupBasicElement[][] | undefined): IMarkupTableRow;
   static createTextElements(text: string, options?: IMarkupCreateTextOptions): IMarkupText[];

@@ -17,9 +17,13 @@ import {
   ApiItem,
   IApiParameter,
   IApiMethod,
+  IMarkupApiLink,
   IMarkupPage,
+  IMarkupList,
+  IMarkupListRow,
   IMarkupTable,
   IMarkupText,
+  IMarkupWebLink,
   Markup,
   MarkupBasicElement,
   MarkupStructuredElement,
@@ -180,34 +184,18 @@ export class MarkdownDocumenter {
 
     markupPage.elements.push(...apiPackage.summary);
 
-    const classesTable: IMarkupTable = Markup.createTable([
-      Markup.createTextElements('Class'),
-      Markup.createTextElements('Description')
-    ]);
-
-    const interfacesTable: IMarkupTable = Markup.createTable([
-      Markup.createTextElements('Interface'),
-      Markup.createTextElements('Description')
-    ]);
-
-    const functionsTable: IMarkupTable = Markup.createTable([
-      Markup.createTextElements('Function'),
-      Markup.createTextElements('Returns'),
-      Markup.createTextElements('Description')
-    ]);
-
-    const enumerationsTable: IMarkupTable = Markup.createTable([
-      Markup.createTextElements('Enumeration'),
-      Markup.createTextElements('Description')
-    ]);
+    const classesList: IMarkupList = Markup.createList();
+    const interfacesList: IMarkupList = Markup.createList();
+    const functionsList: IMarkupList = Markup.createList();
+    const enumerationsList: IMarkupList = Markup.createList();
 
     for (const docChild of docPackage.children) {
       const apiChild: ApiItem = docChild.apiItem;
 
-      const docItemTitle: MarkupBasicElement[] = [
-        Markup.createApiLink(
-          [ Markup.createCode(docChild.name, 'javascript') ],
-          docChild.getApiReference())
+      const docItemTitleLink: MarkupBasicElement[] = [
+        Markup.createHeading3(
+          [Markup.createApiLinkFromText(docChild.name, docChild.getApiReference())]
+        )
       ];
 
       const docChildDescription: MarkupBasicElement[] = [];
@@ -220,38 +208,35 @@ export class MarkdownDocumenter {
 
       switch (apiChild.kind) {
         case 'class':
-          classesTable.rows.push(
-            Markup.createTableRow([
-              docItemTitle,
-              docChildDescription
-            ])
-          );
+          classesList.rows.push(Markup.createListRow([
+            docItemTitleLink,
+            [Markup.createSection(docChildDescription)]
+          ]));
           this._writeClassPage(docChild);
           break;
         case 'interface':
-          interfacesTable.rows.push(
-            Markup.createTableRow([
-              docItemTitle,
-              docChildDescription
+          interfacesList.rows.push(
+            Markup.createListRow([
+              docItemTitleLink,
+              [Markup.createSection(docChildDescription)]
             ])
           );
           this._writeInterfacePage(docChild);
           break;
         case 'function':
-          functionsTable.rows.push(
-            Markup.createTableRow([
-              docItemTitle,
-              apiChild.returnValue ? [Markup.createCode(apiChild.returnValue.type, 'javascript')] : [],
-              docChildDescription
+          functionsList.rows.push(
+            Markup.createListRow([
+              docItemTitleLink,
+              [Markup.createSection(docChildDescription)]
             ])
           );
           this._writeFunctionPage(docChild);
           break;
         case 'enum':
-          enumerationsTable.rows.push(
-            Markup.createTableRow([
-              docItemTitle,
-              docChildDescription
+          enumerationsList.rows.push(
+            Markup.createListRow([
+              docItemTitleLink,
+              [Markup.createSection(docChildDescription)]
             ])
           );
           this._writeEnumPage(docChild);
@@ -264,24 +249,24 @@ export class MarkdownDocumenter {
       markupPage.elements.push(...apiPackage.remarks);
     }
 
-    if (classesTable.rows.length > 0) {
+    if (classesList.rows.length > 0) {
       markupPage.elements.push(Markup.createHeading1('Classes'));
-      markupPage.elements.push(classesTable);
+      markupPage.elements.push(classesList);
     }
 
-    if (interfacesTable.rows.length > 0) {
+    if (interfacesList.rows.length > 0) {
       markupPage.elements.push(Markup.createHeading1('Interfaces'));
-      markupPage.elements.push(interfacesTable);
+      markupPage.elements.push(interfacesList);
     }
 
-    if (functionsTable.rows.length > 0) {
+    if (functionsList.rows.length > 0) {
       markupPage.elements.push(Markup.createHeading1('Functions'));
-      markupPage.elements.push(functionsTable);
+      markupPage.elements.push(functionsList);
     }
 
-    if (enumerationsTable.rows.length > 0) {
+    if (enumerationsList.rows.length > 0) {
       markupPage.elements.push(Markup.createHeading1('Enumerations'));
-      markupPage.elements.push(enumerationsTable);
+      markupPage.elements.push(enumerationsList);
     }
 
     this._writePage(markupPage, docPackage);

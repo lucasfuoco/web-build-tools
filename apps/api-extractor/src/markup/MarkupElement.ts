@@ -121,16 +121,6 @@ export interface IMarkupLineBreak {
 }
 
 /**
- * Represents basic text consisting of paragraphs and links (without structures such as headers or tables).
- *
- * @public
- */
-export type MarkupBasicElement = MarkupLinkTextElement | IMarkupApiLink | IMarkupWebLink | IMarkupParagraph
-  | IMarkupLineBreak;
-
-// ----------------------------------------------------------------------------
-
-/**
  * A top-level heading
  * @public
  */
@@ -148,7 +138,7 @@ export interface IMarkupHeading1 {
 }
 
 /**
- * A sub heading
+ * A headline
  * @public
  */
 export interface IMarkupHeading2 {
@@ -158,6 +148,41 @@ export interface IMarkupHeading2 {
   /** {@inheritdoc IMarkupHeading1.text} */
   text: string;
 }
+
+/**
+ * A sub heading
+ * @internal @preapproved
+ * @internalremarks
+ * modified by ossiaco
+ */
+export interface IMarkupHeading3 {
+  /** The kind of markup element */
+  kind: 'heading3';
+  text?: string;
+  elements?: MarkupBasicElement[];
+}
+
+/**
+ * A section element
+ * @internal @preapproved
+ * @internalremarks
+ * modified by Ossiaco
+ */
+export interface IMarkupSection {
+  /** The kind of markup element */
+  kind: 'section';
+  elements: MarkupBasicElement[];
+}
+
+/**
+ * Represents basic text consisting of paragraphs and links (without structures such as headers or tables).
+ *
+ * @public
+ */
+export type MarkupBasicElement = MarkupLinkTextElement | IMarkupApiLink | IMarkupWebLink | IMarkupParagraph
+  | IMarkupLineBreak | IMarkupHeading1 | IMarkupHeading2 | IMarkupHeading3 | IMarkupSection;
+
+// ----------------------------------------------------------------------------
 
 /**
  * A box containing source code with syntax highlighting
@@ -185,6 +210,17 @@ export interface IMarkupNoteBox {
 }
 
 /**
+ * A list, with optional header row
+ * @internal @preapproved
+ * @internalremarks
+ * modified by Ossiaco
+ */
+export interface IMarkupList {
+  kind: 'list';
+  rows: IMarkupListRow[];
+}
+
+/**
  * A table, with an optional header row
  * @public
  */
@@ -201,8 +237,8 @@ export interface IMarkupTable {
  *
  * @public
  */
-export type MarkupStructuredElement = MarkupBasicElement | IMarkupHeading1 | IMarkupHeading2 | IMarkupCodeBox
-  | IMarkupNoteBox | IMarkupTable;
+export type MarkupStructuredElement = MarkupBasicElement
+  | IMarkupCodeBox | IMarkupNoteBox | IMarkupTable | IMarkupList;
 
 // ----------------------------------------------------------------------------
 
@@ -217,6 +253,33 @@ export interface IMarkupTableCell {
 
   /** The text content for the table cell */
   elements: MarkupBasicElement[];
+}
+
+/**
+ * A cell inside an IMarkupListRow element.
+ * 
+ * @internal @preapproved
+ * @internalremarks
+ * modified by Ossiaco
+ */
+export interface IMarkupListCell {
+  /** The kind of markup element */
+  kind: 'list-cell';
+
+  /** The text content for the list cell */
+  elements: MarkupBasicElement[];
+}
+
+/**
+ * A row inside an IMarkupList element.
+ * @internal @preapproved
+ * @internalremarks
+ * modified by Ossiaco
+ */
+export interface IMarkupListRow {
+  /** The kind of markup element */
+  kind: 'list-row';
+  cells: IMarkupListCell[];
 }
 
 /**
@@ -251,4 +314,5 @@ export interface IMarkupPage {
  *
  * @public
  */
-export type MarkupElement = MarkupStructuredElement | IMarkupTableCell | IMarkupTableRow | IMarkupPage;
+export type MarkupElement = MarkupStructuredElement | IMarkupTableCell | IMarkupTableRow | IMarkupPage
+  | IMarkupListRow | IMarkupListCell | MarkupBasicElement;

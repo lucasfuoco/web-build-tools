@@ -4,7 +4,8 @@
 import {
   IMarkupText,
   MarkupElement,
-  IApiItemReference
+  IApiItemReference,
+  MarkupBasicElement
 } from '@microsoft/api-extractor';
 
 /**
@@ -290,6 +291,27 @@ export class MarkdownRenderer {
           writer.writeLine('### ' + MarkdownRenderer._getEscapedText(element.text));
           writer.writeLine();
           break;
+        case 'heading3':
+          if(element.text) {
+            writer.ensureSkippedLine();
+            writer.writeLine('### ' + MarkdownRenderer._getEscapedText(element.text));
+            writer.writeLine();
+          }
+          if (element.elements) {
+            writer.ensureSkippedLine();
+            writer.writeLine('<h3>');
+            MarkdownRenderer._writeElements(element.elements, context);
+            writer.writeLine('</h3>')
+            writer.writeLine();
+          }
+          break;
+        case 'section':
+          writer.ensureSkippedLine();
+          writer.writeLine('<section>');
+          MarkdownRenderer._writeElements(element.elements, context);
+          writer.writeLine('</section>');
+          writer.writeLine(); 
+          break;
         case 'code-box':
           writer.ensureNewLine();
           writer.write('```');
@@ -359,6 +381,12 @@ export class MarkdownRenderer {
 
           context.insideTable = false;
 
+          break;
+        
+        case 'list':
+          for (const row of element.rows) {
+            row['cells'].map((cell: MarkupElement) => MarkdownRenderer._writeElements(cell['elements'], context));
+          }
           break;
         case 'page':
           if (context.depth !== 1 || elements.length !== 1) {

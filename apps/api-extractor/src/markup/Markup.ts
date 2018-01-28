@@ -9,11 +9,15 @@ import {
   IMarkupText,
   IMarkupParagraph,
   IMarkupLineBreak,
+  IMarkupList,
+  IMarkupListRow,
   IMarkupTable,
   IMarkupTableRow,
   IMarkupTableCell,
   IMarkupHeading1,
   IMarkupHeading2,
+  IMarkupHeading3,
+  IMarkupSection,
   IMarkupPage,
   IMarkupHighlightedText,
   MarkupLinkTextElement,
@@ -23,6 +27,7 @@ import {
 } from './MarkupElement';
 
 import { IApiItemReference } from '../api/ApiItem';
+import { IMarkupListCell } from '../index';
 
 /**
  * Options for {@link Markup.createTextElements}
@@ -213,6 +218,36 @@ export class Markup {
   }
 
   /**
+   * Constructs an IMarkupHeading3 element with the specified title text
+   * @internalremarks
+   * modified by ossiaco
+   */
+  public static createHeading3(arg: string | MarkupBasicElement[]): IMarkupHeading3 {
+    if(typeof arg === 'object') {
+      return {
+        kind: 'heading3',
+        elements: arg
+      } as IMarkupHeading3;
+    }
+    return {
+      kind: 'heading3',
+      text: Markup._trimRawText(arg)
+    } as IMarkupHeading3;
+  }
+
+  /**
+   * Constructs an IMarkupSection element with the specified title text
+   * @internalremarks
+   * modified by Ossiaco
+   */
+  public static createSection(elements: MarkupBasicElement[]): IMarkupSection {
+    return {
+      kind: 'section',
+      elements: elements
+    };
+  }
+
+  /**
    * Constructs an IMarkupCodeBox element representing a program code text
    * with the specified syntax highlighting
    */
@@ -242,6 +277,43 @@ export class Markup {
    */
   public static createNoteBoxFromText(text: string): IMarkupNoteBox {
     return Markup.createNoteBox(Markup.createTextElements(text));
+  }
+
+  /**
+   * Constructs an IMarkupListRow element that will display the specified plain text string
+   * @internalremarks
+   * modified by Ossiaco
+   */
+  public static createListRow(cellValues: MarkupBasicElement[][] | undefined = undefined): IMarkupListRow {
+    const row: IMarkupListRow = {
+      kind: 'list-row',
+      cells: []
+    };
+
+    if (cellValues) {
+      for (const cellValue of cellValues) {
+        const cell: IMarkupListCell = {
+          kind: 'list-cell',
+          elements: cellValue
+        };
+        row.cells.push(cell);
+      }
+    }
+
+    return row;
+  }
+
+  /**
+   * Constructs an IMarkupList element containing the specified header cells, which each contain a
+   * sequence of MarkupBasicElement content.
+   * @internalremarks
+   * modified by ossiaco
+   */
+  public static createList(): IMarkupList {
+    return {
+      kind: 'list',
+      rows: []
+    } as IMarkupList;
   }
 
   /**
