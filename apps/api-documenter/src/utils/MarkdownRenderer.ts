@@ -305,6 +305,11 @@ export class MarkdownRenderer {
             writer.writeLine();
           }
           break;
+        case 'heading4':
+          writer.ensureSkippedLine();
+          writer.writeLine('#### ' + MarkdownRenderer._getEscapedText(element.text));
+          writer.writeLine();
+          break;
         case 'section':
           writer.ensureSkippedLine();
           writer.writeLine('<section>');

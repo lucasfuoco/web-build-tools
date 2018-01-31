@@ -106,21 +106,24 @@ export class MarkdownDocumenter {
     return tocFile;
   }
 
-  private _buildTocItems(docItems: DocItem[]): IYamlTocItem[] {
+  private _buildTocItems(docItems: DocItem[], child: boolean = false): IYamlTocItem[] {
     const tocItems: IYamlTocItem[] = [];
     for(const docItem of docItems) {
       let tocItem: IYamlTocItem;
+      let docHref: string = `${this._getUid(docItem).toLowerCase()}.md`;
       if(this._shouldEmbed(docItem.kind)) {
         continue;
       }
-
+      if(child && docItem.parent) {
+        docHref = `${this._getUid(docItem.parent).toLowerCase()}.md`;
+      }
       tocItem = {
         name: Utilities.getUnscopedPackageName(docItem.name),
-        href: this._getUid(docItem).toLowerCase() + ".md"
+        href: docHref
       };
 
       tocItems.push(tocItem);
-      const childItems: IYamlTocItem[] = this._buildTocItems(docItem.children);
+      const childItems: IYamlTocItem[] = this._buildTocItems(docItem.children, true);
       if (childItems.length > 0) {
         tocItem.items = childItems;
       }
@@ -289,19 +292,8 @@ export class MarkdownDocumenter {
     }
     markupPage.elements.push(summaryParagraph);
 
-    const propertiesTable: IMarkupTable = Markup.createTable([
-      Markup.createTextElements('Property'),
-      Markup.createTextElements('Access Modifier'),
-      Markup.createTextElements('Type'),
-      Markup.createTextElements('Description')
-    ]);
-
-    const methodsTable: IMarkupTable = Markup.createTable([
-      Markup.createTextElements('Method'),
-      Markup.createTextElements('Access Modifier'),
-      Markup.createTextElements('Returns'),
-      Markup.createTextElements('Description')
-    ]);
+    const propertiesList: IMarkupList = Markup.createList();
+    const methodsList: IMarkupList = Markup.createList();
 
     for (const docMember of docClass.children) {
       const apiMember: ApiMember = docMember.apiItem as ApiMember;
@@ -309,69 +301,121 @@ export class MarkdownDocumenter {
       switch (apiMember.kind) {
         case 'property':
           const propertyTitle: MarkupBasicElement[] = [
-            Markup.createApiLink(
-              [Markup.createCode(docMember.name, 'javascript')],
-              docMember.getApiReference())
+            Markup.createHeading3(docMember.name)
           ];
 
-          propertiesTable.rows.push(
-            Markup.createTableRow([
+          propertiesList.rows.push(
+            Markup.createListRow([
               propertyTitle,
-              [],
-              [Markup.createCode(apiMember.type, 'javascript')],
-              apiMember.summary
+              apiMember.summary,
+              [Markup.PARAGRAPH],
+              [Markup.createHeading4('Declaration')],
+              [Markup.createCodeBox(docMember.name + ': ' + apiMember.type, 'javascript')],
+              apiMember.remarks.length ? [Markup.createHeading4('Remarks')] : [],
+              apiMember.remarks.length ? apiMember.remarks : []
             ])
           );
-          this._writePropertyPage(docMember);
           break;
 
         case 'constructor':
           // TODO: Extract constructor into its own section
           const constructorTitle: MarkupBasicElement[] = [
-            Markup.createApiLink(
-              [Markup.createCode(Utilities.getConciseSignature(docMember.name, apiMember), 'javascript')],
-              docMember.getApiReference())
+            Markup.createHeading3(docMember.name)
           ];
 
-          methodsTable.rows.push(
-            Markup.createTableRow([
+          const constructorParametersTable: IMarkupTable = Markup.createTable([
+            Markup.createTextElements('Type'),
+            Markup.createTextElements('Name'),
+            Markup.createTextElements('Description')
+          ]);
+
+          if (Object.keys(apiMember.parameters).length > 0) { 
+            for (const parameterName of Object.keys(apiMember.parameters)) {
+              const apiParameter: IApiParameter = apiMember.parameters[parameterName];
+                constructorParametersTable.rows.push(Markup.createTableRow([
+                  apiParameter.type ? Markup.createTextElements(apiParameter.type) : [],
+                  Markup.createTextElements(parameterName, {italics: true}),
+                  apiParameter.description
+                ])
+              );
+            }
+          }
+
+          methodsList.rows.push(
+            Markup.createListRow([
               constructorTitle,
-              [],
-              [],
-              apiMember.summary
+              apiMember.summary,
+              [Markup.PARAGRAPH],
+              [Markup.createHeading4('Declaration')],
+              [Markup.createCodeBox(apiMember.signature, 'javascript')],
+              Object.keys(apiMember.parameters).length ? [Markup.createHeading4('Parameters')] : [],
+              Object.keys(apiMember.parameters).length ? [constructorParametersTable] : [],
+              apiMember.remarks.length ? [Markup.createHeading4('Remarks')] : [],
+              apiMember.remarks.length ? apiMember.remarks : []
             ])
           );
-          this._writeMethodPage(docMember);
           break;
 
         case 'method':
           const methodTitle: MarkupBasicElement[] = [
-            Markup.createApiLink(
-              [Markup.createCode(Utilities.getConciseSignature(docMember.name, apiMember), 'javascript')],
-              docMember.getApiReference())
+            Markup.createHeading3(docMember.name)
           ];
 
-          methodsTable.rows.push(
-            Markup.createTableRow([
+          const methodParametersTable: IMarkupTable = Markup.createTable([
+            Markup.createTextElements('Type'),
+            Markup.createTextElements('Name'),
+            Markup.createTextElements('Description')
+          ]);
+
+          const returnsTable: IMarkupTable = Markup.createTable([
+            Markup.createTextElements('Type'),
+            Markup.createTextElements('Description')
+          ]);
+
+          if (Object.keys(apiMember.parameters).length > 0) { 
+            for (const parameterName of Object.keys(apiMember.parameters)) {
+              const apiParameter: IApiParameter = apiMember.parameters[parameterName];
+                methodParametersTable.rows.push(Markup.createTableRow([
+                  apiParameter.type ? Markup.createTextElements(apiParameter.type) : [],
+                  Markup.createTextElements(parameterName, {italics: true}),
+                  apiParameter.description
+                ])
+              );
+            }
+          }
+          
+          returnsTable.rows.push(Markup.createTableRow([
+            Markup.createTextElements(apiMember.returnValue.type),
+            apiMember.returnValue.description
+          ]));
+
+          methodsList.rows.push(
+            Markup.createListRow([
               methodTitle,
-              apiMember.accessModifier ? [Markup.createCode(apiMember.accessModifier, 'javascript')] : [],
-              apiMember.returnValue ? [Markup.createCode(apiMember.returnValue.type, 'javascript')] : [],
-              apiMember.summary
+              apiMember.summary,
+              [Markup.PARAGRAPH],
+              [Markup.createHeading4('Declaration')],
+              [Markup.createCodeBox(apiMember.signature, 'javascript')],
+              Object.keys(apiMember.parameters).length ? [Markup.createHeading4('Parameters')] : [],
+              Object.keys(apiMember.parameters).length ? [methodParametersTable] : [],
+              apiMember.returnValue ? [Markup.createHeading4('Returns')] : [],
+              apiMember.returnValue ? [returnsTable] : [],
+              apiMember.remarks.length ? [Markup.createHeading4('Remarks')] : [],
+              apiMember.remarks.length ? apiMember.remarks : []
             ])
           );
-          this._writeMethodPage(docMember);
           break;
       }
     }
 
-    if (propertiesTable.rows.length > 0) {
+    if (propertiesList.rows.length > 0) {
       markupPage.elements.push(Markup.createHeading1('Properties'));
-      markupPage.elements.push(propertiesTable);
+      markupPage.elements.push(propertiesList);
     }
 
-    if (methodsTable.rows.length > 0) {
+    if (methodsList.rows.length > 0) {
       markupPage.elements.push(Markup.createHeading1('Methods'));
-      markupPage.elements.push(methodsTable);
+      markupPage.elements.push(methodsList);
     }
 
     if (apiClass.remarks && apiClass.remarks.length) {
@@ -400,17 +444,8 @@ export class MarkdownDocumenter {
 
     markupPage.elements.push(summaryParagraph);
 
-    const propertiesTable: IMarkupTable = Markup.createTable([
-      Markup.createTextElements('Property'),
-      Markup.createTextElements('Type'),
-      Markup.createTextElements('Description')
-    ]);
-
-    const methodsTable: IMarkupTable = Markup.createTable([
-      Markup.createTextElements('Method'),
-      Markup.createTextElements('Returns'),
-      Markup.createTextElements('Description')
-    ]);
+    const propertiesList: IMarkupList = Markup.createList();
+    const methodsList: IMarkupList = Markup.createList();
 
     for (const docMember of docInterface.children) {
       const apiMember: ApiMember = docMember.apiItem as ApiMember;
@@ -418,48 +453,82 @@ export class MarkdownDocumenter {
       switch (apiMember.kind) {
         case 'property':
           const propertyTitle: MarkupBasicElement[] = [
-            Markup.createApiLink(
-              [Markup.createCode(docMember.name, 'javascript')],
-              docMember.getApiReference())
+            Markup.createHeading3(docMember.name)
           ];
 
-          propertiesTable.rows.push(
-            Markup.createTableRow([
+          propertiesList.rows.push(
+            Markup.createListRow([
               propertyTitle,
-              [Markup.createCode(apiMember.type)],
-              apiMember.summary
+              apiMember.summary,
+              [Markup.PARAGRAPH],
+              [Markup.createHeading4('Declaration')],
+              [Markup.createCodeBox(apiMember.signature, 'javascript')],
+              apiMember.remarks.length ? [Markup.createHeading4('Remarks')] : [],
+              apiMember.remarks.length ? apiMember.remarks : []
             ])
           );
-          this._writePropertyPage(docMember);
           break;
 
         case 'method':
           const methodTitle: MarkupBasicElement[] = [
-            Markup.createApiLink(
-              [Markup.createCode(Utilities.getConciseSignature(docMember.name, apiMember), 'javascript')],
-              docMember.getApiReference())
+            Markup.createHeading3(docMember.name)
           ];
 
-          methodsTable.rows.push(
-            Markup.createTableRow([
+          const methodParametersTable: IMarkupTable = Markup.createTable([
+            Markup.createTextElements('Type'),
+            Markup.createTextElements('Name'),
+            Markup.createTextElements('Description')
+          ]);
+
+          const returnsTable: IMarkupTable = Markup.createTable([
+            Markup.createTextElements('Type'),
+            Markup.createTextElements('Description')
+          ]);
+
+          if (Object.keys(apiMember.parameters).length > 0) { 
+            for (const parameterName of Object.keys(apiMember.parameters)) {
+              const apiParameter: IApiParameter = apiMember.parameters[parameterName];
+                methodParametersTable.rows.push(Markup.createTableRow([
+                  apiParameter.type ? Markup.createTextElements(apiParameter.type) : [],
+                  Markup.createTextElements(parameterName, {italics: true}),
+                  apiParameter.description
+                ])
+              );
+            }
+          }
+          
+          returnsTable.rows.push(Markup.createTableRow([
+            Markup.createTextElements(apiMember.returnValue.type),
+            apiMember.returnValue.description
+          ]));
+
+          methodsList.rows.push(
+            Markup.createListRow([
               methodTitle,
-              apiMember.returnValue ? [Markup.createCode(apiMember.returnValue.type, 'javascript')] : [],
-              apiMember.summary
+              apiMember.summary,
+              [Markup.PARAGRAPH],
+              [Markup.createHeading4('Declaration')],
+              [Markup.createCodeBox(apiMember.signature, 'javascript')],
+              Object.keys(apiMember.parameters).length ? [Markup.createHeading4('Parameters')] : [],
+              Object.keys(apiMember.parameters).length ? [methodParametersTable] : [],
+              apiMember.returnValue ? [Markup.createHeading4('Returns')] : [],
+              apiMember.returnValue ? [returnsTable] : [],
+              apiMember.remarks.length ? [Markup.createHeading4('Remarks')] : [],
+              apiMember.remarks.length ? apiMember.remarks : []
             ])
           );
-          this._writeMethodPage(docMember);
           break;
       }
     }
 
-    if (propertiesTable.rows.length > 0) {
+    if (propertiesList.rows.length > 0) {
       markupPage.elements.push(Markup.createHeading1('Properties'));
-      markupPage.elements.push(propertiesTable);
+      markupPage.elements.push(propertiesList);
     }
 
-    if (methodsTable.rows.length > 0) {
+    if (methodsList.rows.length > 0) {
       markupPage.elements.push(Markup.createHeading1('Methods'));
-      markupPage.elements.push(methodsTable);
+      markupPage.elements.push(methodsList);
     }
 
     if (apiInterface.remarks && apiInterface.remarks.length) {
@@ -550,63 +619,6 @@ export class MarkdownDocumenter {
   }
 
   /**
-   * GENERATE PAGE: METHOD
-   */
-  private _writeMethodPage(docMethod: DocItem): void {
-    const apiMethod: IApiMethod = docMethod.apiItem as IApiMethod;
-
-    const fullMethodName: string = docMethod.parent!.name + '.' + docMethod.name;
-
-    const markupPage: IMarkupPage = Markup.createPage(`${fullMethodName} method`);
-
-    const summaryParagraph = {kind: Markup.PARAGRAPH.kind} as IMarkupParagraph;
-    apiMethod.summary.map((value: IMarkupText) => summaryParagraph['text'] = value.text);
-
-    if (apiMethod.isBeta) {
-      this._writeBetaWarning(markupPage.elements);
-    }
-    markupPage.elements.push(summaryParagraph);
-
-    markupPage.elements.push(Markup.PARAGRAPH);
-    markupPage.elements.push(...Markup.createTextElements('Signature:', { bold: true }));
-    markupPage.elements.push(Markup.createCodeBox(apiMethod.signature, 'javascript'));
-
-    if (apiMethod.returnValue) {
-      markupPage.elements.push(...Markup.createTextElements('Returns:', { bold: true }));
-      markupPage.elements.push(...Markup.createTextElements(' '));
-      markupPage.elements.push(Markup.createCode(apiMethod.returnValue.type, 'javascript'));
-      markupPage.elements.push(Markup.PARAGRAPH);
-      markupPage.elements.push(...apiMethod.returnValue.description);
-    }
-
-    if (apiMethod.remarks && apiMethod.remarks.length) {
-      markupPage.elements.push(Markup.createHeading1('Remarks'));
-      markupPage.elements.push(...apiMethod.remarks);
-    }
-
-    if (Object.keys(apiMethod.parameters).length > 0) {
-      const parametersTable: IMarkupTable = Markup.createTable([
-        Markup.createTextElements('Parameter'),
-        Markup.createTextElements('Type'),
-        Markup.createTextElements('Description')
-      ]);
-
-      markupPage.elements.push(Markup.createHeading1('Parameters'));
-      markupPage.elements.push(parametersTable);
-      for (const parameterName of Object.keys(apiMethod.parameters)) {
-        const apiParameter: IApiParameter = apiMethod.parameters[parameterName];
-          parametersTable.rows.push(Markup.createTableRow([
-            [Markup.createCode(parameterName, 'javascript')],
-            apiParameter.type ? [Markup.createCode(apiParameter.type, 'javascript')] : [],
-            apiParameter.description
-          ])
-        );
-      }
-    }
-    this._writePage(markupPage, docMethod);
-  }
-
-  /**
    * GENERATE PAGE: FUNCTION
    */
   private _writeFunctionPage(docFunction: DocItem): void {
@@ -615,7 +627,18 @@ export class MarkdownDocumenter {
     const markupPage: IMarkupPage = Markup.createPage(`${docFunction.name} function`);
 
     const summaryParagraph = {kind: Markup.PARAGRAPH.kind} as IMarkupParagraph;
+
+    const returnsTable: IMarkupTable = Markup.createTable([
+      Markup.createTextElements('Type'),
+      Markup.createTextElements('Description')
+    ]);
+
     apiFunction.summary.map((value: IMarkupText) => summaryParagraph['text'] = value.text);
+
+    returnsTable.rows.push(Markup.createTableRow([
+      Markup.createTextElements(apiFunction.returnValue.type),
+      apiFunction.returnValue.description
+    ]));
 
     if (apiFunction.isBeta) {
       this._writeBetaWarning(markupPage.elements);
@@ -623,40 +646,37 @@ export class MarkdownDocumenter {
     markupPage.elements.push(summaryParagraph);
 
     markupPage.elements.push(Markup.PARAGRAPH);
-    markupPage.elements.push(...Markup.createTextElements('Signature:', { bold: true }));
-    markupPage.elements.push(Markup.createCodeBox(docFunction.name, 'javascript'));
-
-    if (apiFunction.returnValue) {
-      markupPage.elements.push(...Markup.createTextElements('Returns:', { bold: true }));
-      markupPage.elements.push(...Markup.createTextElements(' '));
-      markupPage.elements.push(Markup.createCode(apiFunction.returnValue.type, 'javascript'));
-      markupPage.elements.push(Markup.PARAGRAPH);
-      markupPage.elements.push(...apiFunction.returnValue.description);
-    }
-
-    if (apiFunction.remarks && apiFunction.remarks.length) {
-      markupPage.elements.push(Markup.createHeading1('Remarks'));
-      markupPage.elements.push(...apiFunction.remarks);
-    }
+    markupPage.elements.push(Markup.createHeading4('Declaration'));
+    markupPage.elements.push(Markup.createCodeBox(apiFunction.signature, 'javascript'));
 
     if (Object.keys(apiFunction.parameters).length > 0) {
       const parametersTable: IMarkupTable = Markup.createTable([
-        Markup.createTextElements('Parameter'),
         Markup.createTextElements('Type'),
+        Markup.createTextElements('Name'),
         Markup.createTextElements('Description')
       ]);
 
-      markupPage.elements.push(Markup.createHeading1('Parameters'));
+      markupPage.elements.push(Markup.createHeading4('Parameters'));
       markupPage.elements.push(parametersTable);
       for (const parameterName of Object.keys(apiFunction.parameters)) {
         const apiParameter: IApiParameter = apiFunction.parameters[parameterName];
           parametersTable.rows.push(Markup.createTableRow([
-            [Markup.createCode(parameterName, 'javascript')],
-            apiParameter.type ? [Markup.createCode(apiParameter.type, 'javascript')] : [],
+            apiParameter.type ? Markup.createTextElements(apiParameter.type) : [],
+            Markup.createTextElements(parameterName, {italics: true}),
             apiParameter.description
           ])
         );
       }
+    }
+
+    if (apiFunction.returnValue) {
+      markupPage.elements.push(Markup.createHeading4('Returns'));
+      markupPage.elements.push(returnsTable);
+    }
+
+    if (apiFunction.remarks && apiFunction.remarks.length) {
+      markupPage.elements.push(Markup.createHeading4('Remarks'));
+      markupPage.elements.push(...apiFunction.remarks);
     }
 
     this._writePage(markupPage, docFunction);

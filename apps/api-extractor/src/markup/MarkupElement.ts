@@ -163,6 +163,18 @@ export interface IMarkupHeading3 {
 }
 
 /**
+ * A body
+ * @internal @preapproved
+ * @internalremarks
+ * modified by ossiaco
+ */
+export interface IMarkupHeading4 {
+  /** The kind of markup element */
+  kind: 'heading4';
+  text: string;
+}
+
+/**
  * A section element
  * @internal @preapproved
  * @internalremarks
@@ -180,7 +192,7 @@ export interface IMarkupSection {
  * @public
  */
 export type MarkupBasicElement = MarkupLinkTextElement | IMarkupApiLink | IMarkupWebLink | IMarkupParagraph
-  | IMarkupLineBreak | IMarkupHeading1 | IMarkupHeading2 | IMarkupHeading3 | IMarkupSection;
+  | IMarkupLineBreak | IMarkupHeading1 | IMarkupHeading2 | IMarkupHeading3 | IMarkupHeading4 | IMarkupSection;
 
 // ----------------------------------------------------------------------------
 
@@ -267,7 +279,7 @@ export interface IMarkupListCell {
   kind: 'list-cell';
 
   /** The text content for the list cell */
-  elements: MarkupBasicElement[];
+  elements: Array<MarkupBasicElement | MarkupStructuredElement>;
 }
 
 /**

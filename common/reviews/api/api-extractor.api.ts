@@ -269,6 +269,11 @@ interface IMarkupHeading3 {
 }
 
 
+// @internal (preapproved)
+interface IMarkupHeading4 {
+}
+
+
 // @public
 interface IMarkupHighlightedText {
   highlighter: MarkupHighlighter;
@@ -371,8 +376,9 @@ class Markup {
   static createHeading1(text: string): IMarkupHeading1;
   static createHeading2(text: string): IMarkupHeading2;
   static createHeading3(arg: string | MarkupBasicElement[]): IMarkupHeading3;
+  static createHeading4(text: string): IMarkupHeading4;
   static createList(): IMarkupList;
-  static createListRow(cellValues?: MarkupBasicElement[][] | undefined): IMarkupListRow;
+  static createListRow(cellValues?: Array<Array<MarkupBasicElement | MarkupStructuredElement>> | undefined): IMarkupListRow;
   static createNoteBox(textElements: MarkupBasicElement[]): IMarkupNoteBox;
   static createNoteBoxFromText(text: string): IMarkupNoteBox;
   static createPage(title: string): IMarkupPage;

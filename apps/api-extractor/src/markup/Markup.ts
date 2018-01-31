@@ -17,6 +17,9 @@ import {
   IMarkupHeading1,
   IMarkupHeading2,
   IMarkupHeading3,
+  IMarkupHeading4,
+  IMarkupListCell,
+  MarkupStructuredElement,
   IMarkupSection,
   IMarkupPage,
   IMarkupHighlightedText,
@@ -27,7 +30,6 @@ import {
 } from './MarkupElement';
 
 import { IApiItemReference } from '../api/ApiItem';
-import { IMarkupListCell } from '../index';
 
 /**
  * Options for {@link Markup.createTextElements}
@@ -236,6 +238,18 @@ export class Markup {
   }
 
   /**
+   * Constructs an IMarkupHeading4 element with the specified title text
+   * @internalremarks
+   * modified by ossiaco
+   */
+  public static createHeading4(text: string): IMarkupHeading4 {
+    return {
+      kind: 'heading4',
+      text: Markup._trimRawText(text)
+    } as IMarkupHeading4;
+  }
+
+  /**
    * Constructs an IMarkupSection element with the specified title text
    * @internalremarks
    * modified by Ossiaco
@@ -284,7 +298,7 @@ export class Markup {
    * @internalremarks
    * modified by Ossiaco
    */
-  public static createListRow(cellValues: MarkupBasicElement[][] | undefined = undefined): IMarkupListRow {
+  public static createListRow(cellValues: Array<Array<MarkupBasicElement | MarkupStructuredElement>> | undefined = undefined): IMarkupListRow {
     const row: IMarkupListRow = {
       kind: 'list-row',
       cells: []
