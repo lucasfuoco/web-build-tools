@@ -27,7 +27,8 @@ import {
   Markup,
   MarkupBasicElement,
   MarkupStructuredElement,
-  IMarkupParagraph
+  IMarkupParagraph,
+  IApiNamespace
 } from '@microsoft/api-extractor';
 
 import {
@@ -191,6 +192,7 @@ export class MarkdownDocumenter {
     const interfacesList: IMarkupList = Markup.createList();
     const functionsList: IMarkupList = Markup.createList();
     const enumerationsList: IMarkupList = Markup.createList();
+    const namespacesList: IMarkupList = Markup.createList();
 
     for (const docChild of docPackage.children) {
       const apiChild: ApiItem = docChild.apiItem;
@@ -244,12 +246,26 @@ export class MarkdownDocumenter {
           );
           this._writeEnumPage(docChild);
           break;
+        case 'namespace':
+          namespacesList.rows.push(
+            Markup.createListRow([
+              docItemTitleLink,
+              [Markup.createSection(docChildDescription)]
+            ])
+          );
+          this._writeNamespacePage(docChild);
+          break;
       }
     }
 
     if (apiPackage.remarks && apiPackage.remarks.length) {
       markupPage.elements.push(Markup.createHeading1('Remarks'));
       markupPage.elements.push(...apiPackage.remarks);
+    }
+
+    if (namespacesList.rows.length > 0) {
+      markupPage.elements.push(Markup.createHeading1('Namespaces'));
+      markupPage.elements.push(namespacesList);
     }
 
     if (classesList.rows.length > 0) {
@@ -273,6 +289,125 @@ export class MarkdownDocumenter {
     }
 
     this._writePage(markupPage, docPackage);
+  }
+
+  /**
+   * GENERATE PAGE: NAMESPACE
+   * @internalremarks
+   * modified by ossiaco
+   */
+  private _writeNamespacePage(docNamespace: DocItem): void {
+    const apiNamespace: IApiNamespace = docNamespace.apiItem as IApiNamespace;
+
+    const markupPage: IMarkupPage = Markup.createPage(`${docNamespace.name} namespace`);
+
+    const summaryParagraph = {kind: Markup.PARAGRAPH.kind} as IMarkupParagraph;
+    apiNamespace.summary.map((value: IMarkupText) => summaryParagraph['text'] = value.text);
+
+    if (apiNamespace.isBeta) {
+      this._writeBetaWarning(markupPage.elements);
+    }
+    markupPage.elements.push(summaryParagraph);
+    
+    const classesList: IMarkupList = Markup.createList();
+    const interfacesList: IMarkupList = Markup.createList();
+    const propertiesList: IMarkupList = Markup.createList();
+    const functionsList: IMarkupList = Markup.createList();
+    const enumerationsList: IMarkupList = Markup.createList();
+
+    for (const docChild of docNamespace.children) {
+      const apiChild: ApiItem = docChild.apiItem;
+
+      const docItemTitleLink: MarkupBasicElement[] = [
+        Markup.createHeading3(
+          [Markup.createApiLinkFromText(docChild.name, docChild.getApiReference())]
+        )
+      ];
+
+      const docChildDescription: MarkupBasicElement[] = [];
+
+      if (apiChild.isBeta) {
+        docChildDescription.push(...Markup.createTextElements('(BETA)', { italics: true, bold: true }));
+        docChildDescription.push(...Markup.createTextElements(' '));
+      }
+      docChildDescription.push(...apiChild.summary);
+
+      switch(apiChild.kind) {
+        case 'property':
+          propertiesList.rows.push(Markup.createListRow([
+            docItemTitleLink,
+            [Markup.createSection(docChildDescription)]
+          ]));
+          this._writePropertyPage(docChild);
+          break;
+        case 'class':
+          classesList.rows.push(Markup.createListRow([
+            docItemTitleLink,
+            [Markup.createSection(docChildDescription)]
+          ]));
+          this._writeClassPage(docChild);
+          break;
+        case 'interface':
+          interfacesList.rows.push(
+            Markup.createListRow([
+              docItemTitleLink,
+              [Markup.createSection(docChildDescription)]
+            ])
+          );
+          this._writeInterfacePage(docChild);
+          break;
+        case 'function':
+          functionsList.rows.push(
+            Markup.createListRow([
+              docItemTitleLink,
+              [Markup.createSection(docChildDescription)]
+            ])
+          );
+          this._writeFunctionPage(docChild);
+          break;
+        case 'enum':
+          enumerationsList.rows.push(
+            Markup.createListRow([
+              docItemTitleLink,
+              [Markup.createSection(docChildDescription)]
+            ])
+          );
+          this._writeEnumPage(docChild);
+          break;
+      }
+    }
+
+    if (classesList.rows.length > 0) {
+      markupPage.elements.push(Markup.createHeading1('Classes'));
+      markupPage.elements.push(classesList);
+    }
+
+    if (functionsList.rows.length > 0) {
+      markupPage.elements.push(Markup.createHeading1('Functions'));
+      markupPage.elements.push(functionsList);
+    }
+
+    if (interfacesList.rows.length > 0) {
+      markupPage.elements.push(Markup.createHeading1('Interfaces'));
+      markupPage.elements.push(interfacesList);
+    }
+
+    if (propertiesList.rows.length > 0) {
+      markupPage.elements.push(Markup.createHeading1('Properties'));
+      markupPage.elements.push(propertiesList);
+    }
+
+    if (enumerationsList.rows.length > 0) {
+      markupPage.elements.push(Markup.createHeading1('Enums'));
+      markupPage.elements.push(enumerationsList);
+    }
+
+    if (apiNamespace.remarks && apiNamespace.remarks.length) {
+      markupPage.elements.push(Markup.createHeading1('Remarks'));
+      markupPage.elements.push(...apiNamespace.remarks);
+    }
+
+    this._writePage(markupPage, docNamespace);
   }
 
   /**

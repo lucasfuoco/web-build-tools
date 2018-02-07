@@ -75,6 +75,8 @@ export interface IApiParameter {
 
   /**
    * The data type of the parameter
+   * @internalremarks
+   * modified by ossiaco
    */
   type: string;
 }
