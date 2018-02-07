@@ -115,7 +115,7 @@ export class MarkdownDocumenter {
         continue;
       }
       if(child && docItem.parent) {
-        docHref = `${this._getUid(docItem.parent).toLowerCase()}.md`;
+        docHref = `${this._getUid(docItem.parent).toLowerCase()}.md#${docItem.name.replace(/(_|__)/g, '').toLowerCase()}`;
       }
       tocItem = {
         name: Utilities.getUnscopedPackageName(docItem.name),
@@ -284,6 +284,9 @@ export class MarkdownDocumenter {
     // TODO: Show concise generic parameters with class name
     const markupPage: IMarkupPage = Markup.createPage(`${docClass.name} class`);
 
+    const classSignature: string = `export class ${docClass.name}${apiClass.extends ? " extends " + apiClass.extends : ""}` +
+        `${apiClass.implements ? " implements " + apiClass.implements : ""}`;
+
     const summaryParagraph = {kind: Markup.PARAGRAPH.kind} as IMarkupParagraph;
     apiClass.summary.map((value: IMarkupText) => summaryParagraph['text'] = value.text);
 
@@ -291,6 +294,8 @@ export class MarkdownDocumenter {
       this._writeBetaWarning(markupPage.elements);
     }
     markupPage.elements.push(summaryParagraph);
+    markupPage.elements.push(Markup.createHeading4('Syntax'));
+    markupPage.elements.push(Markup.createCodeBox(classSignature, 'javascript'));
 
     const propertiesList: IMarkupList = Markup.createList();
     const methodsList: IMarkupList = Markup.createList();
@@ -436,6 +441,10 @@ export class MarkdownDocumenter {
     const markupPage: IMarkupPage = Markup.createPage(`${docInterface.name} interface`);
 
     const summaryParagraph = {kind: Markup.PARAGRAPH.kind} as IMarkupParagraph;
+
+    const interfaceSignature: string = `export interface ${docInterface.name}${apiInterface.extends ? " extends " + apiInterface.extends : ""}` +
+        `${apiInterface.implements ? " implements " + apiInterface.implements : ""}`;
+
     apiInterface.summary.map((value: IMarkupText) => summaryParagraph['text'] = value.text);
 
     if (apiInterface.isBeta) {
@@ -443,6 +452,8 @@ export class MarkdownDocumenter {
     }
 
     markupPage.elements.push(summaryParagraph);
+    markupPage.elements.push(Markup.createHeading4('Syntax'));
+    markupPage.elements.push(Markup.createCodeBox(interfaceSignature, 'javascript'));
 
     const propertiesList: IMarkupList = Markup.createList();
     const methodsList: IMarkupList = Markup.createList();
@@ -549,6 +560,9 @@ export class MarkdownDocumenter {
     const markupPage: IMarkupPage = Markup.createPage(`${docEnum.name} enumeration`);
 
     const summaryParagraph = {kind: Markup.PARAGRAPH.kind} as IMarkupParagraph;
+
+    const enumSignature: string = `export enum ${docEnum.name}`;
+
     apiEnum.summary.map((value: IMarkupText) => summaryParagraph['text'] = value.text);
 
     if (apiEnum.isBeta) {
@@ -556,6 +570,8 @@ export class MarkdownDocumenter {
     }
 
     markupPage.elements.push(summaryParagraph);
+    markupPage.elements.push(Markup.createHeading4('Syntax'));
+    markupPage.elements.push(Markup.createCodeBox(enumSignature, 'javascript'));
 
     const membersTable: IMarkupTable = Markup.createTable([
       Markup.createTextElements('Member'),
