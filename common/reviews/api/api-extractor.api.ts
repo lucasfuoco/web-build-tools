@@ -325,6 +325,11 @@ interface IMarkupParagraph {
 }
 
 // @internal (preapproved)
+interface IMarkupParagraphAndElements {
+}
+
+
+// @internal (preapproved)
 interface IMarkupSection {
 }
 
@@ -382,6 +387,7 @@ class Markup {
   static createNoteBox(textElements: MarkupBasicElement[]): IMarkupNoteBox;
   static createNoteBoxFromText(text: string): IMarkupNoteBox;
   static createPage(title: string): IMarkupPage;
+  static createParagraphAndElements(elements: MarkupBasicElement[]): IMarkupParagraphAndElements;
   static createSection(elements: MarkupBasicElement[]): IMarkupSection;
   static createTable(headerCellValues?: MarkupBasicElement[][] | undefined): IMarkupTable;
   static createTableRow(cellValues?: MarkupBasicElement[][] | undefined): IMarkupTableRow;

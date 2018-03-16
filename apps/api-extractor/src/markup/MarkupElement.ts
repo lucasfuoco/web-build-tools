@@ -187,12 +187,25 @@ export interface IMarkupSection {
 }
 
 /**
+ * A paragraph with different elements
+ * @internal @preapproved
+ * @internalremarks
+ * modified by Ossiaco
+ */
+export interface IMarkupParagraphAndElements {
+  /** The kind of markup element */
+  kind: 'paragraph&elements';
+  elements: MarkupBasicElement[];
+}
+
+/**
  * Represents basic text consisting of paragraphs and links (without structures such as headers or tables).
  *
  * @public
  */
 export type MarkupBasicElement = MarkupLinkTextElement | IMarkupApiLink | IMarkupWebLink | IMarkupParagraph
-  | IMarkupLineBreak | IMarkupHeading1 | IMarkupHeading2 | IMarkupHeading3 | IMarkupHeading4 | IMarkupSection;
+  | IMarkupLineBreak | IMarkupHeading1 | IMarkupHeading2 | IMarkupHeading3 | IMarkupHeading4 | IMarkupSection |
+  IMarkupParagraphAndElements;
 
 // ----------------------------------------------------------------------------
 

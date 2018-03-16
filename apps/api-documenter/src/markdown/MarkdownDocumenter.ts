@@ -298,16 +298,14 @@ export class MarkdownDocumenter {
    */
   private _writeNamespacePage(docNamespace: DocItem): void {
     const apiNamespace: IApiNamespace = docNamespace.apiItem as IApiNamespace;
+    console.log(apiNamespace);
 
     const markupPage: IMarkupPage = Markup.createPage(`${docNamespace.name} namespace`);
-
-    const summaryParagraph = {kind: Markup.PARAGRAPH.kind} as IMarkupParagraph;
-    apiNamespace.summary.map((value: IMarkupText) => summaryParagraph['text'] = value.text);
 
     if (apiNamespace.isBeta) {
       this._writeBetaWarning(markupPage.elements);
     }
-    markupPage.elements.push(summaryParagraph);
+    markupPage.elements.push(Markup.createParagraphAndElements(apiNamespace.summary));
     
     const classesList: IMarkupList = Markup.createList();
     const interfacesList: IMarkupList = Markup.createList();
@@ -422,13 +420,10 @@ export class MarkdownDocumenter {
     const classSignature: string = `export class ${docClass.name}${apiClass.extends ? " extends " + apiClass.extends : ""}` +
         `${apiClass.implements ? " implements " + apiClass.implements : ""}`;
 
-    const summaryParagraph = {kind: Markup.PARAGRAPH.kind} as IMarkupParagraph;
-    apiClass.summary.map((value: IMarkupText) => summaryParagraph['text'] = value.text);
-
     if (apiClass.isBeta) {
       this._writeBetaWarning(markupPage.elements);
     }
-    markupPage.elements.push(summaryParagraph);
+    markupPage.elements.push(Markup.createParagraphAndElements(apiClass.summary));
     markupPage.elements.push(Markup.createHeading4('Syntax'));
     markupPage.elements.push(Markup.createCodeBox(classSignature, 'javascript'));
 
@@ -575,18 +570,14 @@ export class MarkdownDocumenter {
     // TODO: Show concise generic parameters with class name
     const markupPage: IMarkupPage = Markup.createPage(`${docInterface.name} interface`);
 
-    const summaryParagraph = {kind: Markup.PARAGRAPH.kind} as IMarkupParagraph;
-
     const interfaceSignature: string = `export interface ${docInterface.name}${apiInterface.extends ? " extends " + apiInterface.extends : ""}` +
         `${apiInterface.implements ? " implements " + apiInterface.implements : ""}`;
-
-    apiInterface.summary.map((value: IMarkupText) => summaryParagraph['text'] = value.text);
 
     if (apiInterface.isBeta) {
       this._writeBetaWarning(markupPage.elements);
     }
 
-    markupPage.elements.push(summaryParagraph);
+    markupPage.elements.push(Markup.createParagraphAndElements(apiInterface.summary));
     markupPage.elements.push(Markup.createHeading4('Syntax'));
     markupPage.elements.push(Markup.createCodeBox(interfaceSignature, 'javascript'));
 
@@ -694,17 +685,13 @@ export class MarkdownDocumenter {
     // TODO: Show concise generic parameters with class name
     const markupPage: IMarkupPage = Markup.createPage(`${docEnum.name} enumeration`);
 
-    const summaryParagraph = {kind: Markup.PARAGRAPH.kind} as IMarkupParagraph;
-
     const enumSignature: string = `export enum ${docEnum.name}`;
-
-    apiEnum.summary.map((value: IMarkupText) => summaryParagraph['text'] = value.text);
 
     if (apiEnum.isBeta) {
       this._writeBetaWarning(markupPage.elements);
     }
 
-    markupPage.elements.push(summaryParagraph);
+    markupPage.elements.push(Markup.createParagraphAndElements(apiEnum.summary));
     markupPage.elements.push(Markup.createHeading4('Syntax'));
     markupPage.elements.push(Markup.createCodeBox(enumSignature, 'javascript'));
 
@@ -748,14 +735,11 @@ export class MarkdownDocumenter {
 
     const markupPage: IMarkupPage = Markup.createPage(`${fullProperyName} property`);
 
-    const summaryParagraph = {kind: Markup.PARAGRAPH.kind} as IMarkupParagraph;
-    apiProperty.summary.map((value: IMarkupText) => summaryParagraph['text'] = value.text);
-
     if (apiProperty.isBeta) {
       this._writeBetaWarning(markupPage.elements);
     }
 
-    markupPage.elements.push(summaryParagraph);
+    markupPage.elements.push(Markup.createParagraphAndElements(apiProperty.summary));
 
     markupPage.elements.push(Markup.PARAGRAPH);
     markupPage.elements.push(...Markup.createTextElements('Signature:', { bold: true }));
@@ -777,14 +761,10 @@ export class MarkdownDocumenter {
 
     const markupPage: IMarkupPage = Markup.createPage(`${docFunction.name} function`);
 
-    const summaryParagraph = {kind: Markup.PARAGRAPH.kind} as IMarkupParagraph;
-
     const returnsTable: IMarkupTable = Markup.createTable([
       Markup.createTextElements('Type'),
       Markup.createTextElements('Description')
     ]);
-
-    apiFunction.summary.map((value: IMarkupText) => summaryParagraph['text'] = value.text);
 
     returnsTable.rows.push(Markup.createTableRow([
       Markup.createTextElements(apiFunction.returnValue.type),
@@ -794,7 +774,7 @@ export class MarkdownDocumenter {
     if (apiFunction.isBeta) {
       this._writeBetaWarning(markupPage.elements);
     }
-    markupPage.elements.push(summaryParagraph);
+    markupPage.elements.push(Markup.createParagraphAndElements(apiFunction.summary));
 
     markupPage.elements.push(Markup.PARAGRAPH);
     markupPage.elements.push(Markup.createHeading4('Declaration'));

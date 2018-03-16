@@ -26,7 +26,8 @@ import {
   MarkupLinkTextElement,
   IMarkupNoteBox,
   IMarkupCodeBox,
-  MarkupHighlighter
+  MarkupHighlighter,
+  IMarkupParagraphAndElements
 } from './MarkupElement';
 
 import { IApiItemReference } from '../api/ApiItem';
@@ -225,7 +226,7 @@ export class Markup {
    * modified by ossiaco
    */
   public static createHeading3(arg: string | MarkupBasicElement[]): IMarkupHeading3 {
-    if(typeof arg === 'object') {
+    if (typeof arg === 'object') {
       return {
         kind: 'heading3',
         elements: arg
@@ -250,13 +251,25 @@ export class Markup {
   }
 
   /**
-   * Constructs an IMarkupSection element with the specified title text
+   * Constructs an IMarkupSection element with the specified elements
    * @internalremarks
    * modified by Ossiaco
    */
   public static createSection(elements: MarkupBasicElement[]): IMarkupSection {
     return {
       kind: 'section',
+      elements: elements
+    };
+  }
+
+  /**
+   * Contructs an IMarkupParagraphAndElements element with the specified elements
+   * @internalremarks
+   * modified by Ossiaco
+   */
+  public static createParagraphAndElements(elements: MarkupBasicElement[]): IMarkupParagraphAndElements {
+    return {
+      kind: 'paragraph&elements',
       elements: elements
     };
   }

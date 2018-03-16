@@ -278,6 +278,13 @@ export class MarkdownRenderer {
             writer.writeLine();
           }
           break;
+        case 'paragraph&elements':
+          writer.write('<div class="markdown level0 summary">');
+          writer.write('<p>');
+          MarkdownRenderer._writeElements(element.elements, context);
+          writer.write('</p>');
+          writer.write('</div>');
+          writer.writeLine();
         case 'break':
           writer.writeLine('<br/>');
           break;
