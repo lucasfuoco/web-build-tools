@@ -1,6 +1,104 @@
 # Change Log - @microsoft/gulp-core-build-serve
 
-This log was last generated on Fri, 12 Jan 2018 03:35:22 GMT and should not be manually modified.
+This log was last generated on Thu, 15 Mar 2018 16:05:43 GMT and should not be manually modified.
+
+## 3.2.20
+Thu, 15 Mar 2018 16:05:43 GMT
+
+*Version update only*
+
+## 3.2.19
+Fri, 02 Mar 2018 01:13:59 GMT
+
+*Version update only*
+
+## 3.2.18
+Tue, 27 Feb 2018 22:05:57 GMT
+
+*Version update only*
+
+## 3.2.17
+Fri, 23 Feb 2018 17:04:33 GMT
+
+### Patches
+
+- Upgrade gulp-connect in order to remove the HTTP2/HTTPS workaround .
+
+## 3.2.16
+Wed, 21 Feb 2018 22:04:19 GMT
+
+*Version update only*
+
+## 3.2.15
+Wed, 21 Feb 2018 03:13:28 GMT
+
+*Version update only*
+
+## 3.2.14
+Sat, 17 Feb 2018 02:53:49 GMT
+
+*Version update only*
+
+## 3.2.13
+Fri, 16 Feb 2018 22:05:23 GMT
+
+*Version update only*
+
+## 3.2.12
+Fri, 16 Feb 2018 17:05:11 GMT
+
+*Version update only*
+
+## 3.2.11
+Wed, 07 Feb 2018 17:05:11 GMT
+
+*Version update only*
+
+## 3.2.10
+Fri, 26 Jan 2018 22:05:30 GMT
+
+*Version update only*
+
+## 3.2.9
+Fri, 26 Jan 2018 17:53:38 GMT
+
+### Patches
+
+- Force a patch bump in case the previous version was an empty package
+
+## 3.2.8
+Fri, 26 Jan 2018 00:36:51 GMT
+
+*Version update only*
+
+## 3.2.7
+Tue, 23 Jan 2018 17:05:28 GMT
+
+### Patches
+
+- Replace gulp-util.colors with colors package
+
+## 3.2.6
+Sat, 20 Jan 2018 02:39:16 GMT
+
+### Patches
+
+- Fix an issue with gulp serve when serving via https on Node8
+
+## 3.2.5
+Thu, 18 Jan 2018 03:23:46 GMT
+
+*Version update only*
+
+## 3.2.4
+Thu, 18 Jan 2018 00:48:06 GMT
+
+*Version update only*
+
+## 3.2.3
+Wed, 17 Jan 2018 10:49:31 GMT
+
+*Version update only*
 
 ## 3.2.2
 Fri, 12 Jan 2018 03:35:22 GMT

@@ -1,6 +1,90 @@
 # Change Log - @microsoft/gulp-core-build-mocha
 
-This log was last generated on Fri, 12 Jan 2018 03:35:22 GMT and should not be manually modified.
+This log was last generated on Thu, 15 Mar 2018 16:05:43 GMT and should not be manually modified.
+
+## 3.3.18
+Thu, 15 Mar 2018 16:05:43 GMT
+
+*Version update only*
+
+## 3.3.17
+Fri, 02 Mar 2018 01:13:59 GMT
+
+*Version update only*
+
+## 3.3.16
+Tue, 27 Feb 2018 22:05:57 GMT
+
+*Version update only*
+
+## 3.3.15
+Wed, 21 Feb 2018 22:04:19 GMT
+
+*Version update only*
+
+## 3.3.14
+Wed, 21 Feb 2018 03:13:28 GMT
+
+*Version update only*
+
+## 3.3.13
+Sat, 17 Feb 2018 02:53:49 GMT
+
+*Version update only*
+
+## 3.3.12
+Fri, 16 Feb 2018 22:05:23 GMT
+
+*Version update only*
+
+## 3.3.11
+Fri, 16 Feb 2018 17:05:11 GMT
+
+*Version update only*
+
+## 3.3.10
+Wed, 07 Feb 2018 17:05:11 GMT
+
+*Version update only*
+
+## 3.3.9
+Fri, 26 Jan 2018 22:05:30 GMT
+
+*Version update only*
+
+## 3.3.8
+Fri, 26 Jan 2018 17:53:38 GMT
+
+### Patches
+
+- Force a patch bump in case the previous version was an empty package
+
+## 3.3.7
+Fri, 26 Jan 2018 00:36:51 GMT
+
+### Patches
+
+- Increase Mocha test timeout to 15 seconds
+
+## 3.3.6
+Tue, 23 Jan 2018 17:05:28 GMT
+
+*Version update only*
+
+## 3.3.5
+Thu, 18 Jan 2018 03:23:46 GMT
+
+*Version update only*
+
+## 3.3.4
+Thu, 18 Jan 2018 00:48:06 GMT
+
+*Version update only*
+
+## 3.3.3
+Wed, 17 Jan 2018 10:49:31 GMT
+
+*Version update only*
 
 ## 3.3.2
 Fri, 12 Jan 2018 03:35:22 GMT

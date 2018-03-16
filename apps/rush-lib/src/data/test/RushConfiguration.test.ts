@@ -4,6 +4,7 @@
 /// <reference types='mocha' />
 
 import { assert } from 'chai';
+import { Text } from '@microsoft/node-core-library';
 import RushConfiguration from '../RushConfiguration';
 import { ApprovedPackagesPolicy } from '../ApprovedPackagesPolicy';
 import RushConfigurationProject from '../RushConfigurationProject';
@@ -11,7 +12,7 @@ import * as path from 'path';
 import Utilities from '../../utilities/Utilities';
 
 function normalizePathForComparison(pathToNormalize: string): string {
-  return Utilities.getAllReplaced(pathToNormalize, '\\', '/').toUpperCase();
+  return Text.replaceAll(pathToNormalize, '\\', '/').toUpperCase();
 }
 
 function assertPathProperty(validatedPropertyName: string, absolutePath: string, relativePath: string): void {
@@ -21,6 +22,15 @@ function assertPathProperty(validatedPropertyName: string, absolutePath: string,
 }
 
 describe('RushConfiguration', () => {
+  it ('can\'t load too new rush', (done: MochaDone) => {
+    const rushFilename: string = path.resolve(__dirname, 'repo', 'rush-too-new.json');
+
+    assert.throws(() => {
+      RushConfiguration.loadFromConfigurationFile(rushFilename);
+    }, 'Unable to load rush-too-new.json because its RushVersion is 99.0.0');
+
+    done();
+  });
 
   it('can load repo/rush-npm.json', (done: MochaDone) => {
     const rushFilename: string = path.resolve(__dirname, 'repo', 'rush-npm.json');

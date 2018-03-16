@@ -1,6 +1,110 @@
 # Change Log - @microsoft/loader-load-themed-styles
 
-This log was last generated on Fri, 12 Jan 2018 03:35:22 GMT and should not be manually modified.
+This log was last generated on Thu, 15 Mar 2018 20:00:50 GMT and should not be manually modified.
+
+## 1.7.22
+Thu, 15 Mar 2018 20:00:50 GMT
+
+*Version update only*
+
+## 1.7.21
+Thu, 15 Mar 2018 16:05:43 GMT
+
+*Version update only*
+
+## 1.7.20
+Tue, 13 Mar 2018 23:11:32 GMT
+
+*Version update only*
+
+## 1.7.19
+Mon, 12 Mar 2018 20:36:19 GMT
+
+### Patches
+
+- Locked down some "@types/" dependency versions to avoid upgrade conflicts
+
+## 1.7.18
+Tue, 06 Mar 2018 17:04:51 GMT
+
+*Version update only*
+
+## 1.7.17
+Fri, 02 Mar 2018 01:13:59 GMT
+
+*Version update only*
+
+## 1.7.16
+Tue, 27 Feb 2018 22:05:57 GMT
+
+*Version update only*
+
+## 1.7.15
+Wed, 21 Feb 2018 22:04:19 GMT
+
+*Version update only*
+
+## 1.7.14
+Wed, 21 Feb 2018 03:13:29 GMT
+
+*Version update only*
+
+## 1.7.13
+Sat, 17 Feb 2018 02:53:49 GMT
+
+*Version update only*
+
+## 1.7.12
+Fri, 16 Feb 2018 22:05:23 GMT
+
+*Version update only*
+
+## 1.7.11
+Fri, 16 Feb 2018 17:05:11 GMT
+
+*Version update only*
+
+## 1.7.10
+Wed, 07 Feb 2018 17:05:11 GMT
+
+*Version update only*
+
+## 1.7.9
+Fri, 26 Jan 2018 22:05:30 GMT
+
+*Version update only*
+
+## 1.7.8
+Fri, 26 Jan 2018 17:53:38 GMT
+
+### Patches
+
+- Force a patch bump in case the previous version was an empty package
+
+## 1.7.7
+Fri, 26 Jan 2018 00:36:51 GMT
+
+*Version update only*
+
+## 1.7.6
+Tue, 23 Jan 2018 17:05:28 GMT
+
+*Version update only*
+
+## 1.7.5
+Thu, 18 Jan 2018 03:23:46 GMT
+
+*Version update only*
+
+## 1.7.4
+Thu, 18 Jan 2018 00:48:06 GMT
+
+*Version update only*
+
+## 1.7.3
+Wed, 17 Jan 2018 10:49:31 GMT
+
+*Version update only*
 
 ## 1.7.2
 Fri, 12 Jan 2018 03:35:22 GMT

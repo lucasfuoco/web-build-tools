@@ -92,8 +92,8 @@ export class TypeScriptTask extends GulpTask<ITypeScriptTaskConfig> {
         reporter: {
           error: (error: ts.reporter.TypeScriptError): void => {
             const filename: string = error.relativeFilename || error.fullFilename || 'unknown filename';
-            const line: number = error.startPosition ? error.startPosition.line : 0;
-            const character: number = error.startPosition ? error.startPosition.character : 0;
+            const line: number = error.startPosition ? error.startPosition.line + 1 : 0;
+            const character: number = error.startPosition ? error.startPosition.character + 1 : 0;
             const code: number = error.diagnostic.code;
             const errorMessage: string = (typeof error.diagnostic.messageText === 'object') ?
               (error.diagnostic.messageText as { messageText: string }).messageText :

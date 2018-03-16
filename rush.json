@@ -1,7 +1,8 @@
 {
-  "pnpmVersion": "1.25.1",
-  "rushVersion": "4.2.1",
-  "nodeSupportedVersionRange": ">=6.9.0 <9.0.0",
+  "rushVersion": "4.3.0",
+  "pnpmVersion": "1.35.10",
+  "nodeSupportedVersionRange": ">=6.9.0 <7.0.0 || >=8.9.4 <9.0.0",
+
   "projectFolderMinDepth": 1,
 
   "approvedPackagesPolicy": {
@@ -68,6 +69,18 @@
     {
       "packageName": "api-extractor-test-03",
       "projectFolder": "build-tests/api-extractor-test-03",
+      "reviewCategory": "tests",
+      "shouldPublish": false
+    },
+    {
+      "packageName": "api-extractor-test-04",
+      "projectFolder": "build-tests/api-extractor-test-04",
+      "reviewCategory": "tests",
+      "shouldPublish": false
+    },
+    {
+      "packageName": "web-library-build-test",
+      "projectFolder": "build-tests/web-library-build-test",
       "reviewCategory": "tests",
       "shouldPublish": false
     },
@@ -141,12 +154,6 @@
       "projectFolder": "core-build/node-library-build",
       "reviewCategory": "libraries",
       "shouldPublish": true
-    },
-    {
-      "packageName": "test-web-library-build",
-      "projectFolder": "core-build/test-web-library-build",
-      "reviewCategory": "tests",
-      "shouldPublish": false
     },
     {
       "packageName": "@microsoft/web-library-build",

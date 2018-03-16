@@ -51,10 +51,33 @@ class JsonSchema {
 }
 
 // @public
+class LockFile {
+  static acquire(resourceDir: string, resourceName: string, maxWaitMs?: number): Promise<LockFile>;
+  readonly dirtyWhenAcquired: boolean;
+  readonly filePath: string;
+  static getLockFilePath(resourceDir: string, resourceName: string, pid?: number): string;
+  readonly isReleased: boolean;
+  release(): void;
+  static tryAcquire(resourceDir: string, resourceName: string): LockFile | undefined;
+}
+
+// @public
 class PackageJsonLookup {
   constructor();
   clearCache(): void;
   getPackageName(packageJsonPath: string): string;
   tryGetPackageFolder(sourceFilePath: string): string | undefined;
+}
+
+// @public
+class Path {
+  static isUnder(childPath: string, parentFolderPath: string): boolean;
+}
+
+// @public
+class Text {
+  static convertToCrLf(input: string): string;
+  static convertToLf(input: string): string;
+  static replaceAll(input: string, searchValue: string, replaceValue: string): string;
 }
 

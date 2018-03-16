@@ -237,7 +237,7 @@ export default class Utilities {
    * Attempts to run Utilities.executeCommand() up to maxAttempts times before giving up.
    */
   public static executeCommandWithRetry(command: string, args: string[], maxAttempts: number,
-    workingDirectory: string, suppressOutput: boolean = false): void {
+    workingDirectory: string, suppressOutput: boolean = false, retryCallback?: () => void): void {
 
     if (maxAttempts < 1) {
       throw new Error('The maxAttempts parameter cannot be less than 1');
@@ -257,6 +257,9 @@ export default class Utilities {
         if (attemptNumber < maxAttempts) {
           ++attemptNumber;
           console.log(`Trying again (attempt #${attemptNumber})...` + os.EOL);
+          if (retryCallback) {
+            retryCallback();
+          }
           continue;
         } else {
           console.error(`Giving up after ${attemptNumber} attempts` + os.EOL);
@@ -358,17 +361,6 @@ export default class Utilities {
         env: environmentVariables,
         stdio: captureOutput ? ['pipe', 'pipe', 'pipe'] : [0, 1, 2]
       });
-  }
-
-  /**
-   * Returns the same thing as targetString.replace(searchValue, replaceValue), except that
-   * all matches are replaced, rather than just the first match.
-   * @param targetString  - The string to be modified
-   * @param searchValue   - The value to search for
-   * @param replaceValue  - The replacement text
-   */
-  public static getAllReplaced(targetString: string, searchValue: string, replaceValue: string): string {
-    return targetString.split(searchValue).join(replaceValue);
   }
 
   /**

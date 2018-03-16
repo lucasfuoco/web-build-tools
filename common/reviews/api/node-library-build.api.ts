@@ -48,7 +48,7 @@ class CopyTask extends GulpTask<ICopyConfig> {
 export function coverageData(coverage: number, threshold: number, filePath: string): void;
 
 // @public
-export function error(...args: Array<string | Chalk.ChalkChain>): void;
+export function error(...args: Array<string>): void;
 
 // @public
 export function fileError(taskName: string, filePath: string, line: number, column: number, errorCode: string, message: string): void;
@@ -131,7 +131,7 @@ interface IBuildConfig {
   }
   relogIssues?: boolean;
   rootPath: string;
-  shouldWarningsFailBuild?: boolean;
+  shouldWarningsFailBuild: boolean;
   showToast?: boolean;
   srcFolder: string;
   tempFolder: string;
@@ -188,7 +188,9 @@ interface IJestConfig {
   coverage?: boolean;
   coverageReporters?: string[];
   isEnabled?: boolean;
+  maxWorkers?: number;
   moduleDirectories?: string[];
+  testMatch?: string[];
   testPathIgnorePatterns?: string[];
 }
 
@@ -212,7 +214,7 @@ class JestTask extends GulpTask<IJestConfig> {
 }
 
 // @public
-export function log(...args: Array<string | Chalk.ChalkChain>): void;
+export function log(...args: Array<string>): void;
 
 // @public
 export function logSummary(value: string): void;
@@ -282,10 +284,10 @@ class ValidateShrinkwrapTask extends GulpTask<void> {
 }
 
 // @public
-export function verbose(...args: Array<string | Chalk.ChalkChain>): void;
+export function verbose(...args: Array<string>): void;
 
 // @public
-export function warn(...args: Array<string | Chalk.ChalkChain>): void;
+export function warn(...args: Array<string>): void;
 
 // @public
 export function watch(watchMatch: string | string[], taskExecutable: IExecutable): IExecutable;

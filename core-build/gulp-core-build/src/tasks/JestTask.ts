@@ -52,6 +52,16 @@ export interface IJestConfig {
    * Same as Jest CLI option moduleDirectories
    */
   moduleDirectories?: string[];
+
+  /**
+   * Same as Jest CLI option maxWorkers
+   */
+  maxWorkers?: number;
+
+  /**
+   * Same as Jest CLI option testMatch
+   */
+  testMatch?: string[];
 }
 
 const DEFAULT_JEST_CONFIG_FILE_NAME: string = 'jest.config.json';
@@ -172,14 +182,15 @@ export class JestTask extends GulpTask<IJestConfig> {
       coverage: this.taskConfig.coverage,
       coverageReporters: this.taskConfig.coverageReporters,
       coverageDirectory: path.join(this.buildConfig.tempFolder, 'coverage'),
-      maxWorkers: 1,
+      maxWorkers: !!this.taskConfig.maxWorkers ?
+        this.taskConfig.maxWorkers : 1,
       moduleDirectories: !!this.taskConfig.moduleDirectories ?
         this.taskConfig.moduleDirectories :
         ['node_modules', this.buildConfig.libFolder],
       reporters: [path.join(__dirname, 'JestReporter.js')],
       rootDir: this.buildConfig.rootPath,
-      runInBand: true,
-      testMatch: ['**/*.test.js?(x)'],
+      testMatch: !!this.taskConfig.testMatch ?
+        this.taskConfig.testMatch : ['**/*.test.js?(x)'],
       testPathIgnorePatterns: this.taskConfig.testPathIgnorePatterns,
       updateSnapshot: !this.buildConfig.production
     };
@@ -189,9 +200,14 @@ export class JestTask extends GulpTask<IJestConfig> {
       jestConfig['cacheDirectory'] = this.taskConfig.cacheDirectory;
     }
 
+    // suppress 'Running coverage on untested files...' warning
+    const oldTTY: true | undefined = process.stdout.isTTY;
+    process.stdout.isTTY = undefined;
+
     Jest.runCLI(jestConfig,
       [this.buildConfig.rootPath]).then(
       (result: { results: Jest.AggregatedResult, globalConfig: Jest.GlobalConfig }) => {
+        process.stdout.isTTY = oldTTY;
         if (result.results.numFailedTests || result.results.numFailedTestSuites) {
           completeCallback(new Error('Jest tests failed'));
         } else {
@@ -202,6 +218,7 @@ export class JestTask extends GulpTask<IJestConfig> {
         }
       },
       (err) => {
+        process.stdout.isTTY = oldTTY;
         completeCallback(err);
       });
   }

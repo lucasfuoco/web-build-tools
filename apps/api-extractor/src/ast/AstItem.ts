@@ -6,15 +6,18 @@
 
 import * as ts from 'typescript';
 import { ExtractorContext } from '../ExtractorContext';
-import ApiDocumentation from '../aedoc/ApiDocumentation';
+import { ApiDocumentation } from '../aedoc/ApiDocumentation';
 import { MarkupElement } from '../markup/MarkupElement';
 import { ReleaseTag } from '../aedoc/ReleaseTag';
-import TypeScriptHelpers from '../TypeScriptHelpers';
+import { TypeScriptHelpers } from '../utils/TypeScriptHelpers';
 import { Markup } from '../markup/Markup';
-import ResolvedApiItem from '../ResolvedApiItem';
-import ApiDefinitionReference,
-  { IScopedPackageName, IApiDefinitionReferenceParts } from '../ApiDefinitionReference';
-import AstItemContainer from './AstItemContainer';
+import { ResolvedApiItem } from '../ResolvedApiItem';
+import {
+  ApiDefinitionReference,
+  IScopedPackageName,
+  IApiDefinitionReferenceParts
+} from '../ApiDefinitionReference';
+import { AstItemContainer } from './AstItemContainer';
 
 /**
  * Indicates the type of definition represented by a AstItem object.
@@ -142,7 +145,7 @@ const typingsScopeNames: string[] = [ '@types' ];
  * abstract syntax tree from the TypeScript Compiler API, we use AstItem to extract a
  * simplified tree which correponds to the major topics for our API documentation.
  */
-abstract class AstItem {
+export abstract class AstItem {
 
   /**
    * Names of API items should only contain letters, numbers and underscores.
@@ -533,11 +536,17 @@ abstract class AstItem {
       if (this.parentContainer && this.parentContainer.kind === AstItemKind.Package) {
         // Don't warn about items that failed to parse.
         if (!this.documentation.failedToParse) {
-          // If there is no release tag, and this is a top-level export of the package, then
-          // report an error
-          this.reportError(`A release tag (@alpha, @beta, @public, @internal) must be specified`
-            + ` for ${this.name}`);
+          if (this.context.validationRules.missingReleaseTags === 'error') {
+            // If there is no release tag, and this is a top-level export of the package, then
+            // report an error
+            this.reportError(`A release tag (@alpha, @beta, @public, @internal) must be specified`
+              + ` for ${this.name}`);
+          }
         }
+
+        // If the release tag was not specified for a top-level export, then it defaults
+        // to @public (even if we reported an error above)
+        this.documentation.releaseTag = ReleaseTag.Public;
       }
     }
   }
@@ -686,5 +695,3 @@ abstract class AstItem {
     }
   }
 }
-
-export default AstItem;

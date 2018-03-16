@@ -2,10 +2,12 @@
 // See LICENSE in the project root for license information.
 
 /**
- * Example documentation for the package.
+ * api-extractor-test-01
  *
  * @remarks
- * Additional remarks
+ * This library is consumed by api-extractor-test-02 and api-extractor-test-03.
+ * It tests the basic types of definitions, and all the weird cases for following
+ * chains of type aliases.
  *
  * @packagedocumentation
  */
@@ -88,3 +90,13 @@ export { ForgottenExportConsumer1 } from './ForgottenExportConsumer1';
 export { ForgottenExportConsumer2 } from './ForgottenExportConsumer2';
 
 export { default as IInterfaceAsDefaultExport } from './IInterfaceAsDefaultExport';
+
+export { default as AbstractClass } from './AbstractClass';
+export { default as AbstractClass2, AbstractClass3 } from './AbstractClass2';
+
+export {
+  DefaultExportEdgeCase,
+  default as ClassExportedAsDefault
+} from './DefaultExportEdgeCase';
+
+export { TypeReferencesInAedoc as _TypeReferencesInAedoc } from './TypeReferencesInAedoc';

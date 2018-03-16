@@ -5,6 +5,7 @@ import * as fsx from 'fs-extra';
 import * as path from 'path';
 import yaml = require('js-yaml');
 
+import { Text } from '@microsoft/node-core-library';
 import {
   IApiClass,
   IApiEnum,
@@ -831,13 +832,15 @@ export class MarkdownDocumenter {
           throw new Error('Unresolved: ' + JSON.stringify(args.reference));
         }
 
-        const docFilename: string = this._getFilenameForDocItem(resolveResult.docItem);
+        // NOTE: GitHub's markdown renderer does not resolve relative hyperlinks correctly
+        // unless they start with "./" or "../".
+        const docFilename: string = './' + this._getFilenameForDocItem(resolveResult.docItem);
         args.prefix = '[';
         args.suffix = '](' + docFilename + ')';
       }
     });
 
-    fsx.writeFileSync(filename, content);
+    fsx.writeFileSync(filename, Text.convertToCrLf(content));
   }
 
   private _getFilenameForDocItem(docItem: DocItem): string {

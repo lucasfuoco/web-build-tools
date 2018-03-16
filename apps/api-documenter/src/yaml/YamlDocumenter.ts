@@ -3,8 +3,10 @@
 
 import * as fsx from 'fs-extra';
 import * as path from 'path';
+import * as colors from 'colors';
+
 import yaml = require('js-yaml');
-import { JsonFile, JsonSchema } from '@microsoft/node-core-library';
+import { JsonFile, JsonSchema, Text } from '@microsoft/node-core-library';
 import {
   MarkupElement,
   IApiMethod,
@@ -13,7 +15,8 @@ import {
   IApiProperty,
   IApiEnumMember,
   IApiClass,
-  IApiInterface
+  IApiInterface,
+  Markup
 } from '@microsoft/api-extractor';
 
 import { DocItemSet, DocItem, DocItemKind, IDocItemSetResolveResult } from '../utils/DocItemSet';
@@ -343,7 +346,8 @@ export class YamlDocumenter {
         const result: IDocItemSetResolveResult = this._docItemSet.resolveApiItemReference(args.reference);
         if (!result.docItem) {
           // Eventually we should introduce a warnings file
-          console.error('==> UNRESOLVED REFERENCE: ' + JSON.stringify(args.reference));
+          console.error(colors.yellow('Warning: Unresolved hyperlink to '
+            + Markup.formatApiItemReference(args.reference)));
         } else {
           args.prefix = '[';
           args.suffix = `](xref:${this._getUid(result.docItem)})`;
@@ -365,7 +369,7 @@ export class YamlDocumenter {
       stringified = `### YamlMime:${yamlMimeType}\n` + stringified;
     }
 
-    const normalized: string = stringified.split('\n').join('\r\n');
+    const normalized: string = Text.convertToCrLf(stringified);
 
     fsx.mkdirsSync(path.dirname(filePath));
     fsx.writeFileSync(filePath, normalized);

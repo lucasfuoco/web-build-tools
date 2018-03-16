@@ -72,14 +72,14 @@ export abstract class CommandLineAction extends CommandLineParameterProvider {
    * Invoked by CommandLineParser.onExecute().
    * @internal
    */
-  public _execute(): void {
-    this.onExecute();
+  public _execute(): Promise<void> {
+    return this.onExecute();
   }
 
   /**
    * Your subclass should implement this hook to perform the operation.
    */
-  protected abstract onExecute(): void;
+  protected abstract onExecute(): Promise<void>;
 }
 
 export default CommandLineAction;
