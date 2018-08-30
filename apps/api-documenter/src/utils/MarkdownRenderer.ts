@@ -285,7 +285,7 @@ export class MarkdownRenderer {
           break;
         case 'paragraph&elements':
           writer.write('<div class="markdown level0 summary">');
-          writer.write('<p>');
+          writer.write('<p id="document_description">');
           MarkdownRenderer._writeElements(element.elements, context);
           writer.write('</p>');
           writer.write('</div>');
@@ -417,7 +417,9 @@ export class MarkdownRenderer {
             writer.writeLine();
           }
 
-          writer.writeLine('# ' + this._getEscapedText(element.title));
+          writer.writeLine('<h1 id="document_name">');
+          writer.writeLine(this._getEscapedText(element.title));
+          writer.writeLine('</h1>');
           writer.writeLine();
 
           MarkdownRenderer._writeElements(element.elements, context);
