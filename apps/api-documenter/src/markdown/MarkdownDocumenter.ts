@@ -3,6 +3,8 @@
 
 import * as fsx from 'fs-extra';
 import * as path from 'path';
+import * as mkdirp from 'mkdirp';
+import {dirname} from 'path';
 
 import {
   IApiClass,
@@ -31,6 +33,15 @@ import {
 } from '../utils/DocItemSet';
 import { Utilities } from '../utils/Utilities';
 import { MarkdownRenderer, IMarkdownRenderApiLinkArgs } from '../utils/MarkdownRenderer';
+
+export enum FolderType {
+  Class = 'classes',
+  Interface = 'interfaces',
+  Enum = 'enums',
+  Function ='functions',
+  Package = 'package',
+  Property = 'properties'
+}
 
 /**
  * Renders API documentation in the Markdown file format.
@@ -175,7 +186,7 @@ export class MarkdownDocumenter {
       markupPage.elements.push(enumerationsTable);
     }
 
-    this._writePage(markupPage, docPackage);
+    this._writePage(markupPage, docPackage, FolderType.Package);
   }
 
   /**
@@ -284,7 +295,7 @@ export class MarkdownDocumenter {
       markupPage.elements.push(...apiClass.remarks);
     }
 
-    this._writePage(markupPage, docClass);
+    this._writePage(markupPage, docClass, FolderType.Class);
   }
 
   /**
@@ -370,7 +381,7 @@ export class MarkdownDocumenter {
       markupPage.elements.push(...apiInterface.remarks);
     }
 
-    this._writePage(markupPage, docInterface);
+    this._writePage(markupPage, docInterface, FolderType.Interface);
   }
 
   /**
@@ -417,7 +428,7 @@ export class MarkdownDocumenter {
       markupPage.elements.push(membersTable);
     }
 
-    this._writePage(markupPage, docEnum);
+    this._writePage(markupPage, docEnum, FolderType.Enum);
   }
 
   /**
@@ -445,7 +456,7 @@ export class MarkdownDocumenter {
       markupPage.elements.push(...apiProperty.remarks);
     }
 
-    this._writePage(markupPage, docProperty);
+    this._writePage(markupPage, docProperty, FolderType.Property);
   }
 
   /**
@@ -502,7 +513,7 @@ export class MarkdownDocumenter {
       }
     }
 
-    this._writePage(markupPage, docMethod);
+    this._writePage(markupPage, docMethod, FolderType.Property);
   }
 
   /**
@@ -557,7 +568,7 @@ export class MarkdownDocumenter {
       }
     }
 
-    this._writePage(markupPage, docFunction);
+    this._writePage(markupPage, docFunction, FolderType.Function);
   }
 
   private _writeBreadcrumb(markupPage: IMarkupPage, docItem: DocItem): void {
@@ -578,8 +589,8 @@ export class MarkdownDocumenter {
     );
   }
 
-  private _writePage(markupPage: IMarkupPage, docItem: DocItem): void { // override
-    const filename: string = path.join(this._outputFolder, this._getFilenameForDocItem(docItem));
+  private _writePage(markupPage: IMarkupPage, docItem: DocItem, folderType: FolderType): void { // override
+    const filename: string = path.join(this._outputFolder, folderType, this._getFilenameForDocItem(docItem));
 
     const content: string = MarkdownRenderer.renderElements([markupPage], {
       onRenderApiLink: (args: IMarkdownRenderApiLinkArgs) => {
@@ -593,8 +604,10 @@ export class MarkdownDocumenter {
         args.suffix = '](' + docFilename + ')';
       }
     });
-
-    fsx.writeFileSync(filename, content);
+    mkdirp(dirname(filename), (err: Error) => {
+      if (err) throw err;
+      fsx.writeFileSync(filename, content);
+    });
   }
 
   private _getFilenameForDocItem(docItem: DocItem): string {
