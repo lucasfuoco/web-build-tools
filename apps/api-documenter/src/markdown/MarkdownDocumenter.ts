@@ -58,7 +58,7 @@ export class MarkdownDocumenter {
   private _outputFolder: string;
 
   public constructor(docItemSet: DocItemSet) {
-    this._docItemSet = docItemSet;
+      this._docItemSet = docItemSet;
   }
 
   public generateFiles(outputFolder: string): void {
