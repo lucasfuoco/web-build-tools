@@ -3,7 +3,8 @@
 
 import * as fsx from 'fs-extra';
 import * as path from 'path';
-import yaml = require('js-yaml');
+import * as mkdirp from 'mkdirp';
+import {dirname} from 'path';
 
 import { Text } from '@microsoft/node-core-library';
 import {
@@ -46,6 +47,15 @@ import {
 import { Utilities } from '../utils/Utilities';
 import { MarkdownRenderer, IMarkdownRenderApiLinkArgs } from '../utils/MarkdownRenderer';
 import { normalize } from 'path';
+
+export enum FolderType {
+  Class = 'classes',
+  Interface = 'interfaces',
+  Enum = 'enums',
+  Function ='functions',
+  Package = 'package',
+  Property = 'properties'
+}
 
 /**
  * Renders API documentation in the Markdown file format.
@@ -289,7 +299,7 @@ export class MarkdownDocumenter {
       markupPage.elements.push(enumerationsList);
     }
 
-    this._writePage(markupPage, docPackage);
+    this._writePage(markupPage, docPackage, FolderType.Package);
   }
 
   /**
@@ -559,7 +569,7 @@ export class MarkdownDocumenter {
       markupPage.elements.push(...apiClass.remarks);
     }
 
-    this._writePage(markupPage, docClass);
+    this._writePage(markupPage, docClass, FolderType.Class);
   }
 
   /**
@@ -674,7 +684,7 @@ export class MarkdownDocumenter {
       markupPage.elements.push(...apiInterface.remarks);
     }
 
-    this._writePage(markupPage, docInterface);
+    this._writePage(markupPage, docInterface, FolderType.Interface);
   }
 
   /**
@@ -724,7 +734,7 @@ export class MarkdownDocumenter {
       markupPage.elements.push(membersTable);
     }
 
-    this._writePage(markupPage, docEnum);
+    this._writePage(markupPage, docEnum, FolderType.Enum);
   }
 
   /**
@@ -751,7 +761,64 @@ export class MarkdownDocumenter {
       markupPage.elements.push(...apiProperty.remarks);
     }
 
-    this._writePage(markupPage, docProperty);
+    this._writePage(markupPage, docProperty, FolderType.Property);
+  }
+
+  /**
+   * GENERATE PAGE: METHOD
+   */
+  private _writeMethodPage(docMethod: DocItem): void {
+    const apiMethod: IApiMethod = docMethod.apiItem as IApiMethod;
+
+    const fullMethodName: string = docMethod.parent!.name + '.' + docMethod.name;
+
+    const markupPage: IMarkupPage = Markup.createPage(`${fullMethodName} method`);
+    this._writeBreadcrumb(markupPage, docMethod);
+
+    if (apiMethod.isBeta) {
+      this._writeBetaWarning(markupPage.elements);
+    }
+
+    markupPage.elements.push(...apiMethod.summary);
+
+    markupPage.elements.push(Markup.PARAGRAPH);
+    markupPage.elements.push(...Markup.createTextElements('Signature:', { bold: true }));
+    markupPage.elements.push(Markup.createCodeBox(apiMethod.signature, 'javascript'));
+
+    if (apiMethod.returnValue) {
+      markupPage.elements.push(...Markup.createTextElements('Returns:', { bold: true }));
+      markupPage.elements.push(...Markup.createTextElements(' '));
+      markupPage.elements.push(Markup.createCode(apiMethod.returnValue.type, 'javascript'));
+      markupPage.elements.push(Markup.PARAGRAPH);
+      markupPage.elements.push(...apiMethod.returnValue.description);
+    }
+
+    if (apiMethod.remarks && apiMethod.remarks.length) {
+      markupPage.elements.push(Markup.createHeading1('Remarks'));
+      markupPage.elements.push(...apiMethod.remarks);
+    }
+
+    if (Object.keys(apiMethod.parameters).length > 0) {
+      const parametersTable: IMarkupTable = Markup.createTable([
+        Markup.createTextElements('Parameter'),
+        Markup.createTextElements('Type'),
+        Markup.createTextElements('Description')
+      ]);
+
+      markupPage.elements.push(Markup.createHeading1('Parameters'));
+      markupPage.elements.push(parametersTable);
+      for (const parameterName of Object.keys(apiMethod.parameters)) {
+        const apiParameter: IApiParameter = apiMethod.parameters[parameterName];
+          parametersTable.rows.push(Markup.createTableRow([
+            [Markup.createCode(parameterName, 'javascript')],
+            apiParameter.type ? [Markup.createCode(apiParameter.type, 'javascript')] : [],
+            apiParameter.description
+          ])
+        );
+      }
+    }
+
+    this._writePage(markupPage, docMethod, FolderType.Property);
   }
 
   /**
@@ -801,10 +868,11 @@ export class MarkdownDocumenter {
       }
     }
 
-    if (apiFunction.returnValue) {
-      markupPage.elements.push(Markup.createHeading4('Returns'));
-      markupPage.elements.push(returnsTable);
-    }
+    this._writePage(markupPage, docFunction, FolderType.Function);
+  }
+
+  private _writeBreadcrumb(markupPage: IMarkupPage, docItem: DocItem): void {
+    markupPage.breadcrumb.push(Markup.createWebLinkFromText('Home', './index'));
 
     if (apiFunction.remarks && apiFunction.remarks.length) {
       markupPage.elements.push(Markup.createHeading4('Remarks'));
@@ -822,8 +890,8 @@ export class MarkdownDocumenter {
     );
   }
 
-  private _writePage(markupPage: IMarkupPage, docItem: DocItem): void { // override
-    const filename: string = path.join(this._outputFolder, this._getFilenameForDocItem(docItem));
+  private _writePage(markupPage: IMarkupPage, docItem: DocItem, folderType: FolderType): void { // override
+    const filename: string = path.join(this._outputFolder, folderType, this._getFilenameForDocItem(docItem));
 
     const content: string = MarkdownRenderer.renderElements([markupPage], {
       onRenderApiLink: (args: IMarkdownRenderApiLinkArgs) => {
@@ -839,8 +907,10 @@ export class MarkdownDocumenter {
         args.suffix = '](' + docFilename + ')';
       }
     });
-
-    fsx.writeFileSync(filename, Text.convertToCrLf(content));
+    mkdirp(dirname(filename), (err: Error) => {
+      if (err) throw err;
+      fsx.writeFileSync(filename, content);
+    });
   }
 
   private _getFilenameForDocItem(docItem: DocItem): string {
