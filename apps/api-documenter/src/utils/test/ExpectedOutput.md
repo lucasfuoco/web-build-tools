@@ -1,4 +1,6 @@
-# Test page
+<h1 id="document_name">
+Test page
+</h1>
 
 ## Simple bold test
 

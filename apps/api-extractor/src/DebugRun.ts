@@ -32,13 +32,14 @@ const extractor: Extractor = new Extractor(
           ],
           'strictNullChecks': true
         },
-        'include': [ 'lib/**/*.d.ts' ]
+        'include': [ 'lib/**/*.d.ts' ],
+        'files': ['src/**/*.ts']
       },
-      rootFolder: '../../libraries/node-core-library'
+      rootFolder: '.'
     },
     project: {
       entryPointSourceFile: 'lib/index.d.ts',
-      externalJsonFileFolders: [ ]
+      externalJsonFileFolders: []
     },
     apiReviewFile: {
       enabled: false,

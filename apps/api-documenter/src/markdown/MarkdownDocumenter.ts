@@ -3,10 +3,10 @@
 
 import * as fsx from 'fs-extra';
 import * as path from 'path';
+import yaml = require('js-yaml');
 import * as mkdirp from 'mkdirp';
 import {dirname} from 'path';
 
-import { Text } from '@microsoft/node-core-library';
 import {
   IApiClass,
   IApiEnum,
@@ -53,8 +53,8 @@ export enum FolderType {
   Interface = 'interfaces',
   Enum = 'enums',
   Function ='functions',
-  Package = 'package',
-  Property = 'properties'
+  Property = 'properties',
+  Namespace = 'namespaces'
 }
 
 /**
@@ -76,7 +76,7 @@ export class MarkdownDocumenter {
     this._deleteOldOutputFiles();
 
     for (const docPackage of this._docItemSet.docPackages) {
-      this._writePackagePage(docPackage);
+      this._writePackages(docPackage);
       this._writeTocFile(docPackage.children);   
     }
 
@@ -188,16 +188,16 @@ export class MarkdownDocumenter {
   /**
    * GENERATE PAGE: PACKAGE
    */
-  private _writePackagePage(docPackage: DocItem): void {
+  private _writePackages(docPackage: DocItem): void {
     console.log(`Writing ${docPackage.name} package`);
 
     const unscopedPackageName: string = Utilities.getUnscopedPackageName(docPackage.name);
 
-    const markupPage: IMarkupPage = Markup.createPage(`${unscopedPackageName} package`);
-
-    const apiPackage: IApiPackage = docPackage.apiItem as IApiPackage;
-
-    markupPage.elements.push(...apiPackage.summary);
+    const markupNamespaces: IMarkupPage = Markup.createPage(`${unscopedPackageName} namespaces`);
+    const markupClasses: IMarkupPage = Markup.createPage(`${unscopedPackageName} classes`);
+    const markupInterfaces: IMarkupPage = Markup.createPage(`${unscopedPackageName} interfaces`);
+    const markupFunctions: IMarkupPage = Markup.createPage(`${unscopedPackageName} functions`);
+    const markupEnums: IMarkupPage = Markup.createPage(`${unscopedPackageName} enums`);
 
     const classesList: IMarkupList = Markup.createList();
     const interfacesList: IMarkupList = Markup.createList();
@@ -269,37 +269,36 @@ export class MarkdownDocumenter {
       }
     }
 
-    if (apiPackage.remarks && apiPackage.remarks.length) {
-      markupPage.elements.push(Markup.createHeading1('Remarks'));
-      markupPage.elements.push(...apiPackage.remarks);
-    }
-
     if (namespacesList.rows.length > 0) {
-      markupPage.elements.push(Markup.createHeading1('Namespaces'));
-      markupPage.elements.push(namespacesList);
+      markupNamespaces.elements.push(Markup.createHeading1('Namespaces'));
+      markupNamespaces.elements.push(namespacesList);
     }
 
     if (classesList.rows.length > 0) {
-      markupPage.elements.push(Markup.createHeading1('Classes'));
-      markupPage.elements.push(classesList);
+      markupClasses.elements.push(Markup.createHeading1('Classes'));
+      markupClasses.elements.push(classesList);
     }
 
     if (interfacesList.rows.length > 0) {
-      markupPage.elements.push(Markup.createHeading1('Interfaces'));
-      markupPage.elements.push(interfacesList);
+      markupInterfaces.elements.push(Markup.createHeading1('Interfaces'));
+      markupInterfaces.elements.push(interfacesList);
     }
 
     if (functionsList.rows.length > 0) {
-      markupPage.elements.push(Markup.createHeading1('Functions'));
-      markupPage.elements.push(functionsList);
+      markupFunctions.elements.push(Markup.createHeading1('Functions'));
+      markupFunctions.elements.push(functionsList);
     }
 
     if (enumerationsList.rows.length > 0) {
-      markupPage.elements.push(Markup.createHeading1('Enumerations'));
-      markupPage.elements.push(enumerationsList);
+      markupEnums.elements.push(Markup.createHeading1('Enumerations'));
+      markupEnums.elements.push(enumerationsList);
     }
 
-    this._writePage(markupPage, docPackage, FolderType.Package);
+    this._writePage(markupNamespaces, docPackage, FolderType.Namespace);
+    this._writePage(markupClasses, docPackage, FolderType.Class);
+    this._writePage(markupInterfaces, docPackage, FolderType.Interface);
+    this._writePage(markupFunctions, docPackage, FolderType.Function);
+    this._writePage(markupEnums, docPackage, FolderType.Enum);
   }
 
   /**
@@ -416,7 +415,7 @@ export class MarkdownDocumenter {
       markupPage.elements.push(...apiNamespace.remarks);
     }
 
-    this._writePage(markupPage, docNamespace);
+    this._writePage(markupPage, docNamespace, FolderType.Namespace);
   }
 
   /**
@@ -874,12 +873,11 @@ export class MarkdownDocumenter {
   private _writeBreadcrumb(markupPage: IMarkupPage, docItem: DocItem): void {
     markupPage.breadcrumb.push(Markup.createWebLinkFromText('Home', './index'));
 
-    if (apiFunction.remarks && apiFunction.remarks.length) {
-      markupPage.elements.push(Markup.createHeading4('Remarks'));
-      markupPage.elements.push(...apiFunction.remarks);
+    for (const hierarchyItem of docItem.getHierarchy()) {
+      markupPage.breadcrumb.push(...Markup.createTextElements(' > '));
+      markupPage.breadcrumb.push(Markup.createApiLinkFromText(
+        hierarchyItem.name, hierarchyItem.getApiReference()));
     }
-
-    this._writePage(markupPage, docFunction);
   }
 
   private _writeBetaWarning(elements: MarkupStructuredElement[]): void {
