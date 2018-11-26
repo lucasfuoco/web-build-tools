@@ -1,6 +1,364 @@
 # Change Log - @microsoft/api-extractor
 
-This log was last generated on Thu, 15 Mar 2018 20:00:50 GMT and should not be manually modified.
+This log was last generated on Fri, 16 Nov 2018 21:37:10 GMT and should not be manually modified.
+
+## 6.1.6
+Fri, 16 Nov 2018 21:37:10 GMT
+
+### Patches
+
+- Add support for emitting `/// <reference lib="___" />` directives in .d.ts rollups (GitHub issue #946)
+
+## 6.1.5
+Fri, 16 Nov 2018 00:59:00 GMT
+
+### Patches
+
+- Fix an issue where .d.ts trimming did not work for exported variable declarations (GitHub #936)
+
+## 6.1.4
+Fri, 09 Nov 2018 23:07:39 GMT
+
+### Patches
+
+- Upgrade to TSDoc 0.21.2, which improves trimming of link text in `@link` tags
+
+## 6.1.3
+Wed, 07 Nov 2018 21:04:35 GMT
+
+*Version update only*
+
+## 6.1.2
+Mon, 05 Nov 2018 17:04:24 GMT
+
+### Patches
+
+- Upgrade to @microsoft/tsdoc 0.12.0
+
+## 6.1.1
+Thu, 01 Nov 2018 19:32:52 GMT
+
+### Patches
+
+- Fix an issue where EcmaScript symbols ("computed property names") were missing from .d.ts rollups
+
+## 6.1.0
+Wed, 31 Oct 2018 17:00:54 GMT
+
+### Minor changes
+
+- Added an api to invoke api extractor processor by supplying api extractor json config file.
+
+## 6.0.9
+Thu, 25 Oct 2018 23:20:40 GMT
+
+*Version update only*
+
+## 6.0.8
+Thu, 25 Oct 2018 08:56:02 GMT
+
+### Patches
+
+- Fix issue where `DocErrorText.text` returned `[object Object]` instead of the text 
+
+## 6.0.7
+Wed, 24 Oct 2018 16:03:10 GMT
+
+*Version update only*
+
+## 6.0.6
+Thu, 18 Oct 2018 01:32:20 GMT
+
+### Patches
+
+- Fix isAbsolute check for mainDtsRollupPath
+
+## 6.0.5
+Wed, 17 Oct 2018 21:04:49 GMT
+
+*Version update only*
+
+## 6.0.4
+Wed, 17 Oct 2018 14:43:24 GMT
+
+### Patches
+
+- Fix a regression where namespaces were sometimes incorrectly handled in "conservative" mode
+- Update the command line to look for api-extractor.json in both the "./config" folder and the project folder
+- Allow type references in namespaces when namespaceSupport=conservative
+
+## 6.0.3
+Thu, 11 Oct 2018 23:26:07 GMT
+
+### Patches
+
+- Fix an issue where `import x from "."` was sometimes not processed correctly
+
+## 6.0.2
+Tue, 09 Oct 2018 06:58:01 GMT
+
+### Patches
+
+- Fix a regression where API Extractor was sometimes reporting incorrect line numbers
+
+## 6.0.1
+Mon, 08 Oct 2018 16:04:27 GMT
+
+*Version update only*
+
+## 6.0.0
+Sun, 07 Oct 2018 06:15:56 GMT
+
+### Breaking changes
+
+- (Breaking change) API Extractor 6 introduces support for TSDoc doc comment syntax!  Please see https://api-extractor.com/ for documentation.  To learn more about the TSDoc standard, check out https://github.com/Microsoft/tsdoc
+
+## 5.13.1
+Fri, 28 Sep 2018 16:05:35 GMT
+
+*Version update only*
+
+## 5.13.0
+Wed, 26 Sep 2018 21:39:40 GMT
+
+### Minor changes
+
+- Add new command line option --skip-lib-check
+
+## 5.12.2
+Mon, 24 Sep 2018 23:06:40 GMT
+
+### Patches
+
+- Allow doc comments to use TSDoc's "@defaultvalue" tag (but the value is not yet passed to the documentation pipeline)
+
+## 5.12.1
+Fri, 21 Sep 2018 16:04:42 GMT
+
+### Patches
+
+- Fix an issue where TypeScript errors are often logged as "[Object object]" instead of the actual error message.
+
+## 5.12.0
+Thu, 20 Sep 2018 23:57:21 GMT
+
+### Minor changes
+
+- Add new feature: Support using a different version of the TypeScript compiler.
+
+## 5.11.2
+Tue, 18 Sep 2018 21:04:55 GMT
+
+### Patches
+
+- Fix an issue where parameters mentioned in comments were attempting to be analyzed by api-extractor.
+
+## 5.11.1
+Thu, 06 Sep 2018 01:25:25 GMT
+
+### Patches
+
+- Update "repository" field in package.json
+
+## 5.11.0
+Mon, 03 Sep 2018 16:04:45 GMT
+
+### Minor changes
+
+- Upgrade api-extractor to internally use TypeScript 3.0.
+
+## 5.10.8
+Wed, 29 Aug 2018 06:36:50 GMT
+
+*Version update only*
+
+## 5.10.7
+Thu, 23 Aug 2018 18:18:53 GMT
+
+### Patches
+
+- Republish all packages in web-build-tools to resolve GitHub issue #782
+
+## 5.10.6
+Wed, 22 Aug 2018 20:58:58 GMT
+
+*Version update only*
+
+## 5.10.5
+Wed, 22 Aug 2018 16:03:25 GMT
+
+*Version update only*
+
+## 5.10.4
+Tue, 21 Aug 2018 16:04:38 GMT
+
+### Patches
+
+- fix namespace name for export statement`
+
+## 5.10.3
+Thu, 09 Aug 2018 21:03:22 GMT
+
+*Version update only*
+
+## 5.10.2
+Thu, 09 Aug 2018 16:04:24 GMT
+
+### Patches
+
+- Update lodash.
+
+## 5.10.1
+Thu, 26 Jul 2018 16:04:17 GMT
+
+*Version update only*
+
+## 5.10.0
+Tue, 17 Jul 2018 16:02:52 GMT
+
+### Minor changes
+
+- Add support for new "@eventproperty" AEDoc tag, which indicates that a class/interface property should be documented as an event
+
+## 5.9.1
+Tue, 03 Jul 2018 21:03:31 GMT
+
+*Version update only*
+
+## 5.9.0
+Sat, 23 Jun 2018 02:21:20 GMT
+
+### Minor changes
+
+- Add new IMarkupHtmlTag API
+- AEDoc now allows HTML tags inside doc comments, which can be disabled using a backslash escape
+
+## 5.8.1
+Thu, 21 Jun 2018 08:27:29 GMT
+
+*Version update only*
+
+## 5.8.0
+Tue, 19 Jun 2018 19:35:11 GMT
+
+### Minor changes
+
+- For namespaceSupport=permissive, allow arbitrary nesting of namespaces
+
+### Patches
+
+- Fix an issue where multi-line type literals sometimes had inconsistent newlines in the *.api.json file
+
+## 5.7.3
+Fri, 08 Jun 2018 08:43:52 GMT
+
+*Version update only*
+
+## 5.7.2
+Thu, 31 May 2018 01:39:33 GMT
+
+*Version update only*
+
+## 5.7.1
+Tue, 15 May 2018 02:26:45 GMT
+
+*Version update only*
+
+## 5.7.0
+Tue, 15 May 2018 00:18:10 GMT
+
+### Minor changes
+
+- Add support for new AEDoc tags @sealed, @virtual, and @override
+
+## 5.6.8
+Fri, 04 May 2018 00:42:38 GMT
+
+### Patches
+
+- Fix the formatting of a log message.
+
+## 5.6.7
+Tue, 01 May 2018 22:03:20 GMT
+
+### Patches
+
+- Fix an issue where the *.d.ts rollup trimming did not trim import statements
+
+## 5.6.6
+Fri, 27 Apr 2018 03:04:32 GMT
+
+*Version update only*
+
+## 5.6.5
+Thu, 19 Apr 2018 21:25:56 GMT
+
+*Version update only*
+
+## 5.6.4
+Thu, 19 Apr 2018 17:02:06 GMT
+
+### Patches
+
+- Fix errors in schema documentation
+
+## 5.6.3
+Tue, 03 Apr 2018 16:05:29 GMT
+
+*Version update only*
+
+## 5.6.2
+Mon, 02 Apr 2018 16:05:24 GMT
+
+### Patches
+
+- Refactor to use new @microsoft/node-core-library
+
+## 5.6.1
+Tue, 27 Mar 2018 01:34:25 GMT
+
+### Patches
+
+- Update build config so API Extractor builds using the latest version of itself
+
+## 5.6.0
+Sun, 25 Mar 2018 01:26:19 GMT
+
+### Minor changes
+
+- Improve the api-extractor.json config file so that *.d.ts rollups go in separate folders, and trimming can now be disabled
+
+### Patches
+
+- In preparation for initial release, the "Package Typings" feature was renamed to "DTS Rollup"
+- Fix an issue where the @packagedocumentation comment was sometimes getting mixed into the middle of the rollup *.d.ts file
+
+## 5.5.2
+Fri, 23 Mar 2018 00:34:53 GMT
+
+### Patches
+
+- Upgrade colors to version ~1.2.1
+
+## 5.5.1
+Tue, 20 Mar 2018 02:44:45 GMT
+
+### Patches
+
+- Improve packageTypings generator to trim nested members according to their release tag
+- Fix a bug where packageTypings failed to handle merged declarations properly
+
+## 5.5.0
+Sat, 17 Mar 2018 02:54:22 GMT
+
+### Minor changes
+
+- Overhaul the packageTypings generator analysis to get ready for the upcoming nested member trimming
+- Breaking change: Any projects using the package typings feature must now have a "tsdoc" section in their package.json
+
+### Patches
+
+- Add "--debug" flag for debugging
 
 ## 5.4.0
 Thu, 15 Mar 2018 20:00:50 GMT
@@ -31,7 +389,7 @@ Tue, 06 Mar 2018 17:04:51 GMT
 
 ### Patches
 
-- Add preliminary support for preview and public outputs for packageTypings gtenerator
+- Add preliminary support for preview and public outputs for packageTypings generator
 
 ## 5.3.6
 Fri, 02 Mar 2018 01:13:59 GMT

@@ -8,47 +8,53 @@
 
 export {
   ApprovedPackagesPolicy
-} from './data/ApprovedPackagesPolicy';
+} from './api/ApprovedPackagesPolicy';
 
 export {
-  default as RushConfiguration,
-  PackageManager
-} from './data/RushConfiguration';
+  RushConfiguration,
+  PackageManager,
+  PnpmOptionsConfiguration
+} from './api/RushConfiguration';
 
 export {
-  default as RushConfigurationProject
-} from './data/RushConfigurationProject';
+  EnvironmentVariableNames
+} from './api/EnvironmentConfiguration';
+
+export {
+  RushConfigurationProject
+} from './api/RushConfigurationProject';
+
+export {
+  RushGlobalFolder as _RushGlobalFolder
+} from './api/RushGlobalFolder';
 
 export {
   ApprovedPackagesItem,
   ApprovedPackagesConfiguration
-} from './data/ApprovedPackagesConfiguration';
+} from './api/ApprovedPackagesConfiguration';
 
 export {
-  PinnedVersionsConfiguration
-} from './data/PinnedVersionsConfiguration';
+  CommonVersionsConfiguration
+} from './api/CommonVersionsConfiguration';
 
 export {
-  default as EventHooks,
+  PackageJsonEditor,
+  PackageJsonDependency,
+  DependencyType
+} from './api/PackageJsonEditor';
+
+export {
+  EventHooks,
   Event
-} from './data/EventHooks';
+} from './api/EventHooks';
 
 export {
-  ChangeFile
-} from './data/ChangeFile';
-
-export {
-  ChangeType,
-  IChangeInfo
-} from './data/ChangeManagement';
-
-export {
-  default as IPackageJson
-} from './utilities/IPackageJson';
+  ChangeManager
+} from './api/ChangeManager';
 
 export {
   LastInstallFlag as _LastInstallFlag
-} from './utilities/LastInstallFlag';
+} from './api/LastInstallFlag';
 
 export {
   VersionPolicyDefinitionName,
@@ -56,13 +62,10 @@ export {
   LockStepVersionPolicy,
   IndividualVersionPolicy,
   VersionPolicy
-} from './data/VersionPolicy';
+} from './api/VersionPolicy';
 
 export {
   VersionPolicyConfiguration
-} from './data/VersionPolicyConfiguration';
+} from './api/VersionPolicyConfiguration';
 
-/**
- * @internal
- */
-export { default as Rush } from './Rush';
+export { Rush } from './api/Rush';

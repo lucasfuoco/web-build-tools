@@ -16,8 +16,23 @@ Highlighted projects:
 
 - **[Rush](https://github.com/Microsoft/web-build-tools/wiki/Rush)**: Want to consolidate all your web projects in one big repo?  Rush is a fast and reliable solution for installing, linking, building, publishing, checking, change log authoring, and anything else that involves a "package.json" file.
 
-# Full Project Inventory
 
+# Contributing
+
+This repo welcomes contributions and suggestions.  Most contributions require you to agree to a
+Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
+the rights to use your contribution. For details, visit https://cla.microsoft.com.
+
+When you submit a pull request, a CLA-bot will automatically determine whether you need to provide
+a CLA and decorate the PR appropriately (e.g., label, comment). Simply follow the instructions
+provided by the bot. You will only need to do this once across all repos using our CLA.
+
+This repo has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
+For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
+contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+
+
+# Project Inventory
 
 ## Apps
 
@@ -82,7 +97,7 @@ A build task which processes scss files using SASS, runs them through `postcss`,
 
 ### [@microsoft/gulp-core-build-serve](./core-build/gulp-core-build-serve/README.md)
 
-A build task for testing/serving web content on the localhost, and live reloading it when things change.  This drives the `gulp serve' experience.
+A build task for testing/serving web content on the localhost, and live reloading it when things change.  This drives the `gulp serve` experience.
 
 [![npm version](https://badge.fury.io/js/%40microsoft%2Fgulp-core-build-serve.svg)](https://badge.fury.io/js/%40microsoft%2Fgulp-core-build-serve)
 [![Dependencies](https://david-dm.org/Microsoft/gulp-core-build-serve.svg)](https://david-dm.org/Microsoft/gulp-core-build-serve)
@@ -119,13 +134,6 @@ A **Gulp Core Build** rig for building web libraries. It includes build tasks fo
 
 
 ## Libraries
-
-### [@microsoft/decorators](./libraries/decorators/README.md)
-
-A conservative set of decorators intended for use in both NodeJS and web browser projects.
-
-[![npm version](https://badge.fury.io/js/%40microsoft%2Fdecorators.svg)](https://badge.fury.io/js/%40microsoft%2Fdecorators)
-[![Dependencies](https://david-dm.org/Microsoft/decorators.svg)](https://david-dm.org/Microsoft/decorators)
 
 ### [@microsoft/load-themed-styles](./libraries/load-themed-styles/README.md)
 

@@ -1,6 +1,419 @@
 # Change Log - @microsoft/resolve-chunk-plugin
 
-This log was last generated on Thu, 15 Mar 2018 20:00:50 GMT and should not be manually modified.
+This log was last generated on Fri, 16 Nov 2018 21:37:10 GMT and should not be manually modified.
+
+## 2.0.60
+Fri, 16 Nov 2018 21:37:10 GMT
+
+*Version update only*
+
+## 2.0.59
+Fri, 16 Nov 2018 00:59:00 GMT
+
+*Version update only*
+
+## 2.0.58
+Fri, 09 Nov 2018 23:07:39 GMT
+
+*Version update only*
+
+## 2.0.57
+Wed, 07 Nov 2018 21:04:35 GMT
+
+*Version update only*
+
+## 2.0.56
+Wed, 07 Nov 2018 17:03:03 GMT
+
+*Version update only*
+
+## 2.0.55
+Mon, 05 Nov 2018 17:04:24 GMT
+
+*Version update only*
+
+## 2.0.54
+Thu, 01 Nov 2018 21:33:52 GMT
+
+*Version update only*
+
+## 2.0.53
+Thu, 01 Nov 2018 19:32:52 GMT
+
+*Version update only*
+
+## 2.0.52
+Wed, 31 Oct 2018 21:17:50 GMT
+
+*Version update only*
+
+## 2.0.51
+Wed, 31 Oct 2018 17:00:55 GMT
+
+*Version update only*
+
+## 2.0.50
+Sat, 27 Oct 2018 03:45:51 GMT
+
+*Version update only*
+
+## 2.0.49
+Sat, 27 Oct 2018 02:17:18 GMT
+
+*Version update only*
+
+## 2.0.48
+Sat, 27 Oct 2018 00:26:56 GMT
+
+*Version update only*
+
+## 2.0.47
+Thu, 25 Oct 2018 23:20:40 GMT
+
+*Version update only*
+
+## 2.0.46
+Thu, 25 Oct 2018 08:56:02 GMT
+
+*Version update only*
+
+## 2.0.45
+Wed, 24 Oct 2018 16:03:10 GMT
+
+*Version update only*
+
+## 2.0.44
+Thu, 18 Oct 2018 05:30:14 GMT
+
+*Version update only*
+
+## 2.0.43
+Thu, 18 Oct 2018 01:32:21 GMT
+
+*Version update only*
+
+## 2.0.42
+Wed, 17 Oct 2018 21:04:49 GMT
+
+*Version update only*
+
+## 2.0.41
+Wed, 17 Oct 2018 14:43:24 GMT
+
+*Version update only*
+
+## 2.0.40
+Thu, 11 Oct 2018 23:26:07 GMT
+
+*Version update only*
+
+## 2.0.39
+Tue, 09 Oct 2018 06:58:02 GMT
+
+*Version update only*
+
+## 2.0.38
+Mon, 08 Oct 2018 16:04:27 GMT
+
+*Version update only*
+
+## 2.0.37
+Sun, 07 Oct 2018 06:15:56 GMT
+
+*Version update only*
+
+## 2.0.36
+Fri, 28 Sep 2018 16:05:35 GMT
+
+*Version update only*
+
+## 2.0.35
+Wed, 26 Sep 2018 21:39:40 GMT
+
+*Version update only*
+
+## 2.0.34
+Mon, 24 Sep 2018 23:06:40 GMT
+
+*Version update only*
+
+## 2.0.33
+Mon, 24 Sep 2018 16:04:28 GMT
+
+*Version update only*
+
+## 2.0.32
+Fri, 21 Sep 2018 16:04:42 GMT
+
+*Version update only*
+
+## 2.0.31
+Thu, 20 Sep 2018 23:57:22 GMT
+
+*Version update only*
+
+## 2.0.30
+Tue, 18 Sep 2018 21:04:56 GMT
+
+*Version update only*
+
+## 2.0.29
+Mon, 10 Sep 2018 23:23:01 GMT
+
+*Version update only*
+
+## 2.0.28
+Thu, 06 Sep 2018 01:25:26 GMT
+
+### Patches
+
+- Update "repository" field in package.json
+
+## 2.0.27
+Tue, 04 Sep 2018 21:34:10 GMT
+
+*Version update only*
+
+## 2.0.26
+Mon, 03 Sep 2018 16:04:46 GMT
+
+*Version update only*
+
+## 2.0.25
+Thu, 30 Aug 2018 22:47:34 GMT
+
+*Version update only*
+
+## 2.0.24
+Thu, 30 Aug 2018 19:23:16 GMT
+
+*Version update only*
+
+## 2.0.23
+Thu, 30 Aug 2018 18:45:12 GMT
+
+*Version update only*
+
+## 2.0.22
+Wed, 29 Aug 2018 21:43:23 GMT
+
+*Version update only*
+
+## 2.0.21
+Wed, 29 Aug 2018 06:36:50 GMT
+
+*Version update only*
+
+## 2.0.20
+Thu, 23 Aug 2018 18:18:53 GMT
+
+### Patches
+
+- Republish all packages in web-build-tools to resolve GitHub issue #782
+
+## 2.0.19
+Wed, 22 Aug 2018 20:58:58 GMT
+
+*Version update only*
+
+## 2.0.18
+Wed, 22 Aug 2018 16:03:25 GMT
+
+*Version update only*
+
+## 2.0.17
+Tue, 21 Aug 2018 16:04:38 GMT
+
+*Version update only*
+
+## 2.0.16
+Thu, 09 Aug 2018 21:58:02 GMT
+
+*Version update only*
+
+## 2.0.15
+Thu, 09 Aug 2018 21:03:22 GMT
+
+*Version update only*
+
+## 2.0.14
+Thu, 09 Aug 2018 16:04:24 GMT
+
+*Version update only*
+
+## 2.0.13
+Tue, 07 Aug 2018 22:27:31 GMT
+
+*Version update only*
+
+## 2.0.12
+Thu, 26 Jul 2018 23:53:43 GMT
+
+*Version update only*
+
+## 2.0.11
+Thu, 26 Jul 2018 16:04:17 GMT
+
+*Version update only*
+
+## 2.0.10
+Wed, 25 Jul 2018 21:02:57 GMT
+
+*Version update only*
+
+## 2.0.9
+Fri, 20 Jul 2018 16:04:52 GMT
+
+*Version update only*
+
+## 2.0.8
+Tue, 17 Jul 2018 16:02:52 GMT
+
+*Version update only*
+
+## 2.0.7
+Fri, 13 Jul 2018 19:04:50 GMT
+
+*Version update only*
+
+## 2.0.6
+Tue, 03 Jul 2018 21:03:31 GMT
+
+*Version update only*
+
+## 2.0.5
+Fri, 29 Jun 2018 02:56:51 GMT
+
+*Version update only*
+
+## 2.0.4
+Sat, 23 Jun 2018 02:21:20 GMT
+
+*Version update only*
+
+## 2.0.3
+Fri, 22 Jun 2018 16:05:15 GMT
+
+*Version update only*
+
+## 2.0.2
+Thu, 21 Jun 2018 08:27:29 GMT
+
+*Version update only*
+
+## 2.0.1
+Tue, 19 Jun 2018 19:35:11 GMT
+
+*Version update only*
+
+## 2.0.0
+Fri, 08 Jun 2018 08:43:52 GMT
+
+### Breaking changes
+
+- Update the plugin to support Webpack 4.
+
+## 1.0.59
+Thu, 31 May 2018 01:39:33 GMT
+
+*Version update only*
+
+## 1.0.58
+Tue, 15 May 2018 02:26:45 GMT
+
+*Version update only*
+
+## 1.0.57
+Tue, 15 May 2018 00:18:10 GMT
+
+*Version update only*
+
+## 1.0.56
+Fri, 11 May 2018 22:43:14 GMT
+
+*Version update only*
+
+## 1.0.55
+Fri, 04 May 2018 00:42:38 GMT
+
+*Version update only*
+
+## 1.0.54
+Tue, 01 May 2018 22:03:20 GMT
+
+*Version update only*
+
+## 1.0.53
+Fri, 27 Apr 2018 03:04:32 GMT
+
+*Version update only*
+
+## 1.0.52
+Fri, 20 Apr 2018 16:06:11 GMT
+
+*Version update only*
+
+## 1.0.51
+Thu, 19 Apr 2018 21:25:56 GMT
+
+*Version update only*
+
+## 1.0.50
+Thu, 19 Apr 2018 17:02:06 GMT
+
+*Version update only*
+
+## 1.0.49
+Fri, 06 Apr 2018 16:03:14 GMT
+
+### Patches
+
+- Upgrade types for webpack@~3.11.0 compatibility
+
+## 1.0.48
+Tue, 03 Apr 2018 16:05:29 GMT
+
+*Version update only*
+
+## 1.0.47
+Mon, 02 Apr 2018 16:05:24 GMT
+
+*Version update only*
+
+## 1.0.46
+Tue, 27 Mar 2018 01:34:25 GMT
+
+*Version update only*
+
+## 1.0.45
+Mon, 26 Mar 2018 19:12:42 GMT
+
+*Version update only*
+
+## 1.0.44
+Sun, 25 Mar 2018 01:26:19 GMT
+
+*Version update only*
+
+## 1.0.43
+Fri, 23 Mar 2018 00:34:53 GMT
+
+*Version update only*
+
+## 1.0.42
+Thu, 22 Mar 2018 18:34:13 GMT
+
+*Version update only*
+
+## 1.0.41
+Tue, 20 Mar 2018 02:44:45 GMT
+
+*Version update only*
+
+## 1.0.40
+Sat, 17 Mar 2018 02:54:22 GMT
+
+*Version update only*
 
 ## 1.0.39
 Thu, 15 Mar 2018 20:00:50 GMT

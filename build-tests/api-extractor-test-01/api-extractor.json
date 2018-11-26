@@ -1,12 +1,13 @@
 {
-  "$schema": "https://dev.office.com/json-schemas/api-extractor/api-extractor.schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/api-extractor/api-extractor.schema.json",
   "compiler" : {
     "configType": "tsconfig",
     "rootFolder": "."
   },
 
-  "packageTypings": {
-    "enabled": true
+  "dtsRollup": {
+    "enabled": true,
+    "trimming": true
   },
 
   "project": {

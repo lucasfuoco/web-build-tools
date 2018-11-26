@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 // See LICENSE in the project root for license information.
 
+import { PackageName } from '@microsoft/node-core-library';
 import {
   MarkupElement,
   MarkupBasicElement,
@@ -23,6 +24,7 @@ import {
   IMarkupSection,
   IMarkupPage,
   IMarkupHighlightedText,
+  IMarkupHtmlTag,
   MarkupLinkTextElement,
   IMarkupNoteBox,
   IMarkupCodeBox,
@@ -68,6 +70,47 @@ export class Markup {
   public static PARAGRAPH: IMarkupParagraph = {
     kind: 'paragraph'
   };
+
+  /**
+   * Appends text content to the `output` array.  If the last item in the array is a
+   * compatible IMarkupText element, the text will be merged into it.  Otherwise, a new
+   * IMarkupText element will be created.
+   */
+  public static appendTextElements(output: MarkupElement[], text: string, options?: IMarkupCreateTextOptions): void  {
+    if (text.length > 0) {
+      if (output.length > 0) {
+        const lastElement: MarkupElement = output[output.length - 1];
+        if (lastElement.kind === 'text') {
+          const lastTextElement: IMarkupText = lastElement as IMarkupText;
+          if (!options) {
+            options = { };
+          }
+
+          if ((!!lastTextElement.bold === !!options.bold)
+            && (!!lastTextElement.italics === !!options.italics)) {
+            lastTextElement.text += text;
+            return;
+          }
+        }
+      }
+
+      // We can't append to the previous element, so start a new one
+      const result: IMarkupText = {
+        kind: 'text',
+        text: text
+      } as IMarkupText;
+
+      if (options) {
+        if (options.bold) {
+          result.bold = true;
+        }
+        if (options.italics) {
+          result.italics = true;
+        }
+      }
+      output.push(result);
+    }
+  }
 
   /**
    * Constructs an IMarkupText element representing the specified text string, with
@@ -117,6 +160,7 @@ export class Markup {
         if (result.length > 0) {
           result.push(Markup.PARAGRAPH);
         }
+
         result.push(...Markup.createTextElements(paragraph, options));
       }
     }
@@ -138,6 +182,9 @@ export class Markup {
     if (!target.packageName || target.packageName.length < 1) {
       throw new Error('The IApiItemReference.packageName cannot be empty');
     }
+
+    // Validate that the scopeName and packageName are formatted correctly
+    PackageName.combineParts(target.scopeName, target.packageName);
 
     return {
       kind: 'api-link',
@@ -198,6 +245,19 @@ export class Markup {
       text: code,
       highlighter: highlighter || 'plain'
     } as IMarkupHighlightedText;
+  }
+
+  /**
+   * Constructs an IMarkupHtmlTag element representing an opening or closing HTML tag.
+   */
+  public static createHtmlTag(token: string): IMarkupHtmlTag {
+    if (token.length === 0) {
+      throw new Error('The code parameter is missing');
+    }
+    return {
+      kind: 'html-tag',
+      token: token
+    } as IMarkupHtmlTag;
   }
 
   /**
@@ -470,7 +530,7 @@ export class Markup {
     let result: string = apiItemReference.exportName;
     if (apiItemReference.packageName) {
         // Example: "my-library:SomeClass"
-        result = apiItemReference.packageName + ':' + result;
+        result = apiItemReference.packageName + '#' + result;
 
       if (apiItemReference.scopeName) {
         // Example: "@ms/my-library:SomeClass"
@@ -495,10 +555,13 @@ export class Markup {
           break;
         case 'code':
         case 'code-box':
+          buffer.text += element.text;
           break;
         case 'heading1':
         case 'heading2':
           buffer.text += element.text;
+          break;
+        case 'html-tag':
           break;
         case 'note-box':
           buffer.text += Markup.extractTextContent(element.elements);

@@ -1,21 +1,21 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 // See LICENSE in the project root for license information.
 
+/// <reference path="../../../typings/builtins/builtins.d.ts" />
+
 import * as colors from 'colors';
-import * as fsx from 'fs-extra';
 import * as glob from 'glob';
 import * as path from 'path';
 import builtinPackageNames = require('builtins');
 
-import RushCommandLineParser from './RushCommandLineParser';
-import { BaseRushAction } from './BaseRushAction';
+import { RushCommandLineParser } from '../RushCommandLineParser';
+import { BaseConfiglessRushAction } from './BaseRushAction';
+import { FileSystem } from '@microsoft/node-core-library';
 
-export default class ScanAction extends BaseRushAction {
-  private _parser: RushCommandLineParser;
-
+export class ScanAction extends BaseConfiglessRushAction {
   constructor(parser: RushCommandLineParser) {
     super({
-      actionVerb: 'scan',
+      actionName: 'scan',
       summary: 'Scan the current project folder and display a report of imported packages.',
       documentation: `The NPM system allows a project to import dependencies without explicitly`
         + ` listing them in its package.json file. This is a dangerous practice, because`
@@ -25,9 +25,9 @@ export default class ScanAction extends BaseRushAction {
         + ` and "./lib" folders for typical import syntaxes such as "import __ from '__'",`
         + ` "require('__')", "System.import('__'), etc.  The results are only approximate,`
         + ` but generally pretty accurate.`,
-      safeForSimultaneousRushProcesses: true
+      safeForSimultaneousRushProcesses: true,
+      parser
     });
-    this._parser = parser;
   }
 
   protected onDefineParameters(): void {
@@ -37,7 +37,7 @@ export default class ScanAction extends BaseRushAction {
   protected run(): Promise<void> {
     const packageJsonFilename: string = path.resolve('./package.json');
 
-    if (!fsx.existsSync(packageJsonFilename)) {
+    if (!FileSystem.exists(packageJsonFilename)) {
       throw new Error('You must run "rush scan" in a project folder containing a package.json file.');
     }
 
@@ -83,7 +83,7 @@ export default class ScanAction extends BaseRushAction {
 
     for (const filename of glob.sync('{./*.{ts,js,tsx,jsx},./{src,lib}/**/*.{ts,js,tsx,jsx}}')) {
       try {
-        const contents: string = fsx.readFileSync(filename, 'utf8');
+        const contents: string = FileSystem.readFile(filename);
         const lines: string[] = contents.split('\n');
 
         for (const line of lines) {

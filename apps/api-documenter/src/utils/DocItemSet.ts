@@ -1,14 +1,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 // See LICENSE in the project root for license information.
 
+import { PackageName } from '@microsoft/node-core-library';
 import {
   IApiPackage,
   ApiItem,
   ApiJsonFile,
   IApiItemReference
 } from '@microsoft/api-extractor';
-
-import { Utilities } from './Utilities';
 
 export enum DocItemKind {
   Package,
@@ -123,17 +122,20 @@ export class DocItem {
   }
 
   public getApiReference(): IApiItemReference {
-    const reference: IApiItemReference = {
+    const reference: IApiItemReference & { moreHierarchies: string[]; } = {
       scopeName: '',
       packageName: '',
       exportName: '',
-      memberName: ''
+      memberName: '',
+      // TODO: quick fix for api ref inside namespace, need to adjust IApiItemReference later
+      moreHierarchies: []
     };
     let i: number = 0;
     for (const docItem of this.getHierarchy()) {
       switch (i) {
         case 0:
-          reference.packageName = docItem.name;
+          reference.scopeName = PackageName.getScope(docItem.name);
+          reference.packageName = PackageName.getUnscopedName(docItem.name);
           break;
         case 1:
           reference.exportName = docItem.name;
@@ -142,7 +144,9 @@ export class DocItem {
           reference.memberName = docItem.name;
           break;
         default:
-          throw new Error('Unable to create API reference for ' + this.name);
+          reference.moreHierarchies.push(docItem.name);
+          break;
+          // throw new Error('Unable to create API reference for ' + this.name);
       }
       ++i;
     }
@@ -156,6 +160,16 @@ export class DocItem {
       }
     }
     return undefined;
+  }
+
+  /**
+   * Visits this DocItem and every child DocItem in a preorder traversal.
+   */
+  public forEach(callback: (docItem: DocItem) => void): void {
+    callback(this);
+    for (const child of this.children) {
+      child.forEach(callback);
+    }
   }
 }
 
@@ -186,13 +200,8 @@ export interface IDocItemSetResolveResult {
 export class DocItemSet {
   public readonly docPackagesByName: Map<string, DocItem> = new Map<string, DocItem>();
   public readonly docPackages: DocItem[] = [];
-  private _calculated: boolean = false;
 
   public loadApiJsonFile(apiJsonFilename: string): void {
-    if (this._calculated) {
-      throw new Error('calculateReferences() was already called');
-    }
-
     const apiPackage: IApiPackage = ApiJsonFile.loadFromFile(apiJsonFilename);
 
     const docItem: DocItem = new DocItem(apiPackage, apiPackage.name, this, undefined);
@@ -200,34 +209,27 @@ export class DocItemSet {
     this.docPackages.push(docItem);
   }
 
-  public calculateReferences(): void {
-    if (this._calculated) {
-      return;
-    }
-    for (const docPackage of this.docPackages) {
-      this._calculateReferences(docPackage);
-    }
-  }
-
   /**
    * Attempts to find the DocItem described by an IApiItemReference.  If no matching item is
    * found, then undefined is returned.
    */
-  public resolveApiItemReference(reference: IApiItemReference): IDocItemSetResolveResult {
+  public resolveApiItemReference(
+    reference: IApiItemReference & { moreHierarchies?: string[]; }
+  ): IDocItemSetResolveResult {
     const result: IDocItemSetResolveResult = {
       docItem: undefined,
       closestMatch: undefined
     };
 
-    const packageName: string = Utilities.getScopedPackageName(reference.scopeName, reference.packageName);
-    if (!packageName) {
-      // This would indicate an invalid data file, since API Extractor is supposed to normalize this
-      throw new Error('resolveApiItemReference() failed because the packageName should not be empty');
-    }
+    const packageName: string = PackageName.combineParts(reference.scopeName, reference.packageName);
 
     let current: DocItem | undefined = undefined;
 
-    for (const nameToMatch of [packageName, reference.exportName, reference.memberName]) {
+    for (const nameToMatch of [
+      packageName, reference.exportName, reference.memberName,
+      // TODO: quick fix for api ref inside namespace, need to adjust IApiItemReference later
+      ...(reference.moreHierarchies || [])
+    ]) {
       if (!nameToMatch) {
         // Success, since we ran out of stuff to match
         break;
@@ -253,11 +255,12 @@ export class DocItemSet {
     return result;
   }
 
-  private _calculateReferences(docItem: DocItem): void {
-    // (Calculate base classes and child classes)
-
-    for (const child of docItem.children) {
-      this._calculateReferences(child);
+  /**
+   * Visits every DocItem in the tree.
+   */
+  public forEach(callback: (docItem: DocItem) => void): void {
+    for (const docPackage of this.docPackages) {
+      docPackage.forEach(callback);
     }
   }
 }

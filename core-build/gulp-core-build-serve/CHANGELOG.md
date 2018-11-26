@@ -1,6 +1,318 @@
 # Change Log - @microsoft/gulp-core-build-serve
 
-This log was last generated on Thu, 15 Mar 2018 16:05:43 GMT and should not be manually modified.
+This log was last generated on Fri, 16 Nov 2018 21:37:10 GMT and should not be manually modified.
+
+## 3.2.80
+Fri, 16 Nov 2018 21:37:10 GMT
+
+*Version update only*
+
+## 3.2.79
+Fri, 16 Nov 2018 00:59:00 GMT
+
+*Version update only*
+
+## 3.2.78
+Fri, 09 Nov 2018 23:07:39 GMT
+
+*Version update only*
+
+## 3.2.77
+Wed, 07 Nov 2018 21:04:35 GMT
+
+*Version update only*
+
+## 3.2.76
+Wed, 07 Nov 2018 17:03:03 GMT
+
+*Version update only*
+
+## 3.2.75
+Mon, 05 Nov 2018 17:04:24 GMT
+
+*Version update only*
+
+## 3.2.74
+Thu, 01 Nov 2018 21:33:52 GMT
+
+*Version update only*
+
+## 3.2.73
+Thu, 01 Nov 2018 19:32:52 GMT
+
+*Version update only*
+
+## 3.2.72
+Wed, 31 Oct 2018 21:17:50 GMT
+
+*Version update only*
+
+## 3.2.71
+Wed, 31 Oct 2018 17:00:55 GMT
+
+*Version update only*
+
+## 3.2.70
+Sat, 27 Oct 2018 03:45:51 GMT
+
+*Version update only*
+
+## 3.2.69
+Sat, 27 Oct 2018 02:17:18 GMT
+
+*Version update only*
+
+## 3.2.68
+Sat, 27 Oct 2018 00:26:56 GMT
+
+*Version update only*
+
+## 3.2.67
+Thu, 25 Oct 2018 23:20:40 GMT
+
+*Version update only*
+
+## 3.2.66
+Thu, 25 Oct 2018 08:56:02 GMT
+
+*Version update only*
+
+## 3.2.65
+Wed, 24 Oct 2018 16:03:10 GMT
+
+*Version update only*
+
+## 3.2.64
+Thu, 18 Oct 2018 05:30:14 GMT
+
+*Version update only*
+
+## 3.2.63
+Thu, 18 Oct 2018 01:32:21 GMT
+
+*Version update only*
+
+## 3.2.62
+Wed, 17 Oct 2018 21:04:49 GMT
+
+*Version update only*
+
+## 3.2.61
+Wed, 17 Oct 2018 14:43:24 GMT
+
+*Version update only*
+
+## 3.2.60
+Thu, 11 Oct 2018 23:26:07 GMT
+
+*Version update only*
+
+## 3.2.59
+Tue, 09 Oct 2018 06:58:02 GMT
+
+*Version update only*
+
+## 3.2.58
+Mon, 08 Oct 2018 16:04:27 GMT
+
+*Version update only*
+
+## 3.2.57
+Sun, 07 Oct 2018 06:15:56 GMT
+
+*Version update only*
+
+## 3.2.56
+Fri, 28 Sep 2018 16:05:35 GMT
+
+*Version update only*
+
+## 3.2.55
+Wed, 26 Sep 2018 21:39:40 GMT
+
+*Version update only*
+
+## 3.2.54
+Mon, 24 Sep 2018 23:06:40 GMT
+
+*Version update only*
+
+## 3.2.53
+Mon, 24 Sep 2018 16:04:28 GMT
+
+*Version update only*
+
+## 3.2.52
+Fri, 21 Sep 2018 16:04:42 GMT
+
+*Version update only*
+
+## 3.2.51
+Thu, 20 Sep 2018 23:57:21 GMT
+
+*Version update only*
+
+## 3.2.50
+Tue, 18 Sep 2018 21:04:55 GMT
+
+*Version update only*
+
+## 3.2.49
+Mon, 10 Sep 2018 23:23:01 GMT
+
+*Version update only*
+
+## 3.2.48
+Thu, 06 Sep 2018 01:25:26 GMT
+
+### Patches
+
+- Update "repository" field in package.json
+
+## 3.2.47
+Tue, 04 Sep 2018 21:34:10 GMT
+
+*Version update only*
+
+## 3.2.46
+Mon, 03 Sep 2018 16:04:45 GMT
+
+*Version update only*
+
+## 3.2.45
+Thu, 30 Aug 2018 19:23:16 GMT
+
+*Version update only*
+
+## 3.2.44
+Thu, 30 Aug 2018 18:45:12 GMT
+
+*Version update only*
+
+## 3.2.43
+Wed, 29 Aug 2018 21:43:23 GMT
+
+*Version update only*
+
+## 3.2.42
+Wed, 29 Aug 2018 06:36:50 GMT
+
+*Version update only*
+
+## 3.2.41
+Thu, 23 Aug 2018 18:18:53 GMT
+
+### Patches
+
+- Republish all packages in web-build-tools to resolve GitHub issue #782
+
+## 3.2.40
+Wed, 22 Aug 2018 20:58:58 GMT
+
+*Version update only*
+
+## 3.2.39
+Wed, 22 Aug 2018 16:03:25 GMT
+
+*Version update only*
+
+## 3.2.38
+Thu, 09 Aug 2018 21:03:22 GMT
+
+*Version update only*
+
+## 3.2.37
+Tue, 07 Aug 2018 22:27:31 GMT
+
+### Patches
+
+- Upgrade gulp-open to elimiante security warning
+
+## 3.2.36
+Thu, 26 Jul 2018 16:04:17 GMT
+
+*Version update only*
+
+## 3.2.35
+Tue, 03 Jul 2018 21:03:31 GMT
+
+*Version update only*
+
+## 3.2.34
+Thu, 21 Jun 2018 08:27:29 GMT
+
+*Version update only*
+
+## 3.2.33
+Wed, 13 Jun 2018 16:05:21 GMT
+
+### Patches
+
+- Pass the hostname from serve.json to gulpConnect.server()
+
+## 3.2.32
+Fri, 08 Jun 2018 08:43:52 GMT
+
+*Version update only*
+
+## 3.2.31
+Thu, 31 May 2018 01:39:33 GMT
+
+*Version update only*
+
+## 3.2.30
+Tue, 15 May 2018 02:26:45 GMT
+
+*Version update only*
+
+## 3.2.29
+Fri, 11 May 2018 22:43:14 GMT
+
+*Version update only*
+
+## 3.2.28
+Fri, 04 May 2018 00:42:38 GMT
+
+*Version update only*
+
+## 3.2.27
+Mon, 30 Apr 2018 21:04:44 GMT
+
+### Patches
+
+- Internal refactoring to eliminate default exports
+
+## 3.2.26
+Tue, 03 Apr 2018 16:05:29 GMT
+
+*Version update only*
+
+## 3.2.25
+Mon, 02 Apr 2018 16:05:24 GMT
+
+*Version update only*
+
+## 3.2.24
+Mon, 26 Mar 2018 19:12:42 GMT
+
+*Version update only*
+
+## 3.2.23
+Fri, 23 Mar 2018 00:34:53 GMT
+
+### Patches
+
+- Upgrade colors to version ~1.2.1
+
+## 3.2.22
+Thu, 22 Mar 2018 18:34:13 GMT
+
+*Version update only*
+
+## 3.2.21
+Sat, 17 Mar 2018 02:54:22 GMT
+
+*Version update only*
 
 ## 3.2.20
 Thu, 15 Mar 2018 16:05:43 GMT

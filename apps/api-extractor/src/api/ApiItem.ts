@@ -14,14 +14,14 @@ export interface IApiItemReference {
   /**
    * The name of the NPM scope, or an empty string if there is no scope.
    * @remarks
-   * Example: "@microsoft"
+   * Example: `@microsoft`
    */
   scopeName: string;
 
   /**
    * The name of the NPM package that the API item belongs to, without the NPM scope.
    * @remarks
-   * Example: "sample-package"
+   * Example: `sample-package`
    */
   packageName: string;
 
@@ -29,7 +29,7 @@ export interface IApiItemReference {
    * The name of an exported API item, or an empty string.
    * @remarks
    * The name does not include any generic parameters or other punctuation.
-   * Example: "SampleClass"
+   * Example: `SampleClass`
    */
   exportName: string;
 
@@ -37,7 +37,7 @@ export interface IApiItemReference {
    * The name of a member of the exported item, or an empty string.
    * @remarks
    * The name does not include any parameters or punctuation.
-   * Example: "toString"
+   * Example: `toString`
    */
   memberName: string;
 }
@@ -159,6 +159,27 @@ export interface IApiProperty extends IApiBaseDefinition {
   isStatic: boolean;
 
   /**
+   * Whether the item was marked as "\@eventproperty", which indicates an event object that event
+   * handlers can be attached to.
+   */
+  isEventProperty: boolean;
+
+  /**
+   * Indicates that the item was marked as "\@sealed" and must not be extended.
+   */
+  isSealed: boolean;
+
+  /**
+   * Indicates that the item was marked as "\@virtual" and may be extended.
+   */
+  isVirtual: boolean;
+
+  /**
+   * Indicates that the item was marked as "\@override" and is overriding a base definition.
+   */
+  isOverride: boolean;
+
+  /**
    * The data type of this property
    */
   type: string;
@@ -193,6 +214,21 @@ export interface IApiMethod extends IApiBaseDefinition {
    * for a class member, whether it is static
    */
   isStatic: boolean;
+
+  /**
+   * Indicates that the item was marked as "\@sealed" and must not be extended.
+   */
+  isSealed: boolean;
+
+  /**
+   * Indicates that the item was marked as "\@virtual" and may be extended.
+   */
+  isVirtual: boolean;
+
+  /**
+   * Indicates that the item was marked as "\@override" and is overriding a base definition.
+   */
+  isOverride: boolean;
 
   /**
    * a mapping of parameter name to IApiParameter
@@ -248,6 +284,21 @@ export interface IApiConstructor extends IApiBaseDefinition {
   signature: string;
 
   /**
+   * Indicates that the item was marked as "\@sealed" and must not be extended.
+   */
+  isSealed: boolean;
+
+  /**
+   * Indicates that the item was marked as "\@virtual" and may be extended.
+   */
+  isVirtual: boolean;
+
+  /**
+   * Indicates that the item was marked as "\@override" and is overriding a base definition.
+   */
+  isOverride: boolean;
+
+  /**
    * parameters of the function
    */
   parameters: IApiNameMap<IApiParameter>;
@@ -281,6 +332,11 @@ export interface IApiClass extends IApiBaseDefinition {
    * Generic type parameters for this class
    */
   typeParameters?: string[];
+
+  /**
+   * Indicates that the item was marked as "\@sealed" and must not be extended.
+   */
+  isSealed: boolean;
 }
 
 /**
@@ -338,6 +394,11 @@ export interface IApiInterface extends IApiBaseDefinition {
    * Generic type parameters for this interface
    */
   typeParameters?: string[];
+
+  /**
+   * Indicates that the item was marked as "\@sealed" and must not be extended.
+   */
+  isSealed: boolean;
 }
 
 /**
@@ -371,7 +432,7 @@ export interface IApiPackage {
   /**
    * The name of the NPM package, including the optional scope.
    * @remarks
-   * Example: "@microsoft/example-package"
+   * Example: `@microsoft/example-package`
    */
   name: string;
 
@@ -403,14 +464,3 @@ export type ApiMember = IApiProperty | IApiMethod | IApiConstructor;
  */
 export type ApiItem = IApiProperty | ApiMember | IApiFunction | IApiConstructor |
    IApiClass | IApiEnum | IApiEnumMember | IApiInterface | IApiNamespace | IApiPackage;
-
-/**
- * Describes a return type and description of the return type
- * that is given in documentation comments.
- *
- * @alpha
- */
-export interface IApiReturnValue {
-  type: string;
-  description: MarkupBasicElement[];
-}

@@ -1,6 +1,410 @@
 # Change Log - @microsoft/loader-raw-script
 
-This log was last generated on Thu, 15 Mar 2018 20:00:50 GMT and should not be manually modified.
+This log was last generated on Fri, 16 Nov 2018 21:37:10 GMT and should not be manually modified.
+
+## 1.2.102
+Fri, 16 Nov 2018 21:37:10 GMT
+
+*Version update only*
+
+## 1.2.101
+Fri, 16 Nov 2018 00:59:00 GMT
+
+*Version update only*
+
+## 1.2.100
+Fri, 09 Nov 2018 23:07:39 GMT
+
+*Version update only*
+
+## 1.2.99
+Wed, 07 Nov 2018 21:04:35 GMT
+
+*Version update only*
+
+## 1.2.98
+Wed, 07 Nov 2018 17:03:03 GMT
+
+*Version update only*
+
+## 1.2.97
+Mon, 05 Nov 2018 17:04:24 GMT
+
+*Version update only*
+
+## 1.2.96
+Thu, 01 Nov 2018 21:33:52 GMT
+
+*Version update only*
+
+## 1.2.95
+Thu, 01 Nov 2018 19:32:52 GMT
+
+*Version update only*
+
+## 1.2.94
+Wed, 31 Oct 2018 21:17:50 GMT
+
+*Version update only*
+
+## 1.2.93
+Wed, 31 Oct 2018 17:00:55 GMT
+
+*Version update only*
+
+## 1.2.92
+Sat, 27 Oct 2018 03:45:51 GMT
+
+*Version update only*
+
+## 1.2.91
+Sat, 27 Oct 2018 02:17:18 GMT
+
+*Version update only*
+
+## 1.2.90
+Sat, 27 Oct 2018 00:26:56 GMT
+
+*Version update only*
+
+## 1.2.89
+Thu, 25 Oct 2018 23:20:40 GMT
+
+*Version update only*
+
+## 1.2.88
+Thu, 25 Oct 2018 08:56:02 GMT
+
+*Version update only*
+
+## 1.2.87
+Wed, 24 Oct 2018 16:03:10 GMT
+
+*Version update only*
+
+## 1.2.86
+Thu, 18 Oct 2018 05:30:14 GMT
+
+*Version update only*
+
+## 1.2.85
+Thu, 18 Oct 2018 01:32:21 GMT
+
+*Version update only*
+
+## 1.2.84
+Wed, 17 Oct 2018 21:04:49 GMT
+
+*Version update only*
+
+## 1.2.83
+Wed, 17 Oct 2018 14:43:24 GMT
+
+*Version update only*
+
+## 1.2.82
+Thu, 11 Oct 2018 23:26:07 GMT
+
+*Version update only*
+
+## 1.2.81
+Tue, 09 Oct 2018 06:58:02 GMT
+
+*Version update only*
+
+## 1.2.80
+Mon, 08 Oct 2018 16:04:27 GMT
+
+*Version update only*
+
+## 1.2.79
+Sun, 07 Oct 2018 06:15:56 GMT
+
+*Version update only*
+
+## 1.2.78
+Fri, 28 Sep 2018 16:05:35 GMT
+
+*Version update only*
+
+## 1.2.77
+Wed, 26 Sep 2018 21:39:40 GMT
+
+*Version update only*
+
+## 1.2.76
+Mon, 24 Sep 2018 23:06:40 GMT
+
+*Version update only*
+
+## 1.2.75
+Mon, 24 Sep 2018 16:04:28 GMT
+
+*Version update only*
+
+## 1.2.74
+Fri, 21 Sep 2018 16:04:42 GMT
+
+*Version update only*
+
+## 1.2.73
+Thu, 20 Sep 2018 23:57:22 GMT
+
+*Version update only*
+
+## 1.2.72
+Tue, 18 Sep 2018 21:04:55 GMT
+
+*Version update only*
+
+## 1.2.71
+Mon, 10 Sep 2018 23:23:01 GMT
+
+*Version update only*
+
+## 1.2.70
+Thu, 06 Sep 2018 01:25:26 GMT
+
+### Patches
+
+- Update "repository" field in package.json
+
+## 1.2.69
+Tue, 04 Sep 2018 21:34:10 GMT
+
+*Version update only*
+
+## 1.2.68
+Mon, 03 Sep 2018 16:04:46 GMT
+
+*Version update only*
+
+## 1.2.67
+Thu, 30 Aug 2018 22:47:34 GMT
+
+*Version update only*
+
+## 1.2.66
+Thu, 30 Aug 2018 19:23:16 GMT
+
+*Version update only*
+
+## 1.2.65
+Thu, 30 Aug 2018 18:45:12 GMT
+
+*Version update only*
+
+## 1.2.64
+Wed, 29 Aug 2018 21:43:23 GMT
+
+*Version update only*
+
+## 1.2.63
+Wed, 29 Aug 2018 06:36:50 GMT
+
+*Version update only*
+
+## 1.2.62
+Thu, 23 Aug 2018 18:18:53 GMT
+
+### Patches
+
+- Republish all packages in web-build-tools to resolve GitHub issue #782
+
+## 1.2.61
+Wed, 22 Aug 2018 20:58:58 GMT
+
+*Version update only*
+
+## 1.2.60
+Wed, 22 Aug 2018 16:03:25 GMT
+
+*Version update only*
+
+## 1.2.59
+Tue, 21 Aug 2018 16:04:38 GMT
+
+*Version update only*
+
+## 1.2.58
+Thu, 09 Aug 2018 21:58:02 GMT
+
+*Version update only*
+
+## 1.2.57
+Thu, 09 Aug 2018 21:03:22 GMT
+
+*Version update only*
+
+## 1.2.56
+Thu, 09 Aug 2018 16:04:24 GMT
+
+*Version update only*
+
+## 1.2.55
+Tue, 07 Aug 2018 22:27:31 GMT
+
+*Version update only*
+
+## 1.2.54
+Thu, 26 Jul 2018 23:53:43 GMT
+
+*Version update only*
+
+## 1.2.53
+Thu, 26 Jul 2018 16:04:17 GMT
+
+*Version update only*
+
+## 1.2.52
+Wed, 25 Jul 2018 21:02:57 GMT
+
+*Version update only*
+
+## 1.2.51
+Fri, 20 Jul 2018 16:04:52 GMT
+
+*Version update only*
+
+## 1.2.50
+Tue, 17 Jul 2018 16:02:52 GMT
+
+*Version update only*
+
+## 1.2.49
+Fri, 13 Jul 2018 19:04:50 GMT
+
+*Version update only*
+
+## 1.2.48
+Tue, 03 Jul 2018 21:03:31 GMT
+
+*Version update only*
+
+## 1.2.47
+Fri, 29 Jun 2018 02:56:51 GMT
+
+*Version update only*
+
+## 1.2.46
+Sat, 23 Jun 2018 02:21:20 GMT
+
+*Version update only*
+
+## 1.2.45
+Fri, 22 Jun 2018 16:05:15 GMT
+
+*Version update only*
+
+## 1.2.44
+Thu, 21 Jun 2018 08:27:29 GMT
+
+*Version update only*
+
+## 1.2.43
+Tue, 19 Jun 2018 19:35:11 GMT
+
+*Version update only*
+
+## 1.2.42
+Fri, 08 Jun 2018 08:43:52 GMT
+
+*Version update only*
+
+## 1.2.41
+Thu, 31 May 2018 01:39:33 GMT
+
+*Version update only*
+
+## 1.2.40
+Tue, 15 May 2018 02:26:45 GMT
+
+*Version update only*
+
+## 1.2.39
+Tue, 15 May 2018 00:18:10 GMT
+
+*Version update only*
+
+## 1.2.38
+Fri, 11 May 2018 22:43:14 GMT
+
+*Version update only*
+
+## 1.2.37
+Fri, 04 May 2018 00:42:38 GMT
+
+*Version update only*
+
+## 1.2.36
+Tue, 01 May 2018 22:03:20 GMT
+
+*Version update only*
+
+## 1.2.35
+Fri, 27 Apr 2018 03:04:32 GMT
+
+*Version update only*
+
+## 1.2.34
+Fri, 20 Apr 2018 16:06:11 GMT
+
+*Version update only*
+
+## 1.2.33
+Thu, 19 Apr 2018 21:25:56 GMT
+
+*Version update only*
+
+## 1.2.32
+Thu, 19 Apr 2018 17:02:06 GMT
+
+*Version update only*
+
+## 1.2.31
+Tue, 03 Apr 2018 16:05:29 GMT
+
+*Version update only*
+
+## 1.2.30
+Mon, 02 Apr 2018 16:05:24 GMT
+
+*Version update only*
+
+## 1.2.29
+Tue, 27 Mar 2018 01:34:25 GMT
+
+*Version update only*
+
+## 1.2.28
+Mon, 26 Mar 2018 19:12:42 GMT
+
+*Version update only*
+
+## 1.2.27
+Sun, 25 Mar 2018 01:26:19 GMT
+
+*Version update only*
+
+## 1.2.26
+Fri, 23 Mar 2018 00:34:53 GMT
+
+*Version update only*
+
+## 1.2.25
+Thu, 22 Mar 2018 18:34:13 GMT
+
+*Version update only*
+
+## 1.2.24
+Tue, 20 Mar 2018 02:44:45 GMT
+
+*Version update only*
+
+## 1.2.23
+Sat, 17 Mar 2018 02:54:22 GMT
+
+*Version update only*
 
 ## 1.2.22
 Thu, 15 Mar 2018 20:00:50 GMT

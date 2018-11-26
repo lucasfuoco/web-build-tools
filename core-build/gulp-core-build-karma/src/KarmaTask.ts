@@ -2,9 +2,9 @@
 // See LICENSE in the project root for license information.
 
 import { GulpTask, IBuildConfig } from '@microsoft/gulp-core-build';
+import { FileSystem } from '@microsoft/node-core-library';
 
 import * as os from 'os';
-import * as fs from 'fs';
 import * as Gulp from 'gulp';
 import * as path from 'path';
 import * as KarmaType from 'karma';
@@ -23,6 +23,13 @@ export interface IKarmaTaskConfig {
    *  this RegExp to locate test files.
    */
   testMatch?: RegExp | string;
+
+  /**
+   * If specified, prepend the tests.js file with the specified lines.
+   *
+   * @alpha
+   */
+  additionalTestsJsFileLines?: string[];
 }
 
 export class KarmaTask extends GulpTask<IKarmaTaskConfig> {
@@ -34,7 +41,8 @@ export class KarmaTask extends GulpTask<IKarmaTaskConfig> {
       {
         configPath: './karma.config.js',
         testMatch: /.+\.test\.js?$/,
-        failBuildOnErrors: false
+        failBuildOnErrors: false,
+        additionalTestsJsFileLines: []
       }
     );
   }
@@ -119,6 +127,7 @@ export class KarmaTask extends GulpTask<IKarmaTaskConfig> {
 
         // tslint:disable:max-line-length
         const testsJsFileContents: string = [
+          ...(this.taskConfig.additionalTestsJsFileLines || []),
           `var context = require.context('${path.posix.join('..', this.buildConfig.libFolder)}', true, ${normalizedMatch.toString()});`,
           `context.keys().forEach(context);`,
           `module.exports = context;`
@@ -126,10 +135,9 @@ export class KarmaTask extends GulpTask<IKarmaTaskConfig> {
         // tslint:enable:max-line-length
 
         const tempFolder: string = path.join(this.buildConfig.rootPath, this.buildConfig.tempFolder);
-        if (!fs.existsSync(tempFolder)) {
-          fs.mkdirSync(tempFolder);
-        }
-        fs.writeFileSync(path.join(tempFolder, 'tests.js'), testsJsFileContents);
+        FileSystem.writeFile(path.join(tempFolder, 'tests.js'), testsJsFileContents, {
+          ensureFolderExists: true
+        });
       }
 
       const karma: typeof KarmaType = require('karma'); // tslint:disable-line

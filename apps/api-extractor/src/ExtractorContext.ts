@@ -2,14 +2,20 @@
 // See LICENSE in the project root for license information.
 
 import * as ts from 'typescript';
-import * as fsx from 'fs-extra';
 import * as path from 'path';
-import { PackageJsonLookup } from '@microsoft/node-core-library';
+import {
+  PackageJsonLookup,
+  IPackageJson,
+  PackageName,
+  IParsedPackageName,
+  FileSystem
+} from '@microsoft/node-core-library';
 
 import { AstPackage } from './ast/AstPackage';
 import { DocItemLoader } from './DocItemLoader';
 import { ILogger } from './extractor/ILogger';
 import { IExtractorPoliciesConfig, IExtractorValidationRulesConfig } from './extractor/IExtractorConfig';
+import { TypeScriptMessageFormatter } from './utils/TypeScriptMessageFormatter';
 
 /**
  * Options for ExtractorContext constructor.
@@ -47,6 +53,14 @@ export interface IExtractorContextOptions {
 export class ExtractorContext {
   public typeChecker: ts.TypeChecker;
   public package: AstPackage;
+
+  /**
+   * The parsed package.json file for this package.
+   */
+  public readonly packageJson: IPackageJson;
+
+  public readonly parsedPackageName: IParsedPackageName;
+
   /**
    * One DocItemLoader is needed per analyzer to look up external API members
    * as needed.
@@ -58,8 +72,6 @@ export class ExtractorContext {
   public readonly policies: IExtractorPoliciesConfig;
 
   public readonly validationRules: IExtractorValidationRulesConfig;
-
-  private _packageName: string;
 
   // If the entry point is "C:\Folder\project\src\index.ts" and the nearest package.json
   // is "C:\Folder\project\package.json", then the packageFolder is "C:\Folder\project"
@@ -73,13 +85,15 @@ export class ExtractorContext {
     this.policies = options.policies;
     this.validationRules = options.validationRules;
 
-    const folder: string | undefined = this.packageJsonLookup.tryGetPackageFolder(options.entryPointFile);
+    const folder: string | undefined = this.packageJsonLookup.tryGetPackageFolderFor(options.entryPointFile);
     if (!folder) {
       throw new Error('Unable to find a package.json for entry point: ' + options.entryPointFile);
     }
     this._packageFolder = folder;
 
-    this._packageName = this.packageJsonLookup.getPackageName(this._packageFolder);
+    this.packageJson = this.packageJsonLookup.tryLoadPackageJsonFor(this._packageFolder)!;
+
+    this.parsedPackageName = PackageName.parse(this.packageJson.name);
 
     this.docItemLoader = new DocItemLoader(this._packageFolder);
 
@@ -89,7 +103,8 @@ export class ExtractorContext {
     // with semantic information (i.e. symbols).  The "diagnostics" are a subset of the everyday
     // compile errors that would result from a full compilation.
     for (const diagnostic of options.program.getSemanticDiagnostics()) {
-      this.reportError('TypeScript: ' + diagnostic.messageText, diagnostic.file, diagnostic.start);
+      const errorText: string = TypeScriptMessageFormatter.format(diagnostic.messageText);
+      this.reportError(`TypeScript: ${errorText}`, diagnostic.file, diagnostic.start);
     }
 
     this.typeChecker = options.program.getTypeChecker();
@@ -108,7 +123,7 @@ export class ExtractorContext {
    * Returns the full name of the package being analyzed.
    */
   public get packageName(): string {
-    return this._packageName;
+    return this.packageJson.name;
   }
 
   /**
@@ -152,14 +167,13 @@ export class ExtractorContext {
       return;
     }
 
-    const files: string[] = fsx.readdirSync(externalJsonCollectionPath);
-    files.forEach(file => {
+    FileSystem.readFolder(externalJsonCollectionPath, {
+      absolutePaths: true
+    }).forEach(file => {
       if (path.extname(file) === '.json') {
-        const externalJsonFilePath: string = path.join(externalJsonCollectionPath, file);
-
         // Example: "C:\Example\my-package.json" --> "my-package"
         const packageName: string = path.parse(file).name;
-        this.docItemLoader.loadPackageIntoCache(externalJsonFilePath, packageName);
+        this.docItemLoader.loadPackageIntoCache(file, packageName);
       }
     });
   }

@@ -1,13 +1,10 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 // See LICENSE in the project root for license information.
 
-import Utilities from './Utilities';
+import { Utilities } from './Utilities';
 import * as semver from 'semver';
 
-/**
- * @public
- */
-export default class Npm {
+export class Npm {
   public static publishedVersions(
     packageName: string,
     cwd: string,
@@ -18,7 +15,9 @@ export default class Npm {
       const packageTime: string = Utilities.executeCommandAndCaptureOutput('npm',
         `view ${packageName} time --json`.split(' '),
         cwd,
-        env);
+        env,
+        true
+      );
       if (packageTime && packageTime !== '') {
         Object.keys(JSON.parse(packageTime)).forEach(v => {
           if (semver.valid(v)) {
@@ -31,7 +30,9 @@ export default class Npm {
         const packageVersions: string = Utilities.executeCommandAndCaptureOutput('npm',
           `view ${packageName} versions --json`.split(' '),
           cwd,
-          env);
+          env,
+          true
+        );
         if (packageVersions && packageVersions.length > 0) {
           (JSON.parse(packageVersions)).forEach(v => {
             versions.push(v);

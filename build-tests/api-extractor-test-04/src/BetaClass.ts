@@ -1,11 +1,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 // See LICENSE in the project root for license information.
 
+import { BetaInterface } from './BetaInterface';
+
 /**
  * This is a beta class
  * @beta
  */
-export class BetaClass {
+export class BetaClass implements BetaInterface {
   /**
    * This is a comment
    */

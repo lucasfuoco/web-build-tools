@@ -13,12 +13,6 @@
  */
 
 /**
- * Test the alias-following logic:  This class gets aliased twice before being
- * exported from the package.
- */
-export { ReexportedClass1 as ReexportedClass } from './ReexportedClass1';
-
-/**
  * A simple, normal definition
  * @public
  */
@@ -45,7 +39,7 @@ export class AmbientConsumer {
   }
 
   /**
-   * Configured via tsconfig.json's "lib" setting, which specifies "@types/jest".
+   * Configured via tsconfig.json's "lib" setting, which specifies `@types/jest`.
    * The emitted index.d.ts gets a reference like this:  <reference types="jest" />
    */
   public definitelyTyped(): jest.Context {
@@ -86,17 +80,33 @@ export class DecoratorTest {
   }
 }
 
-export { ForgottenExportConsumer1 } from './ForgottenExportConsumer1';
-export { ForgottenExportConsumer2 } from './ForgottenExportConsumer2';
-
-export { default as IInterfaceAsDefaultExport } from './IInterfaceAsDefaultExport';
-
 export { default as AbstractClass } from './AbstractClass';
 export { default as AbstractClass2, AbstractClass3 } from './AbstractClass2';
+
+export { ClassWithTypeLiterals } from './ClassWithTypeLiterals';
+
+export * from './DeclarationMerging';
 
 export {
   DefaultExportEdgeCase,
   default as ClassExportedAsDefault
 } from './DefaultExportEdgeCase';
 
-export { TypeReferencesInAedoc as _TypeReferencesInAedoc } from './TypeReferencesInAedoc';
+export { ClassWithSymbols, fullyExportedCustomSymbol } from './EcmaScriptSymbols';
+
+export { ForgottenExportConsumer1 } from './ForgottenExportConsumer1';
+export { ForgottenExportConsumer2 } from './ForgottenExportConsumer2';
+export { ForgottenExportConsumer3 } from './ForgottenExportConsumer3';
+
+export { default as IInterfaceAsDefaultExport } from './IInterfaceAsDefaultExport';
+
+/**
+ * Test the alias-following logic:  This class gets aliased twice before being
+ * exported from the package.
+ */
+export { ReexportedClass3 as ReexportedClass } from './ReexportedClass3/ReexportedClass3';
+
+export { TypeReferencesInAedoc } from './TypeReferencesInAedoc';
+export { ReferenceLibDirective } from './ReferenceLibDirective';
+
+export { VARIABLE } from './variableDeclarations';

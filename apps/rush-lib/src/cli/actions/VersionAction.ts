@@ -1,26 +1,32 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 // See LICENSE in the project root for license information.
 
+import * as semver from 'semver';
+import {
+  IPackageJson,
+  FileConstants
+} from '@microsoft/node-core-library';
 import {
   CommandLineFlagParameter,
   CommandLineStringParameter
 } from '@microsoft/ts-command-line';
 
-import { BumpType } from '../../data/VersionPolicy';
-import IPackageJson from '../../utilities/IPackageJson';
-import RushConfiguration from '../../data/RushConfiguration';
-import Utilities from '../../utilities/Utilities';
-import VersionControl from '../../utilities/VersionControl';
-import { VersionMismatchFinder } from '../../data/VersionMismatchFinder';
-import RushCommandLineParser from './RushCommandLineParser';
-import GitPolicy from '../logic/GitPolicy';
+import { BumpType, LockStepVersionPolicy } from '../../api/VersionPolicy';
+import { VersionPolicyConfiguration } from '../../api/VersionPolicyConfiguration';
+import { RushConfiguration } from '../../api/RushConfiguration';
+import { VersionControl } from '../../utilities/VersionControl';
+import { VersionMismatchFinder } from '../../api/VersionMismatchFinder';
+import { RushCommandLineParser } from '../RushCommandLineParser';
+import { PolicyValidator } from '../../logic/policy/PolicyValidator';
 import { BaseRushAction } from './BaseRushAction';
-import { VersionManager } from '../logic/VersionManager';
-import { Git } from '../logic/Git';
+import { VersionManager } from '../../logic/VersionManager';
+import { PublishGit } from '../../logic/PublishGit';
+import { Git } from '../../logic/Git';
+import { CommonVersionsConfiguration } from '../../api/CommonVersionsConfiguration';
 
-export default class VersionAction extends BaseRushAction {
-  private _parser: RushCommandLineParser;
+export class VersionAction extends BaseRushAction {
   private _ensureVersionPolicy: CommandLineFlagParameter;
+  private _overrideVersion: CommandLineStringParameter;
   private _bumpVersion: CommandLineFlagParameter;
   private _versionPolicy: CommandLineStringParameter;
   private _bypassPolicy: CommandLineFlagParameter;
@@ -32,25 +38,30 @@ export default class VersionAction extends BaseRushAction {
 
   constructor(parser: RushCommandLineParser) {
     super({
-      actionVerb: 'version',
+      actionName: 'version',
       summary: '(EXPERIMENTAL) Manage package versions in the repo.',
-      documentation: '(EXPERIMENTAL) use this "rush version" command to ensure version policies and bump versions.'
+      documentation: '(EXPERIMENTAL) use this "rush version" command to ensure version policies and bump versions.',
+      parser
     });
-    this._parser = parser;
   }
 
   protected onDefineParameters(): void {
     this._targetBranch = this.defineStringParameter({
       parameterLongName: '--target-branch',
       parameterShortName: '-b',
-      key: 'BRANCH',
+      argumentName: 'BRANCH',
       description:
       'If this flag is specified, changes will be committed and merged into the target branch.'
     });
     this._ensureVersionPolicy = this.defineFlagParameter({
       parameterLongName: '--ensure-version-policy',
-      parameterShortName: '-e',
       description: 'Updates package versions if needed to satisfy version policies.'
+    });
+    this._overrideVersion = this.defineStringParameter({
+      parameterLongName: '--override-version',
+      argumentName: 'NEW_VERSION',
+      description: 'Override the version in the specified --version-policy. ' +
+        'This setting only works for lock-step version policy and when --ensure-version-policy is specified.'
     });
     this._bumpVersion = this.defineFlagParameter({
       parameterLongName: '--bump',
@@ -62,51 +73,97 @@ export default class VersionAction extends BaseRushAction {
     });
     this._versionPolicy = this.defineStringParameter({
       parameterLongName: '--version-policy',
-      parameterShortName: '-p',
+      argumentName: 'POLICY',
       description: 'The name of the version policy'
     });
     this._overwriteBump = this.defineStringParameter({
       parameterLongName: '--override-bump',
+      argumentName: 'BUMPTYPE',
       description: 'Overrides the bump type in the version-policy.json for the specified version policy.' +
-        'Valid values include: prerelease, patch, preminor, minor, major. ' +
+        'Valid BUMPTYPE values include: prerelease, patch, preminor, minor, major. ' +
         'This setting only works for lock-step version policy in bump action.'
     });
     this._prereleaseIdentifier = this.defineStringParameter({
       parameterLongName: '--override-prerelease-id',
+      argumentName: 'ID',
       description: 'Overrides the prerelease identifier in the version value of version-policy.json ' +
         'for the specified version policy. ' +
-        'This setting only works for lock-step version policy in bump action.'
+        'This setting only works for lock-step version policy. ' +
+        'This setting increases to new prerelease id when "--bump" is provided but only replaces the ' +
+        'prerelease name when "--ensure-version-policy" is provided.'
     });
   }
 
   protected run(): Promise<void> {
-    if (!this._bypassPolicy.value) {
-      if (!GitPolicy.check(this.rushConfiguration)) {
-        process.exit(1);
-        return Promise.resolve();
-      }
-    }
-    this._validateInput();
+    return Promise.resolve().then(() => {
+      PolicyValidator.validatePolicy(this.rushConfiguration, this._bypassPolicy.value);
+      const userEmail: string = Git.getGitEmail(this.rushConfiguration);
 
-    this._versionManager = new VersionManager(this.rushConfiguration, this._getUserEmail());
-    if (this._ensureVersionPolicy.value) {
-      const tempBranch: string = 'version/ensure-' + new Date().getTime();
-      this._versionManager.ensure(this._versionPolicy.value, true);
+      this._validateInput();
 
-      const updatedPackages: Map<string, IPackageJson> = this._versionManager.updatedProjects;
-      if (updatedPackages.size > 0) {
-        console.log(`${updatedPackages.size} packages are getting updated.`);
+      this._versionManager = new VersionManager(this.rushConfiguration, userEmail);
+
+      if (this._ensureVersionPolicy.value) {
+        this._overwritePolicyVersionIfNeeded();
+        const tempBranch: string = 'version/ensure-' + new Date().getTime();
+        this._versionManager.ensure(this._versionPolicy.value, true,
+          !!this._overrideVersion.value || !!this._prereleaseIdentifier.value);
+
+        const updatedPackages: Map<string, IPackageJson> = this._versionManager.updatedProjects;
+        if (updatedPackages.size > 0) {
+          console.log(`${updatedPackages.size} packages are getting updated.`);
+          this._gitProcess(tempBranch);
+        }
+      } else if (this._bumpVersion.value) {
+        const tempBranch: string = 'version/bump-' + new Date().getTime();
+        this._versionManager.bump(this._versionPolicy.value,
+          this._overwriteBump.value ? BumpType[this._overwriteBump.value] : undefined,
+          this._prereleaseIdentifier.value,
+          true);
         this._gitProcess(tempBranch);
       }
-    } else if (this._bumpVersion.value) {
-      const tempBranch: string = 'version/bump-' + new Date().getTime();
-      this._versionManager.bump(this._versionPolicy.value,
-        BumpType[this._overwriteBump.value],
-        this._prereleaseIdentifier.value,
-        true);
-      this._gitProcess(tempBranch);
+    });
+  }
+
+  private _overwritePolicyVersionIfNeeded(): void {
+    if (!this._overrideVersion.value && !this._prereleaseIdentifier.value) {
+      // No need to overwrite policy version
+      return;
     }
-    return Promise.resolve();
+    if (this._overrideVersion.value && this._prereleaseIdentifier.value) {
+      throw new Error(`The parameters "--override-version" and` +
+        ` "--override-prerelease-id" cannot be used together.`);
+    }
+
+    if (this._versionPolicy.value) {
+      const versionConfig: VersionPolicyConfiguration = this.rushConfiguration.versionPolicyConfiguration;
+      const policy: LockStepVersionPolicy = versionConfig.getVersionPolicy(this._versionPolicy.value) as
+          LockStepVersionPolicy;
+      if (!policy || !policy.isLockstepped) {
+        throw new Error(`The lockstep version policy "${policy.policyName}" is not found.`);
+      }
+      let newVersion: string | undefined = undefined;
+      if (this._overrideVersion.value) {
+        newVersion = this._overrideVersion.value;
+      } else if (this._prereleaseIdentifier.value) {
+        const newPolicyVersion: semver.SemVer = new semver.SemVer(policy.version);
+        if (newPolicyVersion.prerelease.length) {
+          // Update 1.5.0-alpha.10 to 1.5.0-beta.10
+          newPolicyVersion.prerelease[0] = this._prereleaseIdentifier.value;
+        } else {
+          // Update 1.5.0 to 1.5.0-beta
+          newPolicyVersion.prerelease.push(this._prereleaseIdentifier.value);
+        }
+        newVersion = newPolicyVersion.format();
+      }
+
+      if (newVersion) {
+        console.log(`Update version policy ${policy.policyName} from ${policy.version} to ${newVersion}`);
+        versionConfig.update(this._versionPolicy.value, newVersion);
+      }
+    } else {
+      throw new Error('Missing --version-policy parameter to specify which version policy should be overwritten.');
+    }
   }
 
   private _validateInput(): void {
@@ -124,23 +181,26 @@ export default class VersionAction extends BaseRushAction {
     // Load the config from file to avoid using inconsistent in-memory data.
     const rushConfig: RushConfiguration =
       RushConfiguration.loadFromConfigurationFile(this.rushConfiguration.rushJsonFile);
-    const mismatchFinder: VersionMismatchFinder = new VersionMismatchFinder(rushConfig.projects);
+
+    const commonVersions: CommonVersionsConfiguration = rushConfig.getCommonVersions(
+      /* Always use the default variant */
+    );
+
+    const mismatchFinder: VersionMismatchFinder = new VersionMismatchFinder(
+      rushConfig.projects,
+      commonVersions.allowedAlternativeVersions
+    );
     if (mismatchFinder.numberOfMismatches) {
       throw new Error('Unable to finish version bump because inconsistencies were encountered.' +
         ' Run \"rush check\" to find more details.');
     }
   }
 
-  private _getUserEmail(): string {
-    return Utilities.executeCommandAndCaptureOutput('git',
-        ['config', 'user.email'], '.').trim();
-  }
-
   private _gitProcess(tempBranch: string): void {
     // Validate the result before commit.
     this._validateResult();
 
-    const git: Git = new Git(this._targetBranch.value);
+    const git: PublishGit = new PublishGit(this._targetBranch.value);
 
     // Make changes in temp branch.
     git.checkout(tempBranch, true);
@@ -162,7 +222,7 @@ export default class VersionAction extends BaseRushAction {
 
     // Commit the package.json and change files updates.
     const packageJsonUpdated: boolean = uncommittedChanges.some((changePath) => {
-      return changePath.indexOf('package.json') > 0;
+      return changePath.indexOf(FileConstants.PackageJson) > 0;
     });
 
     if (packageJsonUpdated) {

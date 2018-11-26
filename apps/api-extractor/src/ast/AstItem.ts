@@ -5,6 +5,8 @@
 /* tslint:disable:no-constant-condition */
 
 import * as ts from 'typescript';
+import * as tsdoc from '@microsoft/tsdoc';
+import { IPackageJson, IParsedPackageName, PackageName } from '@microsoft/node-core-library';
 import { ExtractorContext } from '../ExtractorContext';
 import { ApiDocumentation } from '../aedoc/ApiDocumentation';
 import { MarkupElement } from '../markup/MarkupElement';
@@ -14,7 +16,6 @@ import { Markup } from '../markup/Markup';
 import { ResolvedApiItem } from '../ResolvedApiItem';
 import {
   ApiDefinitionReference,
-  IScopedPackageName,
   IApiDefinitionReferenceParts
 } from '../ApiDefinitionReference';
 import { AstItemContainer } from './AstItemContainer';
@@ -295,12 +296,14 @@ export abstract class AstItem {
 
     const sourceFileText: string = this.declaration.getSourceFile().text;
 
-    let aedocCommentRange: ts.TextRange | undefined;
+    // This will contain the AEDoc content, including the "/**" characters
+    let inputTextRange: tsdoc.TextRange = tsdoc.TextRange.empty;
 
     if (options.aedocCommentRange) { // but might be ""
       // This is e.g. for the special @packagedocumentation comment, which is pulled
       // from elsewhere in the AST.
-      aedocCommentRange = options.aedocCommentRange;
+      inputTextRange = tsdoc.TextRange.fromStringRange(sourceFileText,
+        options.aedocCommentRange.pos, options.aedocCommentRange.end);
     } else {
       // This is the typical case
       const ranges: ts.CommentRange[] = TypeScriptHelpers.getJSDocCommentRanges(
@@ -308,22 +311,14 @@ export abstract class AstItem {
       if (ranges.length > 0) {
         // We use the JSDoc comment block that is closest to the definition, i.e.
         // the last one preceding it
-        aedocCommentRange = ranges[ranges.length - 1];
-      }
-    }
-
-    // This will be the AEDoc content, excluding the "/**" characters
-    let aedoc: string = '';
-    if (aedocCommentRange) {
-      // This is the raw comment including the "/**" characters, or "" if there was no comment
-      const rawComment: string = sourceFileText.substring(aedocCommentRange.pos, aedocCommentRange.end);
-      if (rawComment) {
-        aedoc = TypeScriptHelpers.extractJSDocContent(rawComment, this.reportError);
+        const lastRange: ts.TextRange =  ranges[ranges.length - 1];
+        inputTextRange = tsdoc.TextRange.fromStringRange(sourceFileText,
+          lastRange.pos, lastRange.end);
       }
     }
 
     this.documentation = new ApiDocumentation(
-      aedoc,
+      inputTextRange,
       this.context.docItemLoader,
       this.context,
       this.reportError,
@@ -443,8 +438,11 @@ export abstract class AstItem {
    * Reports an error through the ApiErrorHandler interface that was registered with the Extractor,
    * adding the filename and line number information for the declaration of this AstItem.
    */
-  protected reportError(message: string): void {
-    this.context.reportError(message, this._errorNode.getSourceFile(), this._errorNode.getStart());
+  protected reportError(message: string, startIndex?: number): void {
+    if (!startIndex) {
+      startIndex = this._errorNode.getStart();
+    }
+    this.context.reportError(message, this._errorNode.getSourceFile(), startIndex);
   }
 
   /**
@@ -489,7 +487,7 @@ export abstract class AstItem {
     }
 
     if (this.kind === AstItemKind.Package) {
-      if (this.documentation.originalAedoc.trim().length > 0) {
+      if (this.documentation.aedocCommentFound) {
         if (!this.documentation.isPackageDocumentation) {
           this.reportError('A package comment was found, but it is missing the @packagedocumentation tag');
         }
@@ -509,6 +507,12 @@ export abstract class AstItem {
       if (!(this.getDeclaration().kind & (ts.SyntaxKind.InterfaceDeclaration | ts.SyntaxKind.ClassDeclaration))) {
         this.reportError('The @preapproved tag may only be applied to classes and interfaces');
         this.documentation.preapproved = false;
+      }
+    }
+
+    if (this.documentation.isEventProperty) {
+      if (this.kind !== AstItemKind.Property) {
+        this.reportError('The @eventProperty tag may only be applied to a property');
       }
     }
 
@@ -602,18 +606,17 @@ export abstract class AstItem {
     // Walk upwards from that directory until you find a directory containing package.json,
     // this is where the referenced type is located.
     // Example: "c:\users\<username>\sp-client\spfx-core\sp-core-library"
-    const typeReferencePackagePath: string | undefined = this.context.packageJsonLookup
-      .tryGetPackageFolder(sourceFile.fileName);
+    const typeReferencePackageJson: IPackageJson | undefined = this.context.packageJsonLookup
+      .tryLoadPackageJsonFor(sourceFile.fileName);
     // Example: "@microsoft/sp-core-library"
     let typeReferencePackageName: string = '';
 
     // If we can not find a package path, we consider the type to be part of the current project's package.
     // One case where this happens is when looking for a type that is a symlink
-    if (!typeReferencePackagePath) {
+    if (!typeReferencePackageJson) {
       typeReferencePackageName = this.context.package.name;
     } else {
-      typeReferencePackageName = this.context.packageJsonLookup
-        .getPackageName(typeReferencePackagePath);
+      typeReferencePackageName = typeReferencePackageJson.name;
 
       typingsScopeNames.every(typingScopeName => {
         if (typeReferencePackageName.indexOf(typingScopeName) > -1) {
@@ -630,7 +633,7 @@ export abstract class AstItem {
     const currentPackageName: string = this.context.package.name;
 
     const typeName: string = typeReferenceNode.typeName.getText();
-    if (!typeReferencePackagePath || typeReferencePackageName === currentPackageName) {
+    if (!typeReferencePackageJson || typeReferencePackageName === currentPackageName) {
       // The type is defined in this project.  Did the person remember to export it?
       const exportedLocalName: string | undefined = this.context.package.tryGetExportedSymbolName(currentSymbol);
       if (exportedLocalName) {
@@ -650,12 +653,12 @@ export abstract class AstItem {
 
     // External
     // Attempt to load from docItemLoader
-    const scopedPackageName: IScopedPackageName = ApiDefinitionReference.parseScopedPackageName(
+    const parsedPackageName: IParsedPackageName = PackageName.parse(
       typeReferencePackageName
     );
     const apiDefinitionRefParts: IApiDefinitionReferenceParts = {
-      scopeName: scopedPackageName.scope,
-      packageName: scopedPackageName.package,
+      scopeName: parsedPackageName.scope,
+      packageName: parsedPackageName.unscopedName,
       exportName: '',
       memberName: ''
     };

@@ -11,6 +11,26 @@
 
 export { AlphaClass } from './AlphaClass';
 export { BetaClass } from './BetaClass';
-export { PublicClass } from './PublicClass';
+export { PublicClass, IPublicClassInternalParameters } from './PublicClass';
 export { InternalClass } from './InternalClass';
 export { EntangledNamespace } from './EntangledNamespace';
+
+export * from './EnumExamples';
+
+export { BetaInterface } from './BetaInterface';
+
+/**
+ * This is a module-scoped variable.
+ * @beta
+ */
+export const variableDeclaration: string = 'hello';
+
+import { AlphaClass } from './AlphaClass';
+
+/**
+ * This is an exported type alias.
+ * @alpha
+ */
+export type ExportedAlias = AlphaClass;
+
+export { IPublicComplexInterface } from './IPublicComplexInterface';

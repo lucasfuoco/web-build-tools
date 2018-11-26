@@ -4,7 +4,7 @@
 import * as os  from 'os';
 import * as path from 'path';
 import * as ts from 'typescript';
-import { JsonFile, IJsonSchemaErrorInfo } from '@microsoft/node-core-library';
+import { JsonFile, IJsonSchemaErrorInfo, NewlineKind } from '@microsoft/node-core-library';
 
 import { ExtractorContext } from '../ExtractorContext';
 import { AstStructuredType } from '../ast/AstStructuredType';
@@ -48,7 +48,12 @@ export class ApiJsonGenerator extends AstItemVisitor {
     this.visit(context.package, this.jsonOutput);
 
     // Write the output before validating the schema, so we can debug it
-    JsonFile.save(this.jsonOutput, reportFilename);
+    JsonFile.save(this.jsonOutput, reportFilename,
+      {
+        ensureFolderExists: true,
+        newlineConversion: NewlineKind.CrLf
+      }
+    );
 
     // Validate that the output conforms to our JSON schema
     ApiJsonFile.jsonSchema.validateObjectWithCallback(this.jsonOutput, (errorInfo: IJsonSchemaErrorInfo) => {
@@ -95,6 +100,13 @@ export class ApiJsonGenerator extends AstItemVisitor {
       remarks: astStructuredType.documentation.remarks || [],
       isBeta: astStructuredType.inheritedReleaseTag === ReleaseTag.Beta
     };
+
+    // Type literals don't support isSealed
+    if (astStructuredType.kind === AstItemKind.Class || astStructuredType.kind === AstItemKind.Interface) {
+      // tslint:disable-next-line:no-any
+      (structureNode as any).isSealed = !!astStructuredType.documentation.isSealed;
+    }
+
     refObject![astStructuredType.name] = structureNode;
 
     ApiJsonGenerator._methodCounter = 0;
@@ -242,7 +254,11 @@ export class ApiJsonGenerator extends AstItemVisitor {
       deprecatedMessage: astProperty.inheritedDeprecatedMessage || [],
       summary: astProperty.documentation.summary || [],
       remarks: astProperty.documentation.remarks || [],
-      isBeta: astProperty.inheritedReleaseTag === ReleaseTag.Beta
+      isBeta: astProperty.inheritedReleaseTag === ReleaseTag.Beta,
+      isSealed: !!astProperty.documentation.isSealed,
+      isVirtual: !!astProperty.documentation.isVirtual,
+      isOverride: !!astProperty.documentation.isOverride,
+      isEventProperty: astProperty.isEventProperty
     };
 
     refObject![astProperty.name] = newNode;
@@ -295,8 +311,11 @@ export class ApiJsonGenerator extends AstItemVisitor {
         deprecatedMessage: astMethod.inheritedDeprecatedMessage || [],
         summary: astMethod.documentation.summary || [],
         remarks: astMethod.documentation.remarks || [],
-        isBeta: astMethod.inheritedReleaseTag === ReleaseTag.Beta
-      };
+        isBeta: astMethod.inheritedReleaseTag === ReleaseTag.Beta,
+        isSealed: !!astMethod.documentation.isSealed,
+        isVirtual: !!astMethod.documentation.isVirtual,
+        isOverride: !!astMethod.documentation.isOverride
+        };
     }
 
     refObject![astMethod.name] = newNode;

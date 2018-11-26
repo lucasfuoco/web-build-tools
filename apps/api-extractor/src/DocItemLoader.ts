@@ -1,10 +1,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 // See LICENSE in the project root for license information.
 
-import * as fsx from 'fs-extra';
-import * as os  from 'os';
+import * as os from 'os';
 import * as path from 'path';
-import { JsonFile } from '@microsoft/node-core-library';
+import {
+  JsonFile,
+  FileSystem,
+  FileConstants
+} from '@microsoft/node-core-library';
 
 import {
   ApiItem,
@@ -19,22 +22,6 @@ import { AstPackage } from './ast/AstPackage';
 import { ResolvedApiItem } from './ResolvedApiItem';
 import { ApiJsonFile } from './api/ApiJsonFile';
 import { IReferenceResolver } from './aedoc/ApiDocumentation';
-
-/**
- * Used to describe a parsed package name in the form of
- * scopedName/packageName. Ex: @microsoft/sp-core-library.
- */
-export interface IParsedScopeName {
-  /**
-   * The scope prefix. Ex: @microsoft.
-   */
-  scope: string;
-
-  /**
-   * The specific package name. Ex: sp-core-library.
-   */
-  name: string;
-}
 
 /**
  * A loader for locating the ApiItem associated with a given project and API item, or
@@ -54,7 +41,7 @@ export class DocItemLoader implements IReferenceResolver {
    * that we are compiling.
    */
   constructor(projectFolder: string) {
-    if (!fsx.existsSync(path.join(projectFolder, 'package.json'))) {
+    if (!FileSystem.exists(path.join(projectFolder, FileConstants.PackageJson))) {
       throw new Error(`An NPM project was not found in the specified folder: ${projectFolder}`);
     }
 
@@ -214,7 +201,7 @@ export class DocItemLoader implements IReferenceResolver {
       `dist/${apiDefinitionRef.packageName}.api.json`
     );
 
-    if (!fsx.existsSync(path.join(apiJsonFilePath))) {
+    if (!FileSystem.exists(path.join(apiJsonFilePath))) {
       // Error should be handled by the caller
       return undefined;
     }

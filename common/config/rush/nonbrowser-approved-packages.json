@@ -3,6 +3,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/approved-packages.schema.json",
   "packages": [
     {
+      "name": "@microsoft/api-documenter",
+      "allowedCategories": [ "tests" ]
+    },
+    {
       "name": "@microsoft/api-extractor",
       "allowedCategories": [ "libraries", "tests" ]
     },
@@ -48,7 +52,7 @@
     },
     {
       "name": "@microsoft/node-library-build",
-      "allowedCategories": [ "libraries" ]
+      "allowedCategories": [ "libraries", "tests" ]
     },
     {
       "name": "@microsoft/package-deps-hash",
@@ -57,6 +61,14 @@
     {
       "name": "@microsoft/rush-lib",
       "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "@microsoft/rush-stack",
+      "allowedCategories": [ "libraries", "tests" ]
+    },
+    {
+      "name": "@microsoft/rush-stack-compiler",
+      "allowedCategories": [ "libraries", "tests" ]
     },
     {
       "name": "@microsoft/set-webpack-public-path-plugin",
@@ -75,8 +87,24 @@
       "allowedCategories": [ "libraries" ]
     },
     {
+      "name": "@microsoft/tsdoc",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
       "name": "@microsoft/web-library-build",
       "allowedCategories": [ "libraries", "tests" ]
+    },
+    {
+      "name": "@pnpm/link-bins",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "@pnpm/logger",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "@yarnpkg/lockfile",
+      "allowedCategories": [ "libraries" ]
     },
     {
       "name": "api-extractor-test-01",
@@ -107,11 +135,19 @@
       "allowedCategories": [ "libraries" ]
     },
     {
+      "name": "clean-css",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
       "name": "colors",
       "allowedCategories": [ "libraries" ]
     },
     {
       "name": "deasync",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "decomment",
       "allowedCategories": [ "libraries" ]
     },
     {
@@ -235,7 +271,7 @@
       "allowedCategories": [ "libraries" ]
     },
     {
-      "name": "gulp-util",
+      "name": "https-proxy-agent",
       "allowedCategories": [ "libraries" ]
     },
     {
@@ -268,6 +304,10 @@
     },
     {
       "name": "js-yaml",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "jsdom",
       "allowedCategories": [ "libraries" ]
     },
     {
@@ -331,11 +371,19 @@
       "allowedCategories": [ "libraries" ]
     },
     {
+      "name": "node-fetch",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
       "name": "node-forge",
       "allowedCategories": [ "libraries" ]
     },
     {
       "name": "node-notifier",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "node-sass",
       "allowedCategories": [ "libraries" ]
     },
     {
@@ -359,6 +407,10 @@
       "allowedCategories": [ "libraries" ]
     },
     {
+      "name": "postcss",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
       "name": "postcss-modules",
       "allowedCategories": [ "libraries" ]
     },
@@ -371,7 +423,7 @@
       "allowedCategories": [ "libraries" ]
     },
     {
-      "name": "rimraf",
+      "name": "resolve",
       "allowedCategories": [ "libraries" ]
     },
     {
@@ -403,6 +455,10 @@
       "allowedCategories": [ "libraries" ]
     },
     {
+      "name": "ts-jest",
+      "allowedCategories": [ "libraries", "tests" ]
+    },
+    {
       "name": "tslint",
       "allowedCategories": [ "libraries" ]
     },
@@ -416,6 +472,10 @@
     },
     {
       "name": "uglify-js",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "vinyl",
       "allowedCategories": [ "libraries" ]
     },
     {

@@ -19,6 +19,7 @@ class Extractor {
   static generateFilePathsForAnalysis(inputFilePaths: string[]): string[];
   static jsonSchema: JsonSchema;
   processProject(options?: IAnalyzeProjectOptions): boolean;
+  static processProjectFromConfigFile(jsonConfigFile: string, options?: IExtractorOptions): void;
 }
 
 // @public
@@ -49,6 +50,7 @@ interface IApiBaseDefinition {
 interface IApiClass extends IApiBaseDefinition {
   extends?: string;
   implements?: string;
+  isSealed: boolean;
   kind: 'class';
   members: IApiNameMap<ApiMember>;
   typeParameters?: string[];
@@ -56,6 +58,9 @@ interface IApiClass extends IApiBaseDefinition {
 
 // @alpha
 interface IApiConstructor extends IApiBaseDefinition {
+  isOverride: boolean;
+  isSealed: boolean;
+  isVirtual: boolean;
   kind: 'constructor';
   parameters: IApiNameMap<IApiParameter>;
   signature: string;
@@ -87,6 +92,7 @@ interface IApiFunction extends IApiBaseDefinition {
 interface IApiInterface extends IApiBaseDefinition {
   extends?: string;
   implements?: string;
+  isSealed: boolean;
   kind: 'interface';
   members: IApiNameMap<ApiMember>;
   typeParameters?: string[];
@@ -104,7 +110,10 @@ interface IApiItemReference {
 interface IApiMethod extends IApiBaseDefinition {
   accessModifier: ApiAccessModifier;
   isOptional: boolean;
+  isOverride: boolean;
+  isSealed: boolean;
   isStatic: boolean;
+  isVirtual: boolean;
   kind: 'method';
   parameters: IApiNameMap<IApiParameter>;
   returnValue: IApiReturnValue;
@@ -147,9 +156,13 @@ interface IApiParameter {
 
 // @alpha
 interface IApiProperty extends IApiBaseDefinition {
+  isEventProperty: boolean;
   isOptional: boolean;
+  isOverride: boolean;
   isReadOnly: boolean;
+  isSealed: boolean;
   isStatic: boolean;
+  isVirtual: boolean;
   kind: 'property';
   signature: string;
   type: string;
@@ -157,9 +170,7 @@ interface IApiProperty extends IApiBaseDefinition {
 
 // @alpha
 interface IApiReturnValue {
-  // (undocumented)
   description: MarkupBasicElement[];
-  // (undocumented)
   type: string;
 }
 
@@ -182,10 +193,21 @@ interface IExtractorConfig {
   apiReviewFile?: IExtractorApiReviewFileConfig;
   compiler: IExtractorTsconfigCompilerConfig | IExtractorRuntimeCompilerConfig;
   // @beta
-  packageTypings?: IExtractorPackageTypingsConfig;
+  dtsRollup?: IExtractorDtsRollupConfig;
   policies?: IExtractorPoliciesConfig;
   project: IExtractorProjectConfig;
   validationRules?: IExtractorValidationRulesConfig;
+}
+
+// @beta
+interface IExtractorDtsRollupConfig {
+  enabled: boolean;
+  mainDtsRollupPath?: string;
+  publishFolder?: string;
+  publishFolderForBeta?: string;
+  publishFolderForInternal?: string;
+  publishFolderForPublic?: string;
+  trimming?: boolean;
 }
 
 // @public
@@ -193,15 +215,9 @@ interface IExtractorOptions {
   compilerProgram?: ts.Program;
   customLogger?: Partial<ILogger>;
   localBuild?: boolean;
-}
-
-// @beta
-interface IExtractorPackageTypingsConfig {
-  dtsFilePathForInternal?: string;
-  dtsFilePathForPreview?: string;
-  dtsFilePathForPublic?: string;
-  enabled: boolean;
-  outputFolder?: string;
+  skipLibCheck?: boolean;
+  // @beta
+  typescriptCompilerFolder?: string;
 }
 
 // @public
@@ -291,6 +307,12 @@ interface IMarkupHighlightedText {
   highlighter: MarkupHighlighter;
   kind: 'code';
   text: string;
+}
+
+// @public
+interface IMarkupHtmlTag {
+  kind: 'html-tag';
+  token: string;
 }
 
 // @public
@@ -385,6 +407,7 @@ interface IMarkupWebLink {
 
 // @public
 class Markup {
+  static appendTextElements(output: MarkupElement[], text: string, options?: IMarkupCreateTextOptions): void;
   static BREAK: IMarkupLineBreak;
   static createApiLink(textElements: MarkupLinkTextElement[], target: IApiItemReference): IMarkupApiLink;
   static createApiLinkFromText(text: string, target: IApiItemReference): IMarkupApiLink;
@@ -396,6 +419,7 @@ class Markup {
   static createHeading4(text: string): IMarkupHeading4;
   static createList(): IMarkupList;
   static createListRow(cellValues?: Array<Array<MarkupBasicElement | MarkupStructuredElement>> | undefined): IMarkupListRow;
+  static createHtmlTag(token: string): IMarkupHtmlTag;
   static createNoteBox(textElements: MarkupBasicElement[]): IMarkupNoteBox;
   static createNoteBoxFromText(text: string): IMarkupNoteBox;
   static createPage(title: string): IMarkupPage;

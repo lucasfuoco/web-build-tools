@@ -5,15 +5,6 @@ export function _isJestEnabled(rootFolder: string): boolean;
 export function addSuppression(suppression: string | RegExp): void;
 
 // @public
-class ApiExtractorTask extends GulpTask<IApiExtractorTaskConfig> {
-  constructor();
-  // (undocumented)
-  executeTask(gulp: typeof Gulp, completeCallback: (error?: string) => void): NodeJS.ReadWriteStream | void;
-  // (undocumented)
-  loadSchema(): Object;
-}
-
-// @public
 class CleanFlagTask extends CleanTask {
   constructor();
   // (undocumented)
@@ -121,6 +112,7 @@ interface IBuildConfig {
   jestEnabled?: boolean;
   libAMDFolder?: string;
   libES6Folder?: string;
+  libESNextFolder?: string;
   libFolder: string;
   onTaskEnd?: (taskName: string, duration: number[], error?: any) => void;
   onTaskStart?: (taskName: string) => void;
@@ -174,22 +166,16 @@ interface IExecutable {
   onRegister?: () => void;
 }
 
-// @public (undocumented)
-interface IFixupSettingsOptions {
-  // (undocumented)
-  mustBeCommonJsOrEsnext: boolean;
-}
-
 // @alpha
 interface IJestConfig {
   cache?: boolean;
-  cacheDirectory?: string;
   collectCoverageFrom?: string[];
   coverage?: boolean;
   coverageReporters?: string[];
   isEnabled?: boolean;
   maxWorkers?: number;
   moduleDirectories?: string[];
+  modulePathIgnorePatterns?: string[];
   testMatch?: string[];
   testPathIgnorePatterns?: string[];
 }
@@ -198,9 +184,14 @@ interface IJestConfig {
 export function initialize(gulp: typeof Gulp): void;
 
 // @public (undocumented)
-interface ITsConfigFile<T> {
-  // (undocumented)
-  compilerOptions: T;
+interface ITscCmdTaskConfig extends IRSCTaskConfig {
+  removeCommentsFromJavaScript?: boolean;
+  staticMatch?: string[];
+}
+
+// @public (undocumented)
+interface ITslintCmdTaskConfig extends IRSCTaskConfig {
+  displayAsError?: boolean;
 }
 
 // @alpha
@@ -255,26 +246,24 @@ enum TestResultState {
   Skipped = 3
 }
 
-// @public
-class TypeScriptConfiguration {
-  static fixupSettings(compilerOptions: ts.Settings, logWarning: (msg: string) => void, options?: Partial<IFixupSettingsOptions>): void;
-  static getGulpTypescriptOptions(buildConfig: IBuildConfig): ITsConfigFile<ts.Settings>;
-  static getTsConfigFile(config: IBuildConfig): ITsConfigFile<ts.Settings>;
-  static getTypescriptCompiler(): any;
-  static setBaseConfig(config: ITsConfigFile<ts.Settings>): void;
-  static setTypescriptCompiler(typescriptOverride: any): void;
-}
-
-// @public (undocumented)
-class TypeScriptTask extends GulpTask<ITypeScriptTaskConfig> {
+// @beta (undocumented)
+class TscCmdTask extends RSCTask<ITscCmdTaskConfig> {
   constructor();
   // (undocumented)
-  executeTask(gulp: gulpType.Gulp, completeCallback: (error?: string) => void): void;
+  protected _onData(data: Buffer): void;
   // (undocumented)
-  getCleanMatch(buildConfig: IBuildConfig, taskConfig?: ITypeScriptTaskConfig): string[];
+  executeTask(): Promise<void>;
   // (undocumented)
   loadSchema(): Object;
-  mergeConfig(config: ITypeScriptTaskConfig): void;
+}
+
+// @beta (undocumented)
+class TslintCmdTask extends RSCTask<ITslintCmdTaskConfig> {
+  constructor();
+  // (undocumented)
+  executeTask(): Promise<void>;
+  // (undocumented)
+  loadSchema(): Object;
 }
 
 // @public
@@ -301,11 +290,9 @@ export function watch(watchMatch: string | string[], taskExecutable: IExecutable
 // WARNING: Unsupported export: clean
 // WARNING: Unsupported export: copyStaticAssets
 // WARNING: Unsupported export: jest
+// WARNING: Unsupported export: tscCmd
+// WARNING: Unsupported export: tslintCmd
 // WARNING: Unsupported export: apiExtractor
-// WARNING: Unsupported export: typescript
-// WARNING: Unsupported export: tslint
-// WARNING: Unsupported export: text
-// WARNING: Unsupported export: removeTripleSlash
 // WARNING: Unsupported export: instrument
 // WARNING: Unsupported export: mocha
 // (No @packagedocumentation comment for this package)

@@ -113,6 +113,7 @@ interface IBuildConfig {
   jestEnabled?: boolean;
   libAMDFolder?: string;
   libES6Folder?: string;
+  libESNextFolder?: string;
   libFolder: string;
   onTaskEnd?: (taskName: string, duration: number[], error?: any) => void;
   onTaskStart?: (taskName: string) => void;
@@ -170,13 +171,13 @@ interface IExecutable {
 // @alpha
 interface IJestConfig {
   cache?: boolean;
-  cacheDirectory?: string;
   collectCoverageFrom?: string[];
   coverage?: boolean;
   coverageReporters?: string[];
   isEnabled?: boolean;
   maxWorkers?: number;
   moduleDirectories?: string[];
+  modulePathIgnorePatterns?: string[];
   testMatch?: string[];
   testPathIgnorePatterns?: string[];
 }

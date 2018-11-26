@@ -1,6 +1,52 @@
 # Change Log - @microsoft/ts-command-line
 
-This log was last generated on Thu, 15 Mar 2018 20:00:50 GMT and should not be manually modified.
+This log was last generated on Thu, 06 Sep 2018 01:25:26 GMT and should not be manually modified.
+
+## 4.2.2
+Thu, 06 Sep 2018 01:25:26 GMT
+
+### Patches
+
+- Update "repository" field in package.json
+
+## 4.2.1
+Thu, 23 Aug 2018 18:18:53 GMT
+
+### Patches
+
+- Republish all packages in web-build-tools to resolve GitHub issue #782
+
+## 4.2.0
+Fri, 08 Jun 2018 08:43:52 GMT
+
+### Minor changes
+
+- Add CommandLineChoiceParameter.appendToArgList() and CommandLineParser.tryGetAction()
+
+## 4.1.0
+Fri, 27 Apr 2018 03:04:32 GMT
+
+### Minor changes
+
+- Add "defaultValue", "environmentVariable", and "required" features for command-line parameters
+
+## 4.0.0
+Thu, 19 Apr 2018 21:25:56 GMT
+
+### Breaking changes
+
+- Rename "CommandLineOptionParameter" to "CommandLineChoiceParameter" (API change)
+- Rename "ICommandLineChoiceDefinition.options" to "alternatives" (API change)
+- Add DynamicCommandLineAction, DynamicCommandLineParser, and other APIs to support defining and reading command-line parameters at runtime
+- Rename "actionVerb" to "actionName" (API change)
+- Replace "CommandLineAction.options" with more concise top-level properties (API change)
+
+## 3.1.1
+Fri, 23 Mar 2018 00:34:53 GMT
+
+### Patches
+
+- Upgrade colors to version ~1.2.1
 
 ## 3.1.0
 Thu, 15 Mar 2018 20:00:50 GMT

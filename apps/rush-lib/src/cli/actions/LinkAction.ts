@@ -3,22 +3,24 @@
 
 import { CommandLineFlagParameter } from '@microsoft/ts-command-line';
 
-import RushCommandLineParser from './RushCommandLineParser';
-import { LinkManagerFactory } from '../logic/LinkManagerFactory';
-import { BaseLinkManager } from '../logic/base/BaseLinkManager';
+import { RushCommandLineParser } from '../RushCommandLineParser';
+import { LinkManagerFactory } from '../../logic/LinkManagerFactory';
+import { BaseLinkManager } from '../../logic/base/BaseLinkManager';
 import { BaseRushAction } from './BaseRushAction';
 
-export default class LinkAction extends BaseRushAction {
-  private _parser: RushCommandLineParser;
+export class LinkAction extends BaseRushAction {
   private _force: CommandLineFlagParameter;
 
   constructor(parser: RushCommandLineParser) {
     super({
-      actionVerb: 'link',
+      actionName: 'link',
       summary: 'Create node_modules symlinks for all projects',
-      documentation: 'Create node_modules symlinks for all projects'
+      documentation: 'Create node_modules symlinks for all projects.  This operation is normally performed'
+       + ' automatically as part of "rush install" or "rush update".  You should only need to use "rush link"'
+       + ' if you performed "rush unlink" for some reason, or if you specified the "--no-link" option'
+       + ' for "rush install" or "rush update".',
+      parser
     });
-    this._parser = parser;
   }
 
   protected onDefineParameters(): void {

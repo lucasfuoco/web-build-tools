@@ -1,12 +1,18 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 // See LICENSE in the project root for license information.
 
-import * as fsx from 'fs-extra';
+import * as colors from 'colors';
 import * as path from 'path';
 import yaml = require('js-yaml');
 import * as mkdirp from 'mkdirp';
 import {dirname} from 'path';
+import * as fs from 'fs';
+import * as fsx from 'fsx';
 
+import {
+  PackageName,
+  FileSystem
+} from '@microsoft/node-core-library';
 import {
   IApiClass,
   IApiEnum,
@@ -31,6 +37,7 @@ import {
   MarkupStructuredElement,
   IMarkupParagraph,
   IApiNamespace
+  IMarkupTableRow
 } from '@microsoft/api-extractor';
 
 import {
@@ -52,9 +59,9 @@ export enum FolderType {
   Class = 'classes',
   Interface = 'interfaces',
   Enum = 'enums',
-  Function ='functions',
-  Property = 'properties',
-  Namespace = 'namespaces'
+  Function = 'functions',
+  Package = 'package',
+  Property = 'properties'
 }
 
 /**
@@ -66,7 +73,7 @@ export class MarkdownDocumenter {
   private _outputFolder: string;
 
   public constructor(docItemSet: DocItemSet) {
-    this._docItemSet = docItemSet;
+      this._docItemSet = docItemSet;
   }
 
   public generateFiles(outputFolder: string): void {
@@ -77,7 +84,7 @@ export class MarkdownDocumenter {
 
     for (const docPackage of this._docItemSet.docPackages) {
       this._writePackages(docPackage);
-      this._writeTocFile(docPackage.children);   
+      this._writeTocFile(docPackage.children);
     }
 
   }
@@ -175,14 +182,14 @@ export class MarkdownDocumenter {
     return result;
   }
 
-  private _writeYamlFile(dataObject: {}, filePath: string, yamlMimeType: string) {
-    let stringified: string = yaml.safeDump(dataObject, {
+  private _writeYamlFile(dataObject: {}, filePath: string, _yamlMimeType: string): void {
+    const stringified: string = yaml.safeDump(dataObject, {
       lineWidth: 120
     });
 
     const normalized: string = stringified.split('\n').join('\r\n');
     fsx.mkdirsSync(path.dirname(filePath));
-    fsx.writeFileSync(filePath, normalized);
+    fs.writeFileSync(filePath, normalized);
   }
 
   /**
@@ -316,7 +323,7 @@ export class MarkdownDocumenter {
       this._writeBetaWarning(markupPage.elements);
     }
     markupPage.elements.push(Markup.createParagraphAndElements(apiNamespace.summary));
-    
+
     const classesList: IMarkupList = Markup.createList();
     const interfacesList: IMarkupList = Markup.createList();
     const propertiesList: IMarkupList = Markup.createList();
@@ -381,6 +388,15 @@ export class MarkdownDocumenter {
             ])
           );
           this._writeEnumPage(docChild);
+          break;
+        case 'namespace':
+          namespacesTable.rows.push(
+            Markup.createTableRow([
+              docItemTitle,
+              docChildDescription
+            ])
+          );
+          this._writePackagePage(docChild);
           break;
       }
     }
@@ -474,7 +490,7 @@ export class MarkdownDocumenter {
             Markup.createTextElements('Description')
           ]);
 
-          if (Object.keys(apiMember.parameters).length > 0) { 
+          if (Object.keys(apiMember.parameters).length > 0) {
             for (const parameterName of Object.keys(apiMember.parameters)) {
               const apiParameter: IApiParameter = apiMember.parameters[parameterName];
                 constructorParametersTable.rows.push(Markup.createTableRow([
@@ -517,7 +533,7 @@ export class MarkdownDocumenter {
             Markup.createTextElements('Description')
           ]);
 
-          if (Object.keys(apiMember.parameters).length > 0) { 
+          if (Object.keys(apiMember.parameters).length > 0) {
             for (const parameterName of Object.keys(apiMember.parameters)) {
               const apiParameter: IApiParameter = apiMember.parameters[parameterName];
                 methodParametersTable.rows.push(Markup.createTableRow([
@@ -528,7 +544,7 @@ export class MarkdownDocumenter {
               );
             }
           }
-          
+
           returnsTable.rows.push(Markup.createTableRow([
             Markup.createTextElements(apiMember.returnValue.type),
             apiMember.returnValue.description
@@ -580,8 +596,9 @@ export class MarkdownDocumenter {
     // TODO: Show concise generic parameters with class name
     const markupPage: IMarkupPage = Markup.createPage(`${docInterface.name} interface`);
 
-    const interfaceSignature: string = `export interface ${docInterface.name}${apiInterface.extends ? " extends " + apiInterface.extends : ""}` +
-        `${apiInterface.implements ? " implements " + apiInterface.implements : ""}`;
+    const interfaceSignature: string = `export interface ${docInterface.name}${apiInterface.extends ? ' extends ' +
+        apiInterface.extends : ''}` +
+        `${apiInterface.implements ? ' implements ' + apiInterface.implements : ''}`;
 
     if (apiInterface.isBeta) {
       this._writeBetaWarning(markupPage.elements);
@@ -632,7 +649,7 @@ export class MarkdownDocumenter {
             Markup.createTextElements('Description')
           ]);
 
-          if (Object.keys(apiMember.parameters).length > 0) { 
+          if (Object.keys(apiMember.parameters).length > 0) {
             for (const parameterName of Object.keys(apiMember.parameters)) {
               const apiParameter: IApiParameter = apiMember.parameters[parameterName];
                 methodParametersTable.rows.push(Markup.createTableRow([
@@ -643,7 +660,7 @@ export class MarkdownDocumenter {
               );
             }
           }
-          
+
           returnsTable.rows.push(Markup.createTableRow([
             Markup.createTextElements(apiMember.returnValue.type),
             apiMember.returnValue.description
@@ -895,19 +912,23 @@ export class MarkdownDocumenter {
       onRenderApiLink: (args: IMarkdownRenderApiLinkArgs) => {
         const resolveResult: IDocItemSetResolveResult = this._docItemSet.resolveApiItemReference(args.reference);
         if (!resolveResult.docItem) {
-          throw new Error('Unresolved: ' + JSON.stringify(args.reference));
+          // Eventually we should introduce a warnings file
+          console.error(colors.yellow('Warning: Unresolved hyperlink to '
+            + Markup.formatApiItemReference(args.reference)));
+        } else {
+          // NOTE: GitHub's markdown renderer does not resolve relative hyperlinks correctly
+          // unless they start with "./" or "../".
+          const docFilename: string = './' + this._getFilenameForDocItem(resolveResult.docItem);
+          args.prefix = '[';
+          args.suffix = '](' + docFilename + ')';
         }
-
-        // NOTE: GitHub's markdown renderer does not resolve relative hyperlinks correctly
-        // unless they start with "./" or "../".
-        const docFilename: string = './' + this._getFilenameForDocItem(resolveResult.docItem);
-        args.prefix = '[';
-        args.suffix = '](' + docFilename + ')';
       }
     });
     mkdirp(dirname(filename), (err: Error) => {
-      if (err) throw err;
-      fsx.writeFileSync(filename, content);
+      if (err) {
+        throw err;
+      }
+      fs.writeFileSync(filename, content);
     });
   }
 
@@ -915,7 +936,7 @@ export class MarkdownDocumenter {
     let baseName: string = '';
     for (const part of docItem.getHierarchy()) {
       if (part.kind === DocItemKind.Package) {
-        baseName = Utilities.getUnscopedPackageName(part.name);
+        baseName = PackageName.getUnscopedName(part.name);
       } else {
         baseName += '.' + part.name;
       }
@@ -925,6 +946,6 @@ export class MarkdownDocumenter {
 
   private _deleteOldOutputFiles(): void {
     console.log('Deleting old output from ' + this._outputFolder);
-    fsx.emptyDirSync(this._outputFolder);
+    FileSystem.ensureEmptyFolder(this._outputFolder);
   }
 }

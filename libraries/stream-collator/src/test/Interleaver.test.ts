@@ -6,7 +6,7 @@
 import { assert } from 'chai';
 import * as os from 'os';
 
-import Interleaver, { ITaskWriter } from '../Interleaver';
+import { Interleaver, ITaskWriter } from '../Interleaver';
 
 class StringStream {
   private _buffer: string[] = [];
@@ -37,9 +37,8 @@ describe('Interleaver tests', () => {
   describe('Testing register and close', () => {
     it('cannot be directly instantiated', (done: MochaDone) => {
       assert.throws(() => {
-        /* tslint:disable:no-unused-variable */
         const a: Interleaver = new Interleaver();
-        /* tslint:enable:no-unused-variable */
+        assert.isNotNull(a);
       });
       done();
     });

@@ -1,6 +1,201 @@
 # Change Log - @microsoft/node-core-library
 
-This log was last generated on Thu, 15 Mar 2018 16:05:43 GMT and should not be manually modified.
+This log was last generated on Fri, 16 Nov 2018 21:37:10 GMT and should not be manually modified.
+
+## 3.6.0
+Fri, 16 Nov 2018 21:37:10 GMT
+
+### Minor changes
+
+- Add new APIs Sort.sortSet() and Sort.sortSetBy()
+
+## 3.5.2
+Wed, 07 Nov 2018 21:04:35 GMT
+
+### Patches
+
+- Upgrade fs-extra to eliminate the "ERROR: ENOTEMPTY: directory not empty, rmdir" error that sometimes occurred with FileSystem.deleteFolder()
+
+## 3.5.1
+Mon, 05 Nov 2018 17:04:24 GMT
+
+### Patches
+
+- Remove all dependencies on the "rimraf" library
+
+## 3.5.0
+Thu, 25 Oct 2018 23:20:40 GMT
+
+### Minor changes
+
+- Add Sort API
+
+## 3.4.0
+Wed, 24 Oct 2018 16:03:10 GMT
+
+### Minor changes
+
+- Adding Terminal API.
+
+## 3.3.1
+Wed, 17 Oct 2018 21:04:49 GMT
+
+### Patches
+
+- Remove use of a deprecated Buffer API.
+
+## 3.3.0
+Mon, 08 Oct 2018 16:04:27 GMT
+
+### Minor changes
+
+- Renaming PromiseUtilities to LegacyAdapters
+
+## 3.2.0
+Sun, 07 Oct 2018 06:15:56 GMT
+
+### Minor changes
+
+- Introduce promiseify utility function.
+
+### Patches
+
+- Update documentation
+
+## 3.1.0
+Fri, 28 Sep 2018 16:05:35 GMT
+
+### Minor changes
+
+- Add `Path.isUnderOrEquals()`
+
+## 3.0.1
+Thu, 06 Sep 2018 01:25:26 GMT
+
+### Patches
+
+- Update "repository" field in package.json
+
+## 3.0.0
+Wed, 29 Aug 2018 06:36:50 GMT
+
+### Breaking changes
+
+- (Breaking API change) The FileSystem move/copy/createLink operations now require the source/target parameters to be explicitly specified, to avoid confusion
+
+## 2.2.1
+Thu, 23 Aug 2018 18:18:53 GMT
+
+### Patches
+
+- Republish all packages in web-build-tools to resolve GitHub issue #782
+
+## 2.2.0
+Wed, 22 Aug 2018 20:58:58 GMT
+
+### Minor changes
+
+- Add features to JsonFile API to update an existing JSON file while preserving comments and whitespace
+
+## 2.1.1
+Wed, 22 Aug 2018 16:03:25 GMT
+
+### Patches
+
+- Fix an issue where Executable.spawnSync() was returning SpawnSyncReturns<Buffer> instead of SpawnSyncReturns<string>
+- Fix an issue where Executable.spawnSync() did not support command paths containing spaces
+
+## 2.1.0
+Thu, 09 Aug 2018 21:03:22 GMT
+
+### Minor changes
+
+- Add a new API "Executable" for spawning child processes
+
+## 2.0.0
+Thu, 26 Jul 2018 16:04:17 GMT
+
+### Breaking changes
+
+- Replace IFileModeBits with a more flexible PosixModeBits enum
+- Rename FileSystem.changePermissionBits() to changePosixModeBits()
+
+### Minor changes
+
+- Add new APIs FileSystem.getPosixModeBits() and FileSystem.formatPosixModeBits()
+
+## 1.5.0
+Tue, 03 Jul 2018 21:03:31 GMT
+
+### Minor changes
+
+- Add a FileSystem API that wraps and replaces fs and fs-extra
+
+## 1.4.1
+Thu, 21 Jun 2018 08:27:29 GMT
+
+### Patches
+
+- issue #705: fallback on linux to /proc/{n}/stat if 'ps -p 1 -o lstart' is not supported
+
+## 1.4.0
+Fri, 08 Jun 2018 08:43:52 GMT
+
+### Minor changes
+
+- Add Text.truncateWithEllipsis() API
+
+## 1.3.2
+Thu, 31 May 2018 01:39:33 GMT
+
+### Patches
+
+- Add missing "repository" property in IPackageJSON.
+
+## 1.3.1
+Tue, 15 May 2018 02:26:45 GMT
+
+### Patches
+
+- Fix an issue where the PackageName class could not parse the package name "Base64"
+
+## 1.3.0
+Fri, 04 May 2018 00:42:38 GMT
+
+### Minor changes
+
+- Update the package resolution logic to preserve symlinks in paths
+
+## 1.2.0
+Tue, 03 Apr 2018 16:05:29 GMT
+
+### Minor changes
+
+- Add a new API "MapExtensions.mergeFromMap"
+
+## 1.1.0
+Mon, 02 Apr 2018 16:05:24 GMT
+
+### Minor changes
+
+- Add new API "PackageName" for validating package names and extracting scopes
+- Add new API "ProtectableMap" for tracking/restricting how a map is consumed
+
+## 1.0.0
+Sat, 17 Mar 2018 02:54:22 GMT
+
+### Breaking changes
+
+- Redesign the PackageJsonLookup API. This is a breaking change.
+
+### Minor changes
+
+- Add new APIs IPackageJson, FileConstants, and FolderConstants
+
+### Patches
+
+- Add "tsdoc" field to the IPackageJson API
+- Improve PackageJsonLookup.tryGetPackageFolderFor() to deduplicate symlinks by using fs.realpathSync()
 
 ## 0.8.0
 Thu, 15 Mar 2018 16:05:43 GMT
