@@ -1,6 +1,11 @@
 // DO NOT ADD COMMENTS IN THIS FILE.  They will be lost when the Rush tool resaves it.
 {
+  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/approved-packages.schema.json",
   "packages": [
+    {
+      "name": "fsx",
+      "allowedCategories": [ "libraries" ]
+    },
     {
       "name": "mkdirp",
       "allowedCategories": [ "libraries" ]

@@ -61,6 +61,7 @@ dependencies:
   '@types/log4js': 0.0.33
   '@types/mime': 0.0.29
   '@types/minimatch': 2.0.29
+  '@types/mkdirp': 0.5.2
   '@types/mocha': 5.2.5
   '@types/node': 8.5.8
   '@types/node-fetch': 1.6.9
@@ -96,6 +97,7 @@ dependencies:
   end-of-stream: 1.1.0
   express: 4.16.4
   fs-extra: 7.0.1
+  fsx: 1.0.2
   git-repo-info: 1.1.4
   glob: 7.0.6
   glob-escape: 0.0.2
@@ -132,6 +134,7 @@ dependencies:
   lolex: 1.4.0
   merge2: 1.0.3
   minimatch: 3.0.4
+  mkdirp: 0.5.1
   mocha: 5.2.0
   node-fetch: 2.1.2
   node-forge: 0.7.6
@@ -555,6 +558,12 @@ packages:
     dev: false
     resolution:
       integrity: sha1-UALhT3Xi1x5WQoHfBDHIwbSio2o=
+  /@types/mkdirp/0.5.2:
+    dependencies:
+      '@types/node': 8.5.8
+    dev: false
+    resolution:
+      integrity: sha512-U5icWpv7YnZYGsN4/cmh3WD2onMY0aJIiTE6+51TwJCttdHvtCYmkBNOobHlXwrJRL0nkH9jH4kD+1FAdMN4Tg==
   /@types/mocha/5.2.5:
     dev: false
     resolution:
@@ -3583,6 +3592,10 @@ packages:
       node: '>=0.6'
     resolution:
       integrity: sha1-XB+x8RdHcRTwYyoOtLcbPLD9MXE=
+  /fsx/1.0.2:
+    dev: false
+    resolution:
+      integrity: sha1-md8QYT4IrcqLRjtR2Zzzlpaa2Jg=
   /function-bind/1.1.1:
     dev: false
     resolution:
@@ -9708,14 +9721,17 @@ packages:
     dependencies:
       '@types/jest': 21.1.10
       '@types/js-yaml': 3.9.1
+      '@types/mkdirp': 0.5.2
       '@types/node': 8.5.8
       colors: 1.2.5
+      fsx: 1.0.2
       gulp: 3.9.1
       js-yaml: 3.9.1
+      mkdirp: 0.5.1
     dev: false
     name: '@rush-temp/api-documenter'
     resolution:
-      integrity: sha512-KHdbtqNC34dTf8M6Mp6WAzjbKNiCK8R1dk/zDIhxa0FGUzuN/WoB/zFj0wESgaukZbW0gaf+b6/LxDXT8U4OvQ==
+      integrity: sha512-30AevoLWn5GW9sHPFd28k+9fXoOFFvVAxLkJV2vCTpLrl2e/87l1hnOPglInTwfqRT4xMYWTnJLFN9mFGeQrsg==
       tarball: 'file:projects/api-documenter.tgz'
     version: 0.0.0
   'file:projects/api-extractor-test-01.tgz':
@@ -10374,6 +10390,7 @@ specifiers:
   '@types/log4js': 0.0.33
   '@types/mime': 0.0.29
   '@types/minimatch': 2.0.29
+  '@types/mkdirp': ^0.5.2
   '@types/mocha': 5.2.5
   '@types/node': 8.5.8
   '@types/node-fetch': 1.6.9
@@ -10409,6 +10426,7 @@ specifiers:
   end-of-stream: ~1.1.0
   express: ~4.16.2
   fs-extra: ~7.0.1
+  fsx: 1.0.2
   git-repo-info: ~1.1.4
   glob: ~7.0.5
   glob-escape: ~0.0.1
@@ -10445,6 +10463,7 @@ specifiers:
   lolex: ~1.4.0
   merge2: ~1.0.2
   minimatch: ~3.0.2
+  mkdirp: ^0.5.1
   mocha: ^5.2.0
   node-fetch: ~2.1.2
   node-forge: ~0.7.1

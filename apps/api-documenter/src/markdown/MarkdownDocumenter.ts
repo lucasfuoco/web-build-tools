@@ -5,11 +5,11 @@ import * as colors from 'colors';
 import * as path from 'path';
 import * as mkdirp from 'mkdirp';
 import {dirname} from 'path';
+import * as fs from 'fs';
 
 import {
   PackageName,
-  FileSystem,
-  NewlineKind
+  FileSystem
 } from '@microsoft/node-core-library';
 import {
   IApiClass,
@@ -44,7 +44,7 @@ export enum FolderType {
   Class = 'classes',
   Interface = 'interfaces',
   Enum = 'enums',
-  Function ='functions',
+  Function = 'functions',
   Package = 'package',
   Property = 'properties'
 }
@@ -650,8 +650,10 @@ export class MarkdownDocumenter {
       }
     });
     mkdirp(dirname(filename), (err: Error) => {
-      if (err) throw err;
-      fsx.writeFileSync(filename, content);
+      if (err) {
+        throw err;
+      }
+      fs.writeFileSync(filename, content);
     });
   }
 
