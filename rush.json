@@ -1,6 +1,6 @@
 {
-  "rushVersion": "4.3.0",
-  "pnpmVersion": "1.35.10",
+  "rushVersion": "5.5.2",
+  "pnpmVersion": "2.19.3",
   "nodeSupportedVersionRange": ">=6.9.0 <7.0.0 || >=8.9.4 <9.0.0",
 
   "projectFolderMinDepth": 1,
@@ -14,17 +14,12 @@
   },
 
   "gitPolicy": {
-    // Require GitHub scrubbed e-mails
     "allowedEmailRegExps": [
       "[^@]+@users\\.noreply\\.github\\.com"
     ],
     "sampleEmail": "mrexample@users.noreply.github.com"
   },
-
-  // Projects should be in the same alphabetical order that they appear
-  // in Windows Explorer
   "projects": [
-    // "apps" folder (alphabetical order)
     {
       "packageName": "@microsoft/api-extractor",
       "projectFolder": "apps/api-extractor",
@@ -52,8 +47,6 @@
       "reviewCategory": "libraries",
       "versionPolicyName": "rush"
     },
-
-    // "build-tests" folder (alphabetical order)
     {
       "packageName": "api-extractor-test-01",
       "projectFolder": "build-tests/api-extractor-test-01",
@@ -84,8 +77,6 @@
       "reviewCategory": "tests",
       "shouldPublish": false
     },
-
-    // "core-build" folder (alphabetical order)
     {
       "packageName": "@microsoft/gulp-core-build",
       "projectFolder": "core-build/gulp-core-build",
@@ -161,8 +152,6 @@
       "reviewCategory": "libraries",
       "shouldPublish": true
     },
-
-    // "libraries" folder (alphabetical order)
     {
       "packageName": "@microsoft/decorators",
       "projectFolder": "libraries/decorators",
@@ -205,8 +194,6 @@
         "@microsoft/node-library-build"
       ]
     },
-
-    // "webpack" folder (alphabetical order)
     {
       "packageName": "@microsoft/loader-load-themed-styles",
       "projectFolder": "webpack/loader-load-themed-styles",
