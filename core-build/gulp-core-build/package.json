@@ -47,16 +47,16 @@
     "through2": "~2.0.1",
     "yargs": "~4.6.0",
     "z-schema": "~3.18.3",
-    "jest-cli": "~22.4.3",
+    "jest-cli": "23.6.0",
     "jest-environment-jsdom": "~22.4.3",
     "jest-resolve": "~22.4.3",
-    "jest": "~22.4.3",
+    "jest": "23.6.0",
     "jsdom": "~11.11.0"
   },
   "devDependencies": {
+    "@microsoft/node-library-build": "6.0.6",
     "@microsoft/rush-stack-compiler": "0.5.4",
     "@types/z-schema": "3.16.31",
-    "@microsoft/node-library-build": "6.0.6",
     "chai": "~3.5.0"
   }
 }

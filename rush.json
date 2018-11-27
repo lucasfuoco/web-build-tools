@@ -272,6 +272,12 @@
     //
     // "apps" folder (alphabetical order)
     {
+      "packageName": "@ossiaco/jest-scripts",
+      "projectFolder": "scripts/jest",
+      "reviewCategory": "libraries",
+      "shouldPublish": false
+    },
+    {
       "packageName": "@microsoft/api-extractor",
       "projectFolder": "apps/api-extractor",
       "reviewCategory": "libraries",
@@ -282,10 +288,46 @@
       ]
     },
     {
+      "packageName": "@ossiaco/tutorial-extractor",
+      "projectFolder": "apps/tutorial-extractor",
+      "reviewCategory": "libraries",
+      "shouldPublish": true,
+      "cyclicDependencyProjects": [
+        "@microsoft/node-library-build",
+        "@microsoft/rush-stack-compiler"
+      ]
+    },
+    {
+      "packageName": "@ossiaco/tutorial-extractor-tests",
+      "projectFolder": "apps/tutorial-extractor-tests",
+      "reviewCategory": "libraries",
+      "shouldPublish": false,
+      "cyclicDependencyProjects": [
+        "@microsoft/node-library-build",
+        "@microsoft/rush-stack-compiler"
+      ]
+    },
+    {
       "packageName": "@microsoft/api-documenter",
       "projectFolder": "apps/api-documenter",
       "reviewCategory": "libraries",
+      "shouldPublish": true,
+    },
+    {
+      "packageName": "@ossiaco/tutorial-documenter",
+      "projectFolder": "apps/tutorial-documenter",
+      "reviewCategory": "libraries",
       "shouldPublish": true
+    },
+    {
+      "packageName": "@ossiaco/tutorial-documenter-tests",
+      "projectFolder": "apps/tutorial-documenter-tests",
+      "reviewCategory": "libraries",
+      "shouldPublish": false,
+      "cyclicDependencyProjects": [
+        "@microsoft/node-library-build",
+        "@microsoft/rush-stack-compiler"
+      ]
     },
     {
       "packageName": "@microsoft/rush",

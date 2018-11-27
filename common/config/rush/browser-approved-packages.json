@@ -3,11 +3,39 @@
   "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/approved-packages.schema.json",
   "packages": [
     {
+      "name": "@ossiaco/tutorial-documenter",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "@ossiaco/tutorial-extractor",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
       "name": "fsx",
       "allowedCategories": [ "libraries" ]
     },
     {
+      "name": "gulp-jest",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "jest-config",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "merge",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
       "name": "mkdirp",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "rxjs",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "tslib",
       "allowedCategories": [ "libraries" ]
     }
   ]

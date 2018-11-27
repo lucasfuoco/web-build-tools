@@ -1,0 +1,35 @@
+{
+    "author": "Ossiaco",
+    "dependencies": {
+        "@microsoft/gulp-core-build": "3.8.47",
+        "@microsoft/gulp-core-build-typescript": "7.2.5",
+        "@microsoft/node-core-library": "3.6.0",
+        "@ossiaco/tutorial-documenter": "1.0.0",
+        "chalk": "^2.3.2",
+        "rxjs": "^6.2.2",
+        "tslib": "^1.9.3"
+    },
+    "description": "",
+    "devDependencies": {
+        "@microsoft/node-library-build": "6.0.6",
+        "@microsoft/rush-stack-compiler": "0.4.3",
+        "@types/jest": "23.3.9",
+        "@types/node": "8.5.8",
+        "jest-environment-jsdom": "~22.4.3",
+        "jest-config": "23.6.0",
+        "gulp": "~3.9.1",
+        "ts-jest": "23.10.5",
+        "tslint": "~5.11.0",
+        "tslint-microsoft-contrib": "~5.2.1",
+        "typescript": "~3.0.3"
+    },
+    "license": "ISC",
+    "main": "lib/index.js",
+    "name": "@ossiaco/tutorial-documenter-tests",
+    "peerDependencies": {},
+    "scripts": {
+        "build": "gulp default"
+    },
+    "typings": "dist/index-internal.d.ts",
+    "version": "1.0.0"
+}

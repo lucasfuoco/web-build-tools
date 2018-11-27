@@ -1,0 +1,22 @@
+{
+    "extends": [
+        "@microsoft/rush-stack-compiler/includes/tslint.json"
+    ],
+    "rules": {
+        "jsx-alignment": [
+            false
+        ],
+        "jsx-no-lambda": [
+            false
+        ],
+        "jsx-no-multiline-js": [
+            false
+        ],
+        "jsx-self-close": [
+            false
+        ],
+        "jsx-wrap-multiline": [
+            false
+        ]
+    }
+}

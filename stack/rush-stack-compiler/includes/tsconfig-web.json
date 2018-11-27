@@ -5,7 +5,7 @@
   "compilerOptions": {
     "module": "esnext",
     "moduleResolution": "node",
-    "target": "es5",
+    "target": "es6",
     "lib": [
       "es5",
       "scripthost",
