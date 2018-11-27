@@ -269,6 +269,8 @@ interface IMarkupApiLink {
 // @public
 interface IMarkupCodeBox {
   // (undocumented)
+  elements?: MarkupStructuredElement[];
+  // (undocumented)
   highlighter: MarkupHighlighter;
   kind: 'code-box';
   text: string;
@@ -282,12 +284,16 @@ interface IMarkupCreateTextOptions {
 
 // @public
 interface IMarkupHeading1 {
+  // (undocumented)
+  elements?: MarkupBasicElement[];
   kind: 'heading1';
   text: string;
 }
 
 // @public (undocumented)
 interface IMarkupHeading2 {
+  // (undocumented)
+  elements?: MarkupBasicElement[];
   kind: 'heading2';
   text: string;
 }
@@ -304,6 +310,8 @@ interface IMarkupHeading4 {
 
 // @public
 interface IMarkupHighlightedText {
+  // (undocumented)
+  elements?: MarkupLinkTextElement[];
   highlighter: MarkupHighlighter;
   kind: 'code';
   text: string;
@@ -311,12 +319,16 @@ interface IMarkupHighlightedText {
 
 // @public
 interface IMarkupHtmlTag {
+  // (undocumented)
+  elements?: MarkupLinkTextElement[];
   kind: 'html-tag';
   token: string;
 }
 
 // @public
 interface IMarkupLineBreak {
+  // (undocumented)
+  elements?: MarkupBasicElement[];
   kind: 'break';
 }
 
@@ -355,7 +367,11 @@ interface IMarkupPage {
 
 // @public
 interface IMarkupParagraph {
+  // (undocumented)
+  elements?: MarkupBasicElement[];
   kind: 'paragraph';
+  // (undocumented)
+  text?: string;
 }
 
 // @internal (preapproved)
@@ -370,6 +386,8 @@ interface IMarkupSection {
 
 // @public
 interface IMarkupTable {
+  // (undocumented)
+  elements?: MarkupStructuredElement[];
   // (undocumented)
   header?: IMarkupTableRow;
   kind: 'table';
@@ -387,12 +405,16 @@ interface IMarkupTableCell {
 interface IMarkupTableRow {
   // (undocumented)
   cells: IMarkupTableCell[];
+  // (undocumented)
+  elements: MarkupStructuredElement[];
   kind: 'table-row';
 }
 
 // @public
 interface IMarkupText {
   bold?: boolean;
+  // (undocumented)
+  elements?: MarkupLinkTextElement[];
   italics?: boolean;
   kind: 'text';
   text: string;
@@ -417,9 +439,9 @@ class Markup {
   static createHeading2(text: string): IMarkupHeading2;
   static createHeading3(arg: string | MarkupBasicElement[]): IMarkupHeading3;
   static createHeading4(text: string): IMarkupHeading4;
+  static createHtmlTag(token: string): IMarkupHtmlTag;
   static createList(): IMarkupList;
   static createListRow(cellValues?: Array<Array<MarkupBasicElement | MarkupStructuredElement>> | undefined): IMarkupListRow;
-  static createHtmlTag(token: string): IMarkupHtmlTag;
   static createNoteBox(textElements: MarkupBasicElement[]): IMarkupNoteBox;
   static createNoteBoxFromText(text: string): IMarkupNoteBox;
   static createPage(title: string): IMarkupPage;

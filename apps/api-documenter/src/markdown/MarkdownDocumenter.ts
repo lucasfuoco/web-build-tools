@@ -7,7 +7,7 @@ import yaml = require('js-yaml');
 import * as mkdirp from 'mkdirp';
 import {dirname} from 'path';
 import * as fs from 'fs';
-import * as fsx from 'fsx';
+import * as fsx from 'fs-extra';
 
 import {
   PackageName,
@@ -19,25 +19,17 @@ import {
   IApiEnumMember,
   IApiFunction,
   IApiInterface,
-  IApiPackage,
   ApiMember,
   IApiProperty,
   ApiItem,
   IApiParameter,
-  IApiMethod,
-  IMarkupApiLink,
   IMarkupPage,
   IMarkupList,
-  IMarkupListRow,
   IMarkupTable,
-  IMarkupText,
-  IMarkupWebLink,
   Markup,
   MarkupBasicElement,
   MarkupStructuredElement,
-  IMarkupParagraph,
   IApiNamespace
-  IMarkupTableRow
 } from '@microsoft/api-extractor';
 
 import {
@@ -51,9 +43,7 @@ import {
   DocItemKind,
   IDocItemSetResolveResult
 } from '../utils/DocItemSet';
-import { Utilities } from '../utils/Utilities';
 import { MarkdownRenderer, IMarkdownRenderApiLinkArgs } from '../utils/MarkdownRenderer';
-import { normalize } from 'path';
 
 export enum FolderType {
   Class = 'classes',
@@ -61,7 +51,8 @@ export enum FolderType {
   Enum = 'enums',
   Function = 'functions',
   Package = 'package',
-  Property = 'properties'
+  Property = 'properties',
+  Namespace = 'namespace'
 }
 
 /**
@@ -106,18 +97,26 @@ export class MarkdownDocumenter {
   private _sortTocItems(tocFile: IYamlTocFile): IYamlTocFile {
     const items: IYamlTocItem[] = tocFile.items;
     items.sort((a, b) => {
-      if(b.items && a.items) {
-        if(a.name < b.name) return -1;
-        if(a.name > b.name) return 1;
+      if (b.items && a.items) {
+        if (a.name < b.name) {
+          return -1;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
       }
-      if(!b.items && !a.items) {
-        if(a.name < b.name) return -1;
-        if(a.name > b.name) return 1;
+      if (!b.items && !a.items) {
+        if (a.name < b.name) {
+          return -1;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
       }
-      if(b.items) {
+      if (b.items) {
         return 1;
       }
-      if(!b.items) {
+      if (!b.items) {
         return -1;
       }
       return 0;
@@ -127,17 +126,18 @@ export class MarkdownDocumenter {
 
   private _buildTocItems(docItems: DocItem[], child: boolean = false): IYamlTocItem[] {
     const tocItems: IYamlTocItem[] = [];
-    for(const docItem of docItems) {
+    for (const docItem of docItems) {
       let tocItem: IYamlTocItem;
       let docHref: string = `${this._getUid(docItem).toLowerCase()}.md`;
-      if(this._shouldEmbed(docItem.kind)) {
+      if (this._shouldEmbed(docItem.kind)) {
         continue;
       }
-      if(child && docItem.parent) {
-        docHref = `${this._getUid(docItem.parent).toLowerCase()}.md#${docItem.name.replace(/(_|__)/g, '').toLowerCase()}`;
+      if (child && docItem.parent) {
+        docHref = `${this._getUid(docItem.parent).toLowerCase()}.md` +
+        `#${docItem.name.replace(/(_|__)/g, '').toLowerCase()}`;
       }
       tocItem = {
-        name: Utilities.getUnscopedPackageName(docItem.name),
+        name: PackageName.getUnscopedName(docItem.name),
         href: docHref
       };
 
@@ -151,7 +151,7 @@ export class MarkdownDocumenter {
   }
 
   private _shouldEmbed(docItemKind: DocItemKind): boolean {
-    switch(docItemKind) {
+    switch (docItemKind) {
       case DocItemKind.Class:
       case DocItemKind.Package:
       case DocItemKind.Interface:
@@ -168,10 +168,10 @@ export class MarkdownDocumenter {
 
   private _getUid(docItem: DocItem): string {
     let result: string = '';
-    for(const current of docItem.getHierarchy()) {
+    for (const current of docItem.getHierarchy()) {
       switch (current.kind) {
         case DocItemKind.Package:
-          result += Utilities.getUnscopedPackageName(current.name);
+          result += PackageName.getUnscopedName(current.name);
           break;
         default:
           result += '.';
@@ -198,7 +198,7 @@ export class MarkdownDocumenter {
   private _writePackages(docPackage: DocItem): void {
     console.log(`Writing ${docPackage.name} package`);
 
-    const unscopedPackageName: string = Utilities.getUnscopedPackageName(docPackage.name);
+    const unscopedPackageName: string = PackageName.getUnscopedName(docPackage.name);
 
     const markupNamespaces: IMarkupPage = Markup.createPage(`${unscopedPackageName} namespaces`);
     const markupClasses: IMarkupPage = Markup.createPage(`${unscopedPackageName} classes`);
@@ -347,7 +347,7 @@ export class MarkdownDocumenter {
       }
       docChildDescription.push(...apiChild.summary);
 
-      switch(apiChild.kind) {
+      switch (apiChild.kind) {
         case 'property':
           propertiesList.rows.push(Markup.createListRow([
             docItemTitleLink,
@@ -388,15 +388,6 @@ export class MarkdownDocumenter {
             ])
           );
           this._writeEnumPage(docChild);
-          break;
-        case 'namespace':
-          namespacesTable.rows.push(
-            Markup.createTableRow([
-              docItemTitle,
-              docChildDescription
-            ])
-          );
-          this._writePackagePage(docChild);
           break;
       }
     }
@@ -443,8 +434,9 @@ export class MarkdownDocumenter {
     // TODO: Show concise generic parameters with class name
     const markupPage: IMarkupPage = Markup.createPage(`${docClass.name} class`);
 
-    const classSignature: string = `export class ${docClass.name}${apiClass.extends ? " extends " + apiClass.extends : ""}` +
-        `${apiClass.implements ? " implements " + apiClass.implements : ""}`;
+    const classSignature: string = `export class ` +
+        `${docClass.name}${apiClass.extends ? ' extends ' + apiClass.extends : ''}` +
+        `${apiClass.implements ? ' implements ' + apiClass.implements : ''}`;
 
     if (apiClass.isBeta) {
       this._writeBetaWarning(markupPage.elements);
@@ -783,59 +775,59 @@ export class MarkdownDocumenter {
   /**
    * GENERATE PAGE: METHOD
    */
-  private _writeMethodPage(docMethod: DocItem): void {
-    const apiMethod: IApiMethod = docMethod.apiItem as IApiMethod;
+  // private _writeMethodPage(docMethod: DocItem): void {
+  //   const apiMethod: IApiMethod = docMethod.apiItem as IApiMethod;
 
-    const fullMethodName: string = docMethod.parent!.name + '.' + docMethod.name;
+  //   const fullMethodName: string = docMethod.parent!.name + '.' + docMethod.name;
 
-    const markupPage: IMarkupPage = Markup.createPage(`${fullMethodName} method`);
-    this._writeBreadcrumb(markupPage, docMethod);
+  //   const markupPage: IMarkupPage = Markup.createPage(`${fullMethodName} method`);
+  //   this._writeBreadcrumb(markupPage, docMethod);
 
-    if (apiMethod.isBeta) {
-      this._writeBetaWarning(markupPage.elements);
-    }
+  //   if (apiMethod.isBeta) {
+  //     this._writeBetaWarning(markupPage.elements);
+  //   }
 
-    markupPage.elements.push(...apiMethod.summary);
+  //   markupPage.elements.push(...apiMethod.summary);
 
-    markupPage.elements.push(Markup.PARAGRAPH);
-    markupPage.elements.push(...Markup.createTextElements('Signature:', { bold: true }));
-    markupPage.elements.push(Markup.createCodeBox(apiMethod.signature, 'javascript'));
+  //   markupPage.elements.push(Markup.PARAGRAPH);
+  //   markupPage.elements.push(...Markup.createTextElements('Signature:', { bold: true }));
+  //   markupPage.elements.push(Markup.createCodeBox(apiMethod.signature, 'javascript'));
 
-    if (apiMethod.returnValue) {
-      markupPage.elements.push(...Markup.createTextElements('Returns:', { bold: true }));
-      markupPage.elements.push(...Markup.createTextElements(' '));
-      markupPage.elements.push(Markup.createCode(apiMethod.returnValue.type, 'javascript'));
-      markupPage.elements.push(Markup.PARAGRAPH);
-      markupPage.elements.push(...apiMethod.returnValue.description);
-    }
+  //   if (apiMethod.returnValue) {
+  //     markupPage.elements.push(...Markup.createTextElements('Returns:', { bold: true }));
+  //     markupPage.elements.push(...Markup.createTextElements(' '));
+  //     markupPage.elements.push(Markup.createCode(apiMethod.returnValue.type, 'javascript'));
+  //     markupPage.elements.push(Markup.PARAGRAPH);
+  //     markupPage.elements.push(...apiMethod.returnValue.description);
+  //   }
 
-    if (apiMethod.remarks && apiMethod.remarks.length) {
-      markupPage.elements.push(Markup.createHeading1('Remarks'));
-      markupPage.elements.push(...apiMethod.remarks);
-    }
+  //   if (apiMethod.remarks && apiMethod.remarks.length) {
+  //     markupPage.elements.push(Markup.createHeading1('Remarks'));
+  //     markupPage.elements.push(...apiMethod.remarks);
+  //   }
 
-    if (Object.keys(apiMethod.parameters).length > 0) {
-      const parametersTable: IMarkupTable = Markup.createTable([
-        Markup.createTextElements('Parameter'),
-        Markup.createTextElements('Type'),
-        Markup.createTextElements('Description')
-      ]);
+  //   if (Object.keys(apiMethod.parameters).length > 0) {
+  //     const parametersTable: IMarkupTable = Markup.createTable([
+  //       Markup.createTextElements('Parameter'),
+  //       Markup.createTextElements('Type'),
+  //       Markup.createTextElements('Description')
+  //     ]);
 
-      markupPage.elements.push(Markup.createHeading1('Parameters'));
-      markupPage.elements.push(parametersTable);
-      for (const parameterName of Object.keys(apiMethod.parameters)) {
-        const apiParameter: IApiParameter = apiMethod.parameters[parameterName];
-          parametersTable.rows.push(Markup.createTableRow([
-            [Markup.createCode(parameterName, 'javascript')],
-            apiParameter.type ? [Markup.createCode(apiParameter.type, 'javascript')] : [],
-            apiParameter.description
-          ])
-        );
-      }
-    }
+  //     markupPage.elements.push(Markup.createHeading1('Parameters'));
+  //     markupPage.elements.push(parametersTable);
+  //     for (const parameterName of Object.keys(apiMethod.parameters)) {
+  //       const apiParameter: IApiParameter = apiMethod.parameters[parameterName];
+  //         parametersTable.rows.push(Markup.createTableRow([
+  //           [Markup.createCode(parameterName, 'javascript')],
+  //           apiParameter.type ? [Markup.createCode(apiParameter.type, 'javascript')] : [],
+  //           apiParameter.description
+  //         ])
+  //       );
+  //     }
+  //   }
 
-    this._writePage(markupPage, docMethod, FolderType.Property);
-  }
+  //   this._writePage(markupPage, docMethod, FolderType.Property);
+  // }
 
   /**
    * GENERATE PAGE: FUNCTION
@@ -887,15 +879,15 @@ export class MarkdownDocumenter {
     this._writePage(markupPage, docFunction, FolderType.Function);
   }
 
-  private _writeBreadcrumb(markupPage: IMarkupPage, docItem: DocItem): void {
-    markupPage.breadcrumb.push(Markup.createWebLinkFromText('Home', './index'));
+  // private _writeBreadcrumb(markupPage: IMarkupPage, docItem: DocItem): void {
+  //   markupPage.breadcrumb.push(Markup.createWebLinkFromText('Home', './index'));
 
-    for (const hierarchyItem of docItem.getHierarchy()) {
-      markupPage.breadcrumb.push(...Markup.createTextElements(' > '));
-      markupPage.breadcrumb.push(Markup.createApiLinkFromText(
-        hierarchyItem.name, hierarchyItem.getApiReference()));
-    }
-  }
+  //   for (const hierarchyItem of docItem.getHierarchy()) {
+  //     markupPage.breadcrumb.push(...Markup.createTextElements(' > '));
+  //     markupPage.breadcrumb.push(Markup.createApiLinkFromText(
+  //       hierarchyItem.name, hierarchyItem.getApiReference()));
+  //   }
+  // }
 
   private _writeBetaWarning(elements: MarkupStructuredElement[]): void {
     const betaWarning: string = 'This API is provided as a preview for developers and may change'

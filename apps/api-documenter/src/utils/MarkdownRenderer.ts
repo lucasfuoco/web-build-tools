@@ -4,8 +4,7 @@
 import {
   IMarkupText,
   MarkupElement,
-  IApiItemReference,
-  MarkupBasicElement
+  IApiItemReference
 } from '@microsoft/api-extractor';
 
 /**
@@ -276,9 +275,9 @@ export class MarkdownRenderer {
           writer.write(`](${element.targetUrl})`);
           break;
         case 'paragraph':
-          if(element['text']) {
+          if (element && element.text) {
             writer.write('<div class="markdown level0 summary">');
-            writer.write('<p>'+element['text']+'</p>');
+            writer.write('<p>' + element.text + '</p>');
             writer.write('</div>');
           }
           if (context.insideTable) {
@@ -295,6 +294,7 @@ export class MarkdownRenderer {
           writer.write('</p>');
           writer.write('</div>');
           writer.writeLine();
+          break;
         case 'break':
           writer.writeLine('<br/>');
           break;
@@ -309,7 +309,7 @@ export class MarkdownRenderer {
           writer.writeLine();
           break;
         case 'heading3':
-          if(element.text) {
+          if (element.text) {
             writer.ensureSkippedLine();
             writer.writeLine('### ' + MarkdownRenderer._getEscapedText(element.text));
             writer.writeLine();
@@ -318,7 +318,7 @@ export class MarkdownRenderer {
             writer.ensureSkippedLine();
             writer.writeLine('<h3>');
             MarkdownRenderer._writeElements(element.elements, context);
-            writer.writeLine('</h3>')
+            writer.writeLine('</h3>');
             writer.writeLine();
           }
           break;
@@ -332,7 +332,7 @@ export class MarkdownRenderer {
           writer.writeLine('<section>');
           MarkdownRenderer._writeElements(element.elements, context);
           writer.writeLine('</section>');
-          writer.writeLine(); 
+          writer.writeLine();
           break;
         case 'code-box':
           writer.ensureNewLine();
@@ -404,10 +404,14 @@ export class MarkdownRenderer {
           context.insideTable = false;
 
           break;
-        
+
         case 'list':
           for (const row of element.rows) {
-            row['cells'].map((cell: MarkupElement) => MarkdownRenderer._writeElements(cell['elements'], context));
+            row.cells.map((cell: MarkupElement) => {
+              if (cell.elements) {
+                MarkdownRenderer._writeElements(cell.elements, context);
+              }
+            });
           }
           break;
         case 'page':

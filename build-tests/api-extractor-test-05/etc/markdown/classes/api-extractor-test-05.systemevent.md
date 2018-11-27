@@ -1,12 +1,36 @@
-[Home](./index) &gt; [api-extractor-test-05](./api-extractor-test-05.md) &gt; [SystemEvent](./api-extractor-test-05.systemevent.md)
+<h1 id="document_name">
+SystemEvent class
+</h1>
 
-# SystemEvent class
+<div class="markdown level0 summary"><p id="document_description">A class used to exposed events.</p></div>
 
-A class used to exposed events.
+#### Syntax
+
+```javascript
+export class SystemEvent
+```
 
 ## Methods
 
-|  Method | Access Modifier | Returns | Description |
-|  --- | --- | --- | --- |
-|  [`addHandler(handler)`](./api-extractor-test-05.systemevent.addhandler.md) |  | `void` | Adds an handler for the event. |
+### addHandler
+
+Adds an handler for the event.
+
+#### Declaration
+
+```javascript
+addHandler(handler: () => void): void;
+```
+
+#### Parameters
+
+|  Type | Name | Description |
+|  --- | --- | --- |
+|  () =&gt; void | _handler_ |  |
+
+#### Returns
+
+|  Type | Description |
+|  --- | --- |
+|  void |  |
 

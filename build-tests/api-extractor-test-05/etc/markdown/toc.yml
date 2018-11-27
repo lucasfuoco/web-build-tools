@@ -1,0 +1,21 @@
+items:
+  - name: DocClass1
+    href: api-extractor-test-05.docclass1.md
+    items:
+      - name: exampleFunction
+        href: 'api-extractor-test-05.docclass1.md#examplefunction'
+      - name: interestingEdgeCases
+        href: 'api-extractor-test-05.docclass1.md#interestingedgecases'
+      - name: malformedEvent
+        href: 'api-extractor-test-05.docclass1.md#malformedevent'
+      - name: modifiedEvent
+        href: 'api-extractor-test-05.docclass1.md#modifiedevent'
+      - name: regularProperty
+        href: 'api-extractor-test-05.docclass1.md#regularproperty'
+      - name: tableExample
+        href: 'api-extractor-test-05.docclass1.md#tableexample'
+  - name: SystemEvent
+    href: api-extractor-test-05.systemevent.md
+    items:
+      - name: addHandler
+        href: 'api-extractor-test-05.systemevent.md#addhandler'

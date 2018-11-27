@@ -1,29 +1,109 @@
-[Home](./index) &gt; [api-extractor-test-05](./api-extractor-test-05.md) &gt; [DocClass1](./api-extractor-test-05.docclass1.md)
+<h1 id="document_name">
+DocClass1 class
+</h1>
 
-# DocClass1 class
+<div class="markdown level0 summary"><p id="document_description">This is an example class.</p></div>
 
-This is an example class.
+#### Syntax
 
-## Events
-
-|  Property | Access Modifier | Type | Description |
-|  --- | --- | --- | --- |
-|  [`malformedEvent`](./api-extractor-test-05.docclass1.malformedevent.md) |  | `SystemEvent` | This event should have been marked as readonly. |
-|  [`modifiedEvent`](./api-extractor-test-05.docclass1.modifiedevent.md) |  | `SystemEvent` | This event is fired whenever the object is modified. |
+```javascript
+export class DocClass1
+```
 
 ## Properties
 
-|  Property | Access Modifier | Type | Description |
-|  --- | --- | --- | --- |
-|  [`regularProperty`](./api-extractor-test-05.docclass1.regularproperty.md) |  | `SystemEvent` | This is a regular property that happens to use the SystemEvent type. |
+### malformedEvent
+
+This event should have been marked as readonly.
+
+#### Declaration
+
+```javascript
+malformedEvent: SystemEvent
+```
+
+### modifiedEvent
+
+This event is fired whenever the object is modified.
+
+#### Declaration
+
+```javascript
+modifiedEvent: SystemEvent
+```
+
+### regularProperty
+
+This is a regular property that happens to use the SystemEvent type.
+
+#### Declaration
+
+```javascript
+regularProperty: SystemEvent
+```
 
 ## Methods
 
-|  Method | Access Modifier | Returns | Description |
-|  --- | --- | --- | --- |
-|  [`exampleFunction(a, b)`](./api-extractor-test-05.docclass1.examplefunction.md) |  | `string` | This is an overloaded function. |
-|  [`interestingEdgeCases()`](./api-extractor-test-05.docclass1.interestingedgecases.md) |  | `void` | Example: "{ \\"maxItemsToShow\\": 123 }"<p/>The regular expression used to validate the constraints is /^\[a-zA-Z0-9\\-\_\]+$/ |
-|  [`tableExample()`](./api-extractor-test-05.docclass1.tableexample.md) |  | `void` | An example with tables: |
+### exampleFunction
+
+This is an overloaded function.
+
+#### Declaration
+
+```javascript
+exampleFunction(a: string, b: string): string;
+```
+
+#### Parameters
+
+|  Type | Name | Description |
+|  --- | --- | --- |
+|  string | _a_ | the first string |
+|  string | _b_ | the second string |
+
+#### Returns
+
+|  Type | Description |
+|  --- | --- |
+|  string |  |
+
+### interestingEdgeCases
+
+Example: "{ \\"maxItemsToShow\\": 123 }"
+
+The regular expression used to validate the constraints is /^\[a-zA-Z0-9\\-\_\]+$/
+
+#### Declaration
+
+```javascript
+interestingEdgeCases(): void;
+```
+
+#### Returns
+
+|  Type | Description |
+|  --- | --- |
+|  void |  |
+
+### tableExample
+
+An example with tables:
+
+#### Declaration
+
+```javascript
+tableExample(): void;
+```
+
+#### Returns
+
+|  Type | Description |
+|  --- | --- |
+|  void |  |
+
+#### Remarks
+
+<table> <tr> <td>John</td> <td>Doe</td> </tr> </table>
 
 ## Remarks
 

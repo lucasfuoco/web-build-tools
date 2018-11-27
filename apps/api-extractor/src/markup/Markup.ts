@@ -371,7 +371,9 @@ export class Markup {
    * @internalremarks
    * modified by Ossiaco
    */
-  public static createListRow(cellValues: Array<Array<MarkupBasicElement | MarkupStructuredElement>> | undefined = undefined): IMarkupListRow {
+  public static createListRow(
+    cellValues: Array<Array<MarkupBasicElement | MarkupStructuredElement>> | undefined = undefined
+    ): IMarkupListRow {
     const row: IMarkupListRow = {
       kind: 'list-row',
       cells: []
@@ -410,7 +412,8 @@ export class Markup {
   public static createTableRow(cellValues: MarkupBasicElement[][] | undefined = undefined): IMarkupTableRow {
     const row: IMarkupTableRow = {
       kind: 'table-row',
-      cells: []
+      cells: [],
+      elements: []
     };
 
     if (cellValues) {

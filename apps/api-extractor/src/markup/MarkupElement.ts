@@ -31,6 +31,7 @@ export interface IMarkupText {
    * Whether the text should be formatted using italics
    */
   italics?: boolean;
+  elements?: MarkupLinkTextElement[];
 }
 
 /**
@@ -61,6 +62,7 @@ export interface IMarkupHighlightedText {
 
   /** Indicates the syntax highlighting that will be applied to this text */
   highlighter: MarkupHighlighter;
+  elements?: MarkupLinkTextElement[];
 }
 
 /**
@@ -84,6 +86,7 @@ export interface IMarkupHtmlTag {
    * documentation engine.
    */
   token: string;
+  elements?: MarkupLinkTextElement[];
 }
 
 /**
@@ -132,6 +135,8 @@ export interface IMarkupWebLink {
 export interface IMarkupParagraph {
   /** The kind of markup element */
   kind: 'paragraph';
+  text?: string;
+  elements?: MarkupBasicElement[];
 }
 
 /**
@@ -141,6 +146,7 @@ export interface IMarkupParagraph {
 export interface IMarkupLineBreak {
   /** The kind of markup element */
   kind: 'break';
+  elements?: MarkupBasicElement[];
 }
 
 /**
@@ -158,6 +164,7 @@ export interface IMarkupHeading1 {
    * If this text contains symbols such as HTML codes, they will be rendered literally.
    */
   text: string;
+  elements?: MarkupBasicElement[];
 }
 
 /**
@@ -170,6 +177,7 @@ export interface IMarkupHeading2 {
 
   /** {@inheritdoc IMarkupHeading1.text} */
   text: string;
+  elements?: MarkupBasicElement[];
 }
 
 /**
@@ -195,6 +203,7 @@ export interface IMarkupHeading4 {
   /** The kind of markup element */
   kind: 'heading4';
   text: string;
+  elements?: MarkupBasicElement[];
 }
 
 /**
@@ -245,6 +254,7 @@ export interface IMarkupCodeBox {
   /** {@inheritdoc IMarkupHighlightedText.text} */
   text: string;
   highlighter: MarkupHighlighter;
+  elements?: MarkupStructuredElement[];
 }
 
 /**
@@ -266,6 +276,7 @@ export interface IMarkupNoteBox {
 export interface IMarkupList {
   kind: 'list';
   rows: IMarkupListRow[];
+  elements?: MarkupStructuredElement[];
 }
 
 /**
@@ -277,6 +288,7 @@ export interface IMarkupTable {
   kind: 'table';
   header?: IMarkupTableRow;
   rows: IMarkupTableRow[];
+  elements?: MarkupStructuredElement[];
 }
 
 /**
@@ -305,7 +317,7 @@ export interface IMarkupTableCell {
 
 /**
  * A cell inside an IMarkupListRow element.
- * 
+ *
  * @internal @preapproved
  * @internalremarks
  * modified by Ossiaco
@@ -328,6 +340,7 @@ export interface IMarkupListRow {
   /** The kind of markup element */
   kind: 'list-row';
   cells: IMarkupListCell[];
+  elements?: MarkupElement[];
 }
 
 /**
@@ -339,6 +352,7 @@ export interface IMarkupTableRow {
   /** The kind of markup element */
   kind: 'table-row';
   cells: IMarkupTableCell[];
+  elements: MarkupStructuredElement[];
 }
 
 /**
