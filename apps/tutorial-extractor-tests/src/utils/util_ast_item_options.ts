@@ -9,9 +9,10 @@ import {
     ExtractorContext,
     IAstItemOptions,
     UtilTypescriptHelpers
-} from '../../../tutorial-extractor/src/index';
+} from '@ossiaco/tutorial-extractor';
 
 /** Get the abstract syntax tree item options. */
+// tslint:disable-next-line:export-name
 export function UTIL_GetAstItemOptions (context: ExtractorContext, rootFile: SourceFile): IAstItemOptions {
     const rootFileSymbol: Symbol | undefined = UtilTypescriptHelpers.getSymbolForDeclaration(rootFile);
 
@@ -23,5 +24,5 @@ export function UTIL_GetAstItemOptions (context: ExtractorContext, rootFile: Sou
         context,
         declaration: rootFileSymbol.declarations[0],
         declarationSymbol: rootFileSymbol
-    }
+    };
 }

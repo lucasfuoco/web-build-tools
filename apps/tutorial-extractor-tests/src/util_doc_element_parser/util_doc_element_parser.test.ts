@@ -1,26 +1,24 @@
-import {ApiDocumentation} from '../../../tutorial-extractor/src/aedoc/api_documentation';
 import {
+    ApiDocumentation,
     ExtractorContext,
     Token,
     Tokenizer,
-     TokenType
-} from '../../../tutorial-extractor/src/index';
-import {
+    TokenType,
     IMarkupApiLink,
     MarkupBasicElement,
-    MarkupElement
-} from '../../../tutorial-extractor/src/markup/markup_element';
-import {UtilDocElementParser} from '../../../tutorial-extractor/src/utils/util_doc_element_parser';
+    MarkupElement,
+    UtilDocElementParser
+} from '@ossiaco/tutorial-extractor';
 import {UTIL_GetApiDocumentation} from '../utils/util_api_documentation';
 import {UTIL_GetExtractorContext} from '../utils/util_extractor_context';
 import {UTIL_GetTokenizer} from '../utils/util_tokenizer';
 
 describe('Class UtilDocElementParser', () => {
-    let parseInteger: number | null;
-    let parseIntegerNull: number | null;
+    let parseInteger: number | undefined;
+    let parseIntegerNull: number | undefined;
     let badStepIndexTagApiDocumentation: () => ApiDocumentation;
     let badStepIndexTagTokenizer: () => Tokenizer;
-    let parse: MarkupBasicElement[]
+    let parse: MarkupBasicElement[];
     let parseBlockTag: MarkupBasicElement[];
     let parseTextTag: MarkupBasicElement[];
     let inheritdocInlineTagApiDocumentation: ApiDocumentation;
@@ -35,59 +33,63 @@ describe('Class UtilDocElementParser', () => {
     let parseStepsWithoutEnd: () => string[];
     beforeAll(() => {
         const context: ExtractorContext = UTIL_GetExtractorContext();
-        const reportError = (message: string) => {throw new Error(message)};
-        const stepIndexTag = `
+        const reportError: (message: string) => void = (message: string) => {
+            throw new Error(message);
+        };
+        const stepIndexTag: string = `
             /**
              * @stepindex 1
             */
         `;
-        const stepIndexTagNull = `
+        const stepIndexTagNull: string = `
             /**
              * @stepindex
             */
         `;
-        const badStepIndexTag = `
+        const badStepIndexTag: string = `
             /**
              * @stepindex []
             */
         `;
-        const blockTag = `
+        const blockTag: string = `
             /**
              * @tutorial
              * @public
              */
         `;
-        const textTag = `
+        const textTag: string = `
             /**
              * @tutorial
              * @remarks This is a test message.
             */
         `;
-        const inheritdocInlineTag = `
+        const inheritdocInlineTag: string = `
             /**
              * {@inheritdoc UTIL_GetExtractorContext()}
             */
         `;
-        const linkInlineTag = `
+        const linkInlineTag: string = `
             /**
              * @tutorial
              * @summary Checkout this {@link https://microsoft.com | Microsoft}
-             * Checkout this external package {@link @ossiaco/tutorial-extractor-tests:UTIL_GetExtractorContext | Ossiaco}
+             * Checkout this external package ` +
+             `{@link @ossiaco/tutorial-extractor-tests:UTIL_GetExtractorContext | Ossiaco}
             */
         `;
-        const webLinkTag = `
+        const webLinkTag: string = `
             /**
              * @tutorial
              * @summary Checkout this {@link https://microsoft.com | Microsoft}
             */
         `;
-        const apiLinkTag = `
+        const apiLinkTag: string = `
             /**
              * @tutorial
-             * @summary Checkout this external package {@link @ossiaco/tutorial-extractor-tests:UTIL_GetExtractorContext | Ossiaco}
+             * @summary Checkout this external package ` +
+             `{@link @ossiaco/tutorial-extractor-tests:UTIL_GetExtractorContext | Ossiaco}
             */
         `;
-        const codeTag = `
+        const codeTag: string = `
             /**
              * @tutorial
             */
@@ -143,21 +145,21 @@ describe('Class UtilDocElementParser', () => {
             reportError,
             []
         );
-        const parseWebLinkTagApiDocumentation = new ApiDocumentation(
+        const parseWebLinkTagApiDocumentation: ApiDocumentation = new ApiDocumentation(
             webLinkTag,
             context.docItemLoader,
             context,
             reportError,
             []
         );
-        const parseApiLinkTagApiDocumentation = new ApiDocumentation(
+        const parseApiLinkTagApiDocumentation: ApiDocumentation = new ApiDocumentation(
             apiLinkTag,
             context.docItemLoader,
             context,
             reportError,
             []
         );
-        const parseCodeTagApiDocumentation = new ApiDocumentation(
+        const parseCodeTagApiDocumentation: ApiDocumentation = new ApiDocumentation(
             codeTag,
             context.docItemLoader,
             context,
@@ -200,17 +202,26 @@ describe('Class UtilDocElementParser', () => {
         parseCodeTagTokenizer.getToken();
 
         parseInteger = UtilDocElementParser.parseInteger(stepIndexTagApiDocumentation, stepIndexTagTokenizer);
-        parseIntegerNull = UtilDocElementParser.parseInteger(stepIndexTagNullApiDocumentation, stepIndexTagNullTokenizer);
+        parseIntegerNull = UtilDocElementParser.parseInteger(
+            stepIndexTagNullApiDocumentation,
+            stepIndexTagNullTokenizer
+        );
         parse = UtilDocElementParser.parse(UTIL_GetApiDocumentation(), UTIL_GetTokenizer());
         parseBlockTag = UtilDocElementParser.parse(blockTagApiDocumentation, blockTagTokenizer);
         parseTextTag = UtilDocElementParser.parse(textTagApiDocumentation, textTagTokenizer);
         parseLinkInlineTag = UtilDocElementParser.parse(linkInlineTagApiDocumentation, linkInlineTagTokenizer);
         parseAndNormalize = UtilDocElementParser.parseAndNormalize(UTIL_GetApiDocumentation(), UTIL_GetTokenizer());
-        parseWebLinkTag = UtilDocElementParser.parseLinkTag(parseWebLinkTagApiDocumentation, parseWebLinkTagTokenizer.peekToken() as Token);
-        parseApiLinkTag = UtilDocElementParser.parseLinkTag(parseApiLinkTagApiDocumentation, parseApiLinkTagTokenizer.peekToken() as Token);
+        parseWebLinkTag = UtilDocElementParser.parseLinkTag(
+            parseWebLinkTagApiDocumentation,
+            parseWebLinkTagTokenizer.peekToken() as Token
+        );
+        parseApiLinkTag = UtilDocElementParser.parseLinkTag(
+            parseApiLinkTagApiDocumentation,
+            parseApiLinkTagTokenizer.peekToken() as Token
+        );
         parseCode = UtilDocElementParser.parseCode(parseCodeTagApiDocumentation, parseCodeTagTokenizer);
 
-        const stepsWithoutStart = `
+        const stepsWithoutStart: string = `
             /**
              * @public
             */
@@ -218,7 +229,7 @@ describe('Class UtilDocElementParser', () => {
              * @stepend
             */
         `;
-        const stepsWithoutEnd = `
+        const stepsWithoutEnd: string = `
             /**
              * @stepstart
             */
@@ -226,7 +237,7 @@ describe('Class UtilDocElementParser', () => {
             * @codedescription
            */
         `;
-        const steps = `
+        const steps: string = `
             /**
              * @tutorial
              * @tutorialname Test
@@ -261,7 +272,7 @@ describe('Class UtilDocElementParser', () => {
     });
 
     it('method parseInterger returns null when an index isn\'t set', () => {
-        expect(parseIntegerNull).toEqual(null);
+        expect(parseIntegerNull).toEqual(undefined);
     });
 
     it('method parseInteger throws an error when the index isn\'t type number', () => {
@@ -291,14 +302,16 @@ describe('Class UtilDocElementParser', () => {
         expect(parseTextTag).toEqual([{kind: 'text', text: ' This is a test message.'}]);
     });
 
-    it('method parse adds a token to the incompleteInheritdocs array in its ApiDocumentation instance when the inline "@inheritdoc" tag is parsed', () => {
+    it('method parse adds a token to the incompleteInheritdocs array in ' +
+    'its ApiDocumentation instance when the inline "@inheritdoc" tag is parsed', () => {
         const token: Token = new Token(TokenType.InlineTag, '@inheritdoc', 'UTIL_GetExtractorContext()');
         expect(inheritdocInlineTagApiDocumentation.incompleteInheritdocs).toEqual([
             token
         ]);
     });
 
-    it('method parse assigns true to the isDocInherited variable in it\'s ApiDocumentation instance when the inline "@inheritdoc" tag is parsed', () => {
+    it('method parse assigns true to the isDocInherited variable in it\'s ' +
+    'ApiDocumentation instance when the inline "@inheritdoc" tag is parsed', () => {
         expect(inheritdocInlineTagApiDocumentation.isDocInherited).toEqual(true);
     });
 
@@ -340,7 +353,8 @@ describe('Class UtilDocElementParser', () => {
         ]);
     });
 
-    it ('method parse adds a link markup element to the incompleteLinks array in it\'s ApiDocumentation instance when the element kind is \'api-link\'', () => {
+    it ('method parse adds a link markup element to the incompleteLinks array in it\'s ' +
+    'ApiDocumentation instance when the element kind is \'api-link\'', () => {
         const apiLink: IMarkupApiLink = {
             kind: 'api-link',
             elements: [
@@ -355,7 +369,7 @@ describe('Class UtilDocElementParser', () => {
                 packageName: 'tutorial-extractor-tests',
                 scopeName: '@ossiaco'
             }
-        }
+        };
         expect(linkInlineTagApiDocumentation.incompleteLinks).toEqual([
             apiLink,
             apiLink
@@ -454,7 +468,8 @@ describe('Class UtilDocElementParser', () => {
         ]);
     });
 
-    it('method parseSteps throws an error when a \'@stepstart\' tag doesn\'t associated with a \'@stepend\' tag', () => {
+    it('method parseSteps throws an error when a \'@stepstart\' ' +
+    'tag doesn\'t associated with a \'@stepend\' tag', () => {
         expect(() => {
             parseStepsWithoutStart();
         }).toThrow(new Error('The {@stepend} tag must associate to a {@stepstart} tag'));

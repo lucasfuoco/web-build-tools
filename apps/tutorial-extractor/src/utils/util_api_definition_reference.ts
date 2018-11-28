@@ -42,19 +42,6 @@ export interface IScopedPackageName {
 }
 
 export class UtilApiDefinitionReference {
-    scopeName: string;
-    packageName: string;
-    exportName: string;
-    memberName: string;
-
-    toApiItemReference(): IApiItemReference {
-        return {
-            scopeName: this.scopeName,
-            packageName: this.packageName,
-            exportName: this.exportName,
-            memberName: this.memberName
-        }
-    }
     /**
      * Splits an API reference expression into two parts, first part is the scopename/packageName and
      * the second part is the exportName.memberName.
@@ -68,23 +55,28 @@ export class UtilApiDefinitionReference {
      * Used to ensure that the export name contains only text characters.
      */
     private static _exportRegEx: RegExp =  /^\w+/;
+    public scopeName: string;
+    public packageName: string;
+    public exportName: string;
+    public memberName: string;
     /**
      * Creates an ApiDefinitionReference instance given strings that symbolize the public
      * properties of ApiDefinitionReference.
      */
-    static createFromParts(parts: IApiDefinitionReferenceParts): UtilApiDefinitionReference {
+    public static createFromParts(parts: IApiDefinitionReferenceParts): UtilApiDefinitionReference {
         return new UtilApiDefinitionReference(parts);
     }
     /**
      * Takes an API reference expression of the form '@scopeName/packageName.memberName'
      * and deconstructs it into an IApiDefinitionReference interface object.
      */
-    static createFromString(
+    public static createFromString(
         apiReferenceExpr: string,
         reportError: (message: string) => void
     ): UtilApiDefinitionReference | undefined {
         if (!apiReferenceExpr || apiReferenceExpr.split(' ').length > 1) {
-            reportError(`An API item reference must use the notation: "@scopeName/packageName:exportName.memberName".\nReceived: "${apiReferenceExpr}"`);
+            reportError(`An API item reference must use the notation: ` +
+            `"@scopeName/packageName:exportName.memberName".\nReceived: "${apiReferenceExpr}"`);
             return undefined;
         }
 
@@ -110,7 +102,8 @@ export class UtilApiDefinitionReference {
             apiDefRefParts.memberName = parts[2] ? parts[2] : '';
         } else {
             // The export name is required
-            reportError(`The API item reference contains an invalid "exportName.memberName" expression: "${apiReferenceExpr}"`);
+            reportError(`The API item reference contains an invalid ` +
+            `"exportName.memberName" expression: "${apiReferenceExpr}"`);
             return undefined;
         }
         if (!apiReferenceExpr.match(UtilApiDefinitionReference._exportRegEx)) {
@@ -121,7 +114,7 @@ export class UtilApiDefinitionReference {
         return UtilApiDefinitionReference.createFromParts(apiDefRefParts);
     }
     /** For a scoped NPM package name this separates the scope and package parts. */
-    static parseScopedPackageName(scopedName: string): IScopedPackageName {
+    public static parseScopedPackageName(scopedName: string): IScopedPackageName {
         if (scopedName.substr(0, 1) !== '@') {
             return {scope: '', package: scopedName};
         }
@@ -134,21 +127,22 @@ export class UtilApiDefinitionReference {
         }
     }
 
-    private constructor(parts: IApiDefinitionReferenceParts) {
-        this.scopeName = parts.scopeName;
-        this.packageName = parts.packageName;
-        this.exportName = parts.exportName;
-        this.memberName = parts.memberName;
+    public toApiItemReference(): IApiItemReference {
+        return {
+            scopeName: this.scopeName,
+            packageName: this.packageName,
+            exportName: this.exportName,
+            memberName: this.memberName
+        };
     }
-
     /**
      * Stringifies the ApiDefinitionReferenceOptions up and including the
      * scoped and package name.
      *
      * Example output: '@microsoft/Utilities'
      */
-    toScopePackageString(): string {
-        let result = '';
+    public toScopePackageString(): string {
+        let result: string = '';
         if (this.scopeName) {
             result += `${this.scopeName}/${this.packageName}`;
         } else if (this.packageName) {
@@ -156,28 +150,33 @@ export class UtilApiDefinitionReference {
         }
         return result;
     }
-
     /**
      * Stringifies the ApiDefinitionReferenceOptions up and including the
      * scope, package and export name.
      *
      * Example output: '@microsoft/Utilities.Parse'
      */
-    toExportString(): string {
+    public toExportString(): string {
         let result: string = this.toScopePackageString();
         if (result) {
             result += ':';
         }
         return result + `${this.exportName}`;
     }
-
     /**
      * Stringifies the ApiDefinitionReferenceOptions up and including the
      * scope, package, export and member name.
      *
      * Example output: '@microsoft/Utilities.Parse.parseJsonToString'
      */
-    toMemberString(): string {
+    public toMemberString(): string {
         return this.toExportString() + `.${this.memberName}`;
+    }
+
+    private constructor(parts: IApiDefinitionReferenceParts) {
+        this.scopeName = parts.scopeName;
+        this.packageName = parts.packageName;
+        this.exportName = parts.exportName;
+        this.memberName = parts.memberName;
     }
 }

@@ -1,4 +1,4 @@
-import {ReleaseTag} from '../../../tutorial-extractor/src/aedoc/release_tag.types';
+import {ReleaseTag} from '@ossiaco/tutorial-extractor';
 
 describe('Enum ReleaseTag', () => {
     it('is defined', () => {

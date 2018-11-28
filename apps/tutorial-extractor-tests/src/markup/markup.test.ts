@@ -1,11 +1,11 @@
-import {Markup} from '../../../tutorial-extractor/src/markup/markup';
 import {
+    Markup,
     IMarkupApiLink,
     IMarkupCodeBox,
     IMarkupText,
     IMarkupWebLink,
     MarkupBasicElement
-} from '../../../tutorial-extractor/src/markup/markup_element';
+} from '@ossiaco/tutorial-extractor';
 
 describe('Class Markup', () => {
     let createTextElements: IMarkupText[];
@@ -24,17 +24,35 @@ describe('Class Markup', () => {
     let createCodeBoxWithoutText: () => IMarkupCodeBox;
     beforeAll(() => {
         createTextElements = Markup.createTextElements('This is a test message');
-        createTextElementsWithOptions = Markup.createTextElements('This is a test message', {bold: true, italics: true});
+        createTextElementsWithOptions = Markup.createTextElements(
+            'This is a test message',
+            {bold: true, italics: true}
+        );
         createTextElementsWithoutText = Markup.createTextElements('');
         createTextParagraphs = Markup.createTextParagraphs('This is a test message\n\nThis is a test message');
-        createTextParagraphsWithOptions = Markup.createTextParagraphs('This is a test message\n\nThis is a test message', {bold: true, italics: true});
+        createTextParagraphsWithOptions = Markup.createTextParagraphs(
+            'This is a test message\n\nThis is a test message',
+            {bold: true, italics: true}
+        );
         createTextParagraphsWithoutText = Markup.createTextParagraphs('');
-        createWebLink = Markup.createWebLink([{kind: 'text', text: 'Microsoft'}], 'https://microsoft.com');
+        createWebLink = Markup.createWebLink(
+            [{kind: 'text', text: 'Microsoft'}],
+            'https://microsoft.com'
+        );
         createWebLinkWithoutText = () => Markup.createWebLink([], 'https://microsoft.com');
         createWebLinkWithoutLink = () => Markup.createWebLink([{kind: 'text', text: 'Microsoft'}], '');
-        createApiLink = Markup.createApiLink([{kind: 'text', text: 'Ossiaco'}], {scopeName: '', packageName: '@ossiaco', exportName: 'Markup', memberName: 'createApiLink'});
-        createApiLinkWithoutText = () => Markup.createApiLink([], {scopeName: '', packageName: '@ossiaco', exportName: 'Markup', memberName: 'createApiLink'});
-        createApiLinkWithoutPackageName = () => Markup.createApiLink([{kind: 'text', text: 'Ossiaco'}], {scopeName: '', packageName: '', exportName: '', memberName: ''});
+        createApiLink = Markup.createApiLink(
+            [{kind: 'text', text: 'Ossiaco'}],
+            {scopeName: '', packageName: '@ossiaco', exportName: 'Markup', memberName: 'createApiLink'}
+        );
+        createApiLinkWithoutText = () => Markup.createApiLink(
+            [],
+            {scopeName: '', packageName: '@ossiaco', exportName: 'Markup', memberName: 'createApiLink'}
+        );
+        createApiLinkWithoutPackageName = () => Markup.createApiLink(
+            [{kind: 'text', text: 'Ossiaco'}],
+            {scopeName: '', packageName: '', exportName: '', memberName: ''}
+        );
         createCodeBox = Markup.createCodeBox('import * as fs from \'fs\';', 'javascript');
         createCodeBoxWithoutText = () => Markup.createCodeBox('', 'javascript');
     });
@@ -150,11 +168,15 @@ describe('Class Markup', () => {
     });
 
     it('method createWebLink throws an error when no text elements are set', () => {
-        expect(() => {createWebLinkWithoutText();}).toThrow(new Error('Missing text for link'));
+        expect(() => {
+            createWebLinkWithoutText();
+        }).toThrow(new Error('Missing text for link'));
     });
 
     it('method createWebLink throws an error when no link is set', () => {
-        expect(() => {createWebLinkWithoutLink();}).toThrow(new Error('Missing link target'));
+        expect(() => {
+            createWebLinkWithoutLink();
+        }).toThrow(new Error('Missing link target'));
     });
 
     it('has method createApiLink', () => {
@@ -175,15 +197,19 @@ describe('Class Markup', () => {
                 exportName: 'Markup',
                 memberName: 'createApiLink'
             }
-        })
+        });
     });
 
     it('method createApiLink returns an error when no text is set', () => {
-        expect(() => {createApiLinkWithoutText();}).toThrow(new Error('Missing text for link'));
+        expect(() => {
+            createApiLinkWithoutText();
+        }).toThrow(new Error('Missing text for link'));
     });
 
     it('method createApiLink returns an error when no packageName is set', () => {
-        expect(() => {createApiLinkWithoutPackageName();}).toThrow(new Error('The IApiItemReference.packageName cannot be empty'));
+        expect(() => {
+            createApiLinkWithoutPackageName();
+        }).toThrow(new Error('The IApiItemReference.packageName cannot be empty'));
     });
 
     it('has method createCodeBox', () => {

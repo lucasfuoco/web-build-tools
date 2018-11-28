@@ -1,16 +1,18 @@
-import { ApiDocumentation } from '../../../tutorial-extractor/src/aedoc/api_documentation';
-import {AstItem} from '../../../tutorial-extractor/src/ast/ast_item';
-import {ExtractorContext} from '../../../tutorial-extractor/src/extractor_context/extractor_context';
-import {ResolvedApiItem} from '../../../tutorial-extractor/src/resolved_api_item';
-import {UtilApiDefinitionReference}  from '../../../tutorial-extractor/src/utils/util_api_definition_reference';
+import {
+    ApiDocumentation,
+    AstItem,
+    ExtractorContext,
+    ResolvedApiItem,
+    UtilApiDefinitionReference
+} from '@ossiaco/tutorial-extractor';
 import {UTIL_GetExtractorContext} from '../utils/util_extractor_context';
 
 describe('Class ResolvedApiItem', () => {
     let createFromAstItem: ResolvedApiItem;
     beforeAll(() => {
-        const reportError = (message: string) => new Error(message);
+        const reportError: (message: string) => void = (message: string) => new Error(message);
         const context: ExtractorContext = UTIL_GetExtractorContext();
-        const docs = `
+        const docs: string = `
             /**
              * @tutorial
              * @public
@@ -24,7 +26,7 @@ describe('Class ResolvedApiItem', () => {
             reportError,
             []
         );
-        const text = '@ossiaco/tutorial-extractor-tests:UTIL_GetExtractorContext';
+        const text: string = '@ossiaco/tutorial-extractor-tests:UTIL_GetExtractorContext';
         const apiDefinitionRef: UtilApiDefinitionReference | undefined = UtilApiDefinitionReference.createFromString(
             text,
             documentation.reportError

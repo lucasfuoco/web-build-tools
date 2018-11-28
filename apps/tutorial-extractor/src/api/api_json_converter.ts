@@ -4,6 +4,7 @@ import { AstItemKind } from '../ast/ast_item.types';
  * Supports the conversion between AstItems that are loaded from AstItem to JSON notation
  * and vice versa.
  */
+// tslint:disable-next-line:export-name
 export class ApiJsonConverter {
     // tslint:disable:no-inferrable-types
     private static _KIND_PACKAGE: string = 'package';
@@ -14,7 +15,7 @@ export class ApiJsonConverter {
      * Uses the lowercase string that represents 'kind' in an API JSON file, and
      * converts it to an AstItemKind enum value.
      */
-    static convertKindToJson (astItemKind: AstItemKind): string {
+    public static convertKindToJson (astItemKind: AstItemKind): string {
         switch (astItemKind) {
             case (AstItemKind.Package):
                 return this._KIND_PACKAGE;

@@ -6,3 +6,4 @@ export * from './exported_symbol.types';
 export * from './ast_item_container';
 export * from './ast_tutorial';
 export * from './ast_tutorial.types';
+export * from './ast_step';

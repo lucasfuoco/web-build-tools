@@ -12,6 +12,7 @@ import {
     UtilPrettyPrinter
 } from './util_pretty_printer';
 
+// tslint:disable-next-line:export-name
 export class UtilTypescriptHelpers {
     /**
      * Splits on CRLF and other newline sequences
@@ -28,7 +29,7 @@ export class UtilTypescriptHelpers {
     /**
      * Returns the Symbol for the provided Declaration.
      */
-    static tryGetSymbolForDeclaration (declaration: Declaration): Symbol | undefined {
+    public static tryGetSymbolForDeclaration (declaration: Declaration): Symbol | undefined {
         if (!declaration) {
             return undefined;
         }
@@ -38,7 +39,7 @@ export class UtilTypescriptHelpers {
      * Same semantics as tryGetSymbolForDeclaration, but throws an exeption if the symbol
      * cannot be found.
      */
-    static getSymbolForDeclaration (declaration: Declaration): Symbol | undefined {
+    public static getSymbolForDeclaration (declaration: Declaration): Symbol | undefined {
         const symbol: Symbol | undefined = UtilTypescriptHelpers.tryGetSymbolForDeclaration(declaration);
         if (!symbol) {
             UtilPrettyPrinter.throwUnexpectedSyntaxError(
@@ -52,14 +53,15 @@ export class UtilTypescriptHelpers {
      * Find the original place where an item was defined.
      * For example, suppose a class is exported from the package's index.ts.
      */
-    static followAliases (symbol: Symbol, typeChecker: TypeChecker): Symbol {
+    public static followAliases (symbol: Symbol, typeChecker: TypeChecker): Symbol {
         let current: Symbol = symbol;
+        // tslint:disable-next-line:no-constant-condition
         while (true) {
-            if (!(current.flags & SymbolFlags.Alias)) {
+            if (current.flags !== SymbolFlags.Alias) {
                 break;
             }
             const currentAlias: Symbol = typeChecker.getAliasedSymbol(current);
-            if (!currentAlias || currentAlias === current) {
+            if (!currentAlias || (currentAlias === current)) {
                 break;
             }
             current = currentAlias;
@@ -70,16 +72,17 @@ export class UtilTypescriptHelpers {
     /**
      * Retrieves the comment ranges associated with the specified node.
      */
-    static getJSDocCommentRanges (_node: Node, _text: string): CommentRange[] | undefined {
+    public static getJSDocCommentRanges (_node: Node, _text: string): CommentRange[] | undefined {
         // Compiler internal:
         // https://github.com/Microsoft/TypeScript/blob/v2.4.2/src/compiler/utilities.ts#L616
+        // tslint:disable-next-line:no-any
         return (ts as any).getJSDocCommentRanges.apply(this, arguments);
     }
     /**
      * Similar to calling string.split() with RegExp, except that the delimiters
      * are included in the result
      */
-    static splitStringWithRegEx(text: string, regExp: RegExp): string[] {
+    public static splitStringWithRegEx(text: string, regExp: RegExp): string[] {
         if (!regExp.global) {
             throw new Error('RegExp must have the /g flag');
         }
@@ -88,7 +91,7 @@ export class UtilTypescriptHelpers {
         }
 
         const result: string[] = [];
-        let index = 0;
+        let index: number = 0;
         let match: RegExpExecArray | null;
 
         do {
@@ -116,7 +119,7 @@ export class UtilTypescriptHelpers {
     /**
      * Extracts the body of a tutorial file and returns it
      */
-    static extractJSDocContent (text: string, errorLogger: (message: string) => void): string {
+    public static extractJSDocContent (text: string, errorLogger: (message: string) => void): string {
         // Remove any leading/trailing whitespace around the comment characters, then split on newlines
         const lines: string[] = text.trim().split(UtilTypescriptHelpers._newLineRegEx);
         if ((lines.length === 0) || !(UtilTypescriptHelpers._jsdocStartRegEx.test(text))) {
@@ -127,7 +130,7 @@ export class UtilTypescriptHelpers {
 
         // Remove "/**" from all lines
         matched = false;
-        for (let i = 0; i < lines.length; i++) {
+        for (let i: number = 0; i < lines.length; i++) {
             lines[i] = lines[i].replace(UtilTypescriptHelpers._jsdocStartRegEx, () => {
                 matched = true;
                 return '';
@@ -141,7 +144,7 @@ export class UtilTypescriptHelpers {
 
         // Remove "*/" from all lines
         matched = false;
-        for (let i = 0; i < lines.length; i++) {
+        for (let i: number = 0; i < lines.length; i++) {
             lines[i] = lines[i].replace(UtilTypescriptHelpers._jsdocEndRegEx, () => {
                 matched = true;
                 return '';
@@ -154,17 +157,17 @@ export class UtilTypescriptHelpers {
         }
 
         // Remove a leading "*" from all lines except the first one
-        for (let i = 1; i < lines.length; ++i) {
+        for (let i: number = 1; i < lines.length; ++i) {
             lines[i] = lines[i].replace(UtilTypescriptHelpers._jsdocIntermediateRegEx, '');
         }
 
         // Remove trailing spaces from all lines
-        for (let i = 0; i < lines.length; ++i) {
+        for (let i: number = 0; i < lines.length; ++i) {
             lines[i] = lines[i].replace(UtilTypescriptHelpers._jsdocTrimRightRegEx, '');
         }
 
         // If the lines are blank, then remove them
-        for (let i = 0; i < lines.length; i++) {
+        for (let i: number = 0; i < lines.length; i++) {
             if (lines[i] === '') {
                 lines.splice(i, 1);
             }

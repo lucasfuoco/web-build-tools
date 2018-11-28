@@ -5,9 +5,11 @@ import { AstPackage } from './ast/ast_package';
 import { ResolvedApiItem } from './resolved_api_item';
 import { UtilApiDefinitionReference } from './utils/util_api_definition_reference';
 
+// tslint:disable-next-line:export-name
 export class DocItemLoader implements IReferenceResolver {
+    // tslint:disable-next-line:no-empty
     constructor() {}
-    resolver (
+    public resolver (
         apiDefinitionRef: UtilApiDefinitionReference,
         astPackage: AstPackage,
         warnings: string[]
@@ -27,7 +29,7 @@ export class DocItemLoader implements IReferenceResolver {
      * No processing on the AstItem should be done here, this class is only concerned
      * with communicating state.
      */
-    resolveLocalReferences(
+    public resolveLocalReferences(
         apiDefinitionRef: UtilApiDefinitionReference,
         astPackage: AstPackage,
         warnings: string[]

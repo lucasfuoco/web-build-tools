@@ -17,13 +17,14 @@ import { AstItemVisitor } from './ast_item_visitor';
  * a published package, or the results of the analysis might be difference somehow.) Documentation
  * tools such as the tutorial-documenter can also use the *.api.json files.
  */
+// tslint:disable-next-line:export-name
 export class TutorialJsonGenerator extends AstItemVisitor {
     // tslint:disable:no-inferrable-types
     private static _EXPORTS_KEY: string = 'exports';
 
     protected jsonOutput: Object = {};
 
-    writeJsonFile (reportFilename: string, context: ExtractorContext): void {
+    public writeJsonFile (reportFilename: string, context: ExtractorContext): void {
         this.visit(context.package, this.jsonOutput);
 
         // Write the output before validating the schema, so we can debug it
@@ -44,6 +45,7 @@ export class TutorialJsonGenerator extends AstItemVisitor {
     }
 
     protected visitAstPackage (astPackage: AstPackage, refObject?: Object): void {
+        // tslint:disable:no-string-literal
         refObject!['kind'] = ApiJsonConverter.convertKindToJson(astPackage.kind);
         refObject!['name'] = astPackage.name;
         refObject!['summary'] = astPackage.documentation.summary;
@@ -75,7 +77,7 @@ export class TutorialJsonGenerator extends AstItemVisitor {
         refObject![astTutorial.name] = tutorialNode;
 
         const members: AstItem[] = astTutorial.getSortedMemberItems();
-        for (let i = 0; i < members.length; ++i) {
+        for (let i: number = 0; i < members.length; ++i) {
             this.visit(members[i], childrenNode, i);
         }
     }

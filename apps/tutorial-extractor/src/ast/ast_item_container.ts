@@ -1,6 +1,7 @@
 import { AstItem } from './ast_item';
 import { IAstItemOptions } from './ast_item.types';
 
+// tslint:disable-next-line:export-name
 export abstract class AstItemContainer extends AstItem {
     private _memberItems: Map<string, AstItem> = new Map<string, AstItem>();
     constructor (options: IAstItemOptions) {
@@ -10,11 +11,11 @@ export abstract class AstItemContainer extends AstItem {
     /**
      * Find a member in the namespace by name and return it if found.
      */
-    getMemberItem (memberName: string): AstItem | undefined {
+    public getMemberItem (memberName: string): AstItem | undefined {
         return this._memberItems.get(memberName);
     }
 
-    visitTypeReferencesForAstItem (): void {
+    public visitTypeReferencesForAstItem (): void {
         super.visitTypeReferencesForAstItem();
 
         this._memberItems.forEach((astItem: AstItem) => {
@@ -23,7 +24,7 @@ export abstract class AstItemContainer extends AstItem {
     }
 
     /** Return a list of the child items for this container sorted alphabetically. */
-    getSortedMemberItems (): AstItem[] {
+    public getSortedMemberItems (): AstItem[] {
         const astItems: AstItem[] = [];
         this._memberItems.forEach((astItem: AstItem) => {
             astItems.push(astItem);

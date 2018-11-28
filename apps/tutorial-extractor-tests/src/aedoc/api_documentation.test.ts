@@ -1,10 +1,10 @@
-import {ApiDocumentation} from '../../../tutorial-extractor/src/aedoc/api_documentation';
-import { ReleaseTag } from '../../../tutorial-extractor/src/aedoc/release_tag.types';
-import {
-    ExtractorContext
-} from '../../../tutorial-extractor/src/extractor_context/extractor_context';
 import {UTIL_GetExtractorContext} from '../utils/util_extractor_context';
 import {UTIL_GetSourceFile} from '../utils/util_source_file';
+import {
+    ApiDocumentation,
+    ReleaseTag,
+    ExtractorContext
+} from '@ossiaco/tutorial-extractor';
 
 describe('Class ApiDocumentation', () => {
     let instance: ApiDocumentation;
@@ -23,79 +23,81 @@ describe('Class ApiDocumentation', () => {
     let badStepIndexApiDocumentation: () => ApiDocumentation;
     beforeAll(() => {
         const context: ExtractorContext = UTIL_GetExtractorContext();
-        const reportError = (message: string) => {throw new Error(message);}
+        const reportError: (message: string) => void = (message: string) => {
+            throw new Error(message);
+        };
         const docs: string = UTIL_GetSourceFile();
-        const internalDocs = `
+        const internalDocs: string = `
             /**
              * @tutorial
              * @internal
             */
         `;
-        const alphaDocs = `
+        const alphaDocs: string = `
             /**
              * @tutorial
              * @alpha
             */
         `;
-        const betaDocs = `
+        const betaDocs: string = `
             /**
              * @tutorial
              * @beta
             */
         `;
-        const badReleaseTagDocs = `
+        const badReleaseTagDocs: string = `
             /**
              * @public
              * @alpha
              * @beta
             */
         `;
-        const badRemarksDocs = `
+        const badRemarksDocs: string = `
             /**
              * @tutorial
              * {@inheritdoc UTIL_GetSourceFile}
              * @remarks This is a test message.
             */
         `;
-        const deprecatedDocs = `
+        const deprecatedDocs: string = `
             /**
              * @tutorial
              * @deprecated This is a test message.
             */
         `;
-        const badDeprecatedDocs = `
+        const badDeprecatedDocs: string = `
             /**
              * @tutorial
              * @deprecated
             */
         `;
-        const preapprovedDocs = `
+        const preapprovedDocs: string = `
             /**
              * @tutorial
              * @internal
              * @preapproved
             */
         `;
-        const badPreapprovedDocs = `
+        const badPreapprovedDocs: string = `
             /**
              * @tutorial
              * @preapproved
             */
         `;
-        const badTutorialCountDocs = `
+        const badTutorialCountDocs: string = `
             /**
              * @tutorial
              * @tutorial
             */
         `;
-        const badTutorialNameCountDocs = `
+        const badTutorialNameCountDocs: string = `
             /**
              * @tutorial
              * @tutorialname Jest testing baby!
              * @tutorialname Jest rocks!
             */
         `;
-        const stepDocs = `
+        const stepDocs: string = `
             /**
              * @stepstart
              * @stepindex 1
@@ -104,7 +106,7 @@ describe('Class ApiDocumentation', () => {
             * @stepend
            */
         `;
-        const badStepIndexDocs = `
+        const badStepIndexDocs: string = `
             /**
              * @stepstart
              * @stepindex 1
@@ -231,7 +233,9 @@ describe('Class ApiDocumentation', () => {
     });
 
     it('variable _aedocTagsRegex is the right regular expression', () => {
-        expect(ApiDocumentation._aedocTagsRegex.source).toBe('{\\s*@(\\\\{|\\\\}|[^{}])*}|(?:^|\\s)(\\@[a-z_]+)(?=\\s|$)');
+        expect(ApiDocumentation._aedocTagsRegex.source).toBe(
+            '{\\s*@(\\\\{|\\\\}|[^{}])*}|(?:^|\\s)(\\@[a-z_]+)(?=\\s|$)'
+        );
     });
 
     it('has variable _allowedRegularAedocTags', () => {
@@ -391,7 +395,8 @@ describe('Class ApiDocumentation', () => {
         expect(typeof deprecatedApiDocumentation.deprecatedMessage).toBe('object');
     });
 
-    it('variable deprecatedMessage returns an array of MarkupElement objects when the \'@deprecated\' token is set', () => {
+    it('variable deprecatedMessage returns an array of MarkupElement' +
+    'objects when the \'@deprecated\' token is set', () => {
         expect(deprecatedApiDocumentation.deprecatedMessage).toEqual([
             {
                 kind: 'text',
@@ -426,7 +431,8 @@ describe('Class ApiDocumentation', () => {
     it('variable remarks returns an empty array and throws an error if the documentation is inherited', () => {
         expect(() => {
             badRemarksApiDocumentation();
-        }).toThrow(new Error('The @remarks tag may not be used because this state is provided by the @inheritdoc target'));
+        }).toThrow(new Error('The @remarks tag may not be used because ' +
+        'this state is provided by the @inheritdoc target'));
     });
 
     it('has variable preapproved', () => {
@@ -445,7 +451,8 @@ describe('Class ApiDocumentation', () => {
         expect(instance.preapproved).toEqual(false);
     });
 
-    it('variable preapproved returns false and throws an error when it\'s release tag isn\'t set to \'@internal\'', () => {
+    it('variable preapproved returns false and throws an error ' +
+    'when it\'s release tag isn\'t set to \'@internal\'', () => {
         expect(() => {
             badPreapprovedApiDocumentation();
         }).toThrow(new Error('The @preapproved tag may only be applied to @internal definitions'));

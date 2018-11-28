@@ -6,6 +6,7 @@ import { IAstItemOptions } from './ast_item.types';
 import { AstModule } from './ast_module';
 import { IExportedSymbol } from './exported_symbol.types';
 
+// tslint:disable-next-line:export-name
 export class AstPackage extends AstModule {
     private _exportedNormalizedSymbols: IExportedSymbol[] = [];
     private static _getOptions (context: ExtractorContext, rootFile: SourceFile): IAstItemOptions {
@@ -27,7 +28,6 @@ export class AstPackage extends AstModule {
         const exportSymbols: Symbol[] = this.typeChecker.getExportsOfModule(this.declarationSymbol) || [];
         for (const exportSymbol of exportSymbols) {
             this.processModuleExport(exportSymbol);
-
             const followedSymbol: Symbol = UtilTypescriptHelpers.followAliases(exportSymbol, this.typeChecker);
             this._exportedNormalizedSymbols.push({
                 exportedName: exportSymbol.name,

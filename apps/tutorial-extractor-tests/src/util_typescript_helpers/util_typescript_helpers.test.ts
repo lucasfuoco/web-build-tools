@@ -1,5 +1,5 @@
 import { Program, SourceFile, Symbol } from 'typescript';
-import { UtilTypescriptHelpers } from '../../../tutorial-extractor/src/index';
+import { UtilTypescriptHelpers } from '@ossiaco/tutorial-extractor';
 import { UTIL_GetExtractorContext } from '../index';
 
 describe('Class UtilTypescriptHelpers', () => {
@@ -11,7 +11,7 @@ describe('Class UtilTypescriptHelpers', () => {
     beforeAll(() => {
         const program: Program = UTIL_GetExtractorContext().program;
         const entryPointFile: string = UTIL_GetExtractorContext().entryPointFile;
-        const jsDocContent = `/**
+        const jsDocContent: string = `/**
             * @public
             * @tutorial
             * @tutorialname Load Context
@@ -23,7 +23,12 @@ describe('Class UtilTypescriptHelpers', () => {
 
         tryGetSymbolForDeclaration = UtilTypescriptHelpers.tryGetSymbolForDeclaration(rootFile!);
         getSymbolForDeclaration = UtilTypescriptHelpers.getSymbolForDeclaration(rootFile!);
-        extractJSDocContent = UtilTypescriptHelpers.extractJSDocContent(jsDocContent, (message: string) => {throw new Error(message)});
+        extractJSDocContent = UtilTypescriptHelpers.extractJSDocContent(
+            jsDocContent,
+            (message: string) => {
+                throw new Error(message);
+            }
+        );
     });
 
     it('is defined', () => {
@@ -39,6 +44,7 @@ describe('Class UtilTypescriptHelpers', () => {
     });
 
     it('method tryGetSymbolForDeclaration returns a instance of Symbol', () => {
+        // tslint:disable-next-line:no-any
         expect(tryGetSymbolForDeclaration).toStrictEqual((rootFile as any).symbol);
     });
 
@@ -51,6 +57,7 @@ describe('Class UtilTypescriptHelpers', () => {
     });
 
     it('method getSymbolForDeclaration returns a instance of Symbol', () => {
+        // tslint:disable-next-line:no-any
         expect(getSymbolForDeclaration).toStrictEqual((rootFile as any).symbol);
     });
 
@@ -69,6 +76,7 @@ describe('Class UtilTypescriptHelpers', () => {
     });
 
     it('method extractJSDocContent returns the right string format', () => {
-        expect(extractJSDocContent).toEqual(`@public\n@tutorial\n@tutorialname Load Context\nLoad the runtime context.\n@note blah blah blah`);
+        expect(extractJSDocContent).toEqual(`@public\n@tutorial\n@tutorialname ` +
+        `Load Context\nLoad the runtime context.\n@note blah blah blah`);
     });
 });

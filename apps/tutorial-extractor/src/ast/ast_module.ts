@@ -6,6 +6,7 @@ import { AstItemContainer } from './ast_item_container';
 import { AstTutorial } from './ast_tutorial';
 import { IAstTutorialOptions } from './ast_tutorial.types';
 
+// tslint:disable-next-line:export-name
 export class AstModule extends AstItemContainer {
     private static _getTutorialOptions(options: IAstItemOptions): IAstTutorialOptions {
         const {
@@ -13,12 +14,14 @@ export class AstModule extends AstItemContainer {
             context
         } = options;
         const sourceFileText: string = declaration.getSourceFile().text;
-        const reportError = (message: string) => context.reportError(message, declaration.getSourceFile(), declaration.getStart());
+        const reportError: (message: string) => void = (message: string) => {
+            context.reportError(message, declaration.getSourceFile(), declaration.getStart());
+        };
         const steps: string[] = UtilDocElementParser.parseSteps(sourceFileText, reportError);
 
         // Remove steps from source file text
         let tutorialText: string = sourceFileText;
-        for (let i = 0; i < steps.length; i++) {
+        for (let i: number = 0; i < steps.length; i++) {
             tutorialText = tutorialText.replace(steps[i], '');
         }
 
@@ -28,7 +31,11 @@ export class AstModule extends AstItemContainer {
             declarationSymbol: options.declarationSymbol,
             sourceFileText: tutorialText,
             steps: steps
-        }
+        };
+    }
+
+    constructor (options: IAstItemOptions) {
+        super(options);
     }
     protected processModuleExport (exportSymbol: Symbol): void {
         const followedSymbol: Symbol = UtilTypescriptHelpers.followAliases(exportSymbol, this.typeChecker);
@@ -46,12 +53,12 @@ export class AstModule extends AstItemContainer {
                 declaration,
                 declarationSymbol: followedSymbol,
                 exportSymbol
-            }
+            };
 
-            if (followedSymbol.flags & (
-                SymbolFlags.Class |
-                SymbolFlags.Interface |
-                SymbolFlags.Function |
+            if (followedSymbol.flags && (
+                SymbolFlags.Class ||
+                SymbolFlags.Interface ||
+                SymbolFlags.Function ||
                 SymbolFlags.Enum
             )) {
                 this.addMemberItem(new AstTutorial(AstModule._getTutorialOptions(options)));
@@ -59,8 +66,5 @@ export class AstModule extends AstItemContainer {
                 this.reportWarning(`Unsupported export: ${exportSymbol.name}`);
             }
         }
-    }
-    constructor (options: IAstItemOptions) {
-        super(options);
     }
 }

@@ -3,21 +3,22 @@ import { ILogger } from './extractor.types';
 /**
  * Used to collect statistics for an ILogger implementation.
  */
+// tslint:disable-next-line:export-name
 export class MonitoredLogger implements ILogger {
   /**
    * Number of calls to logError()
    */
-  errorCount: number;
+  public errorCount: number;
 
   /**
    * Number of calls to logWarning()
    */
-  warningCount: number;
+  public warningCount: number;
 
   /**
    * Number of calls to any logging method.
    */
-  messageCount: number;
+  public messageCount: number;
 
   private _innerLogger: ILogger;
 

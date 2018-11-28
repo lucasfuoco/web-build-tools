@@ -10796,11 +10796,11 @@ packages:
       '@types/semver': 5.3.33
       fs-extra: 7.0.1
       semver: 5.3.0
-      typescript: 3.0.3
+      typescript: 3.1.6
     dev: false
     name: '@rush-temp/api-extractor-test-02'
     resolution:
-      integrity: sha512-q0O6aOThh6xroG3CNiZdtK4AUQlZjhWZwdD78oJDUoLDd5Pnhhz2WOSAPW0gDymwK9phLm7D47MdlRGeoEGnyw==
+      integrity: sha512-zBbtJ0Sqd6Uwn/gPjkLmBbvrGqufK22topnUSIFysR/byueXquVbpQqGQs3qmTE2O/4jBEWcukFuGIOqpT3/NA==
       tarball: 'file:projects/api-extractor-test-02.tgz'
     version: 0.0.0
   'file:projects/api-extractor-test-03.tgz':
@@ -10808,21 +10808,21 @@ packages:
       '@types/jest': 23.3.9
       '@types/node': 8.5.8
       fs-extra: 7.0.1
-      typescript: 3.0.3
+      typescript: 3.1.6
     dev: false
     name: '@rush-temp/api-extractor-test-03'
     resolution:
-      integrity: sha512-WIoNSAEl3g7oWTZO42I7fCdLB4+xOBRZPdTXyq9DnO3uK/zJh0EaSxCw8Ln2XOIPn/y4Tvgb1DOP+atv9qQKvw==
+      integrity: sha512-dpkt6PRRlmnGgvk1HfjwQFX0eXBKD8RNpXsXmUyZNY7p+MJo73/9kSKXqTYv+vK0fh5KsBPsQCXyxfU+kC4AcQ==
       tarball: 'file:projects/api-extractor-test-03.tgz'
     version: 0.0.0
   'file:projects/api-extractor-test-04.tgz':
     dependencies:
       fs-extra: 7.0.1
-      typescript: 3.0.3
+      typescript: 3.1.6
     dev: false
     name: '@rush-temp/api-extractor-test-04'
     resolution:
-      integrity: sha512-qJ2lf+00AeWj+UZnKbGUkxk+mxKFYAOrGXFK0L2RjRffkHc0RA4HbPG8judIrMYx+YduXI4jVp3g55bwEK2XmA==
+      integrity: sha512-x35rKey/54j7E58/uqkKJ9q0rx5nNsDsfbdXP4bnvAXcTA9AsEHs8CFj7H6RpqxcfLNwrAMzqBk1EqYlhpvaQw==
       tarball: 'file:projects/api-extractor-test-04.tgz'
     version: 0.0.0
   'file:projects/api-extractor-test-05.tgz':
@@ -10830,11 +10830,11 @@ packages:
       '@types/jest': 23.3.9
       '@types/node': 8.5.8
       fs-extra: 7.0.1
-      typescript: 3.0.3
+      typescript: 3.1.6
     dev: false
     name: '@rush-temp/api-extractor-test-05'
     resolution:
-      integrity: sha512-BhZY1no2uVYVYMoHVwuDAM9YCI1BWGU2h75G25xOFQzBjNPOikBl118ximntz3tqQEk6mSznQFJTPfqGB4J59Q==
+      integrity: sha512-xF+kTwjrRWyiE/mz4lrJK8+/5IzjBuMOfyTU/jMtdBRVPJBPDg/Sm2D07267fLcFgK5acpIODtglQfbAT41ZZA==
       tarball: 'file:projects/api-extractor-test-05.tgz'
     version: 0.0.0
   'file:projects/api-extractor.tgz':
@@ -11324,11 +11324,11 @@ packages:
       gulp: 3.9.1
       tslint: 5.11.0
       tslint-microsoft-contrib: /tslint-microsoft-contrib/5.2.1/tslint@5.11.0
-      typescript: 3.0.3
+      typescript: 3.1.6
     dev: false
     name: '@rush-temp/rush-stack-compiler'
     resolution:
-      integrity: sha512-15CXyBJRlH9YXS+KssdoH6ozGYZUSgndSnhHsBJk8lnQ21lTwo9VGaeNQ3r3EruHEeoP8elkqrw+LJSyG+7TXA==
+      integrity: sha512-b9gYnXhNFz1IwOgt0U7+zmL2iiTIp9+s/RWKwcKmMafubH188oTZ9uQHIAFwIMFx7nFNMP5sI59+mwqCE1PQNQ==
       tarball: 'file:projects/rush-stack-compiler.tgz'
     version: 0.0.0
   'file:projects/rush-stack-library-test.tgz':
@@ -11440,6 +11440,8 @@ packages:
     version: 0.0.0
   'file:projects/tutorial-documenter-tests.tgz':
     dependencies:
+      '@microsoft/node-library-build': 6.0.6
+      '@microsoft/rush-stack-compiler': 0.4.3
       '@types/jest': 23.3.9
       '@types/node': 8.5.8
       chalk: 2.4.1
@@ -11450,11 +11452,12 @@ packages:
       ts-jest: 23.10.5
       tslib: 1.9.3
       tslint: 5.11.0
-      typescript: 3.0.3
+      tslint-microsoft-contrib: /tslint-microsoft-contrib/5.2.1/tslint@5.11.0
+      typescript: 3.1.6
     dev: false
     name: '@rush-temp/tutorial-documenter-tests'
     resolution:
-      integrity: sha512-3Dt/87lsMr/6XNr9I8bSm+TVWXMutRAsVidpwDqWhKa+KmqxAgQPV+MfBkdscgwHkcussJwbarLo6yVFmsQWxg==
+      integrity: sha512-n+vXW6MbbKW0SagJLbdChL+y1FN0MrQHpvYrHfsVT1wIDAxtSnzyKbDSuJsl6/jnFJmb0VldTEp79WkMdsVK/g==
       tarball: 'file:projects/tutorial-documenter-tests.tgz'
     version: 0.0.0
   'file:projects/tutorial-documenter.tgz':
@@ -11470,11 +11473,12 @@ packages:
       rxjs: 6.3.3
       tslib: 1.9.3
       tslint: 5.11.0
-      typescript: 3.0.3
+      tslint-microsoft-contrib: /tslint-microsoft-contrib/5.2.1/tslint@5.11.0
+      typescript: 3.1.6
     dev: false
     name: '@rush-temp/tutorial-documenter'
     resolution:
-      integrity: sha512-2WL/xHeinKTq6ho1N891bxPRNUsB0b8lUX3Q2S6kUgRLK9FH0kIrw78GZx/+tyUg4/wz1umJYRbUbcjZT31tAw==
+      integrity: sha512-PiE0ms7sr9Phu4XC3VC9ql7v7R4R4ZwGBAnvfFv4F9jYDTlGxk1V2nzrOwo/u2bBtaq9/GIlXiogC2nxCDAz6A==
       tarball: 'file:projects/tutorial-documenter.tgz'
     version: 0.0.0
   'file:projects/tutorial-extractor-tests.tgz':
@@ -11485,6 +11489,7 @@ packages:
       '@types/jest': 23.3.9
       '@types/node': 8.5.8
       chalk: 2.4.1
+      colors: 1.2.5
       gulp: 3.9.1
       gulp-jest: 4.0.2
       jest-config: 23.6.0
@@ -11493,11 +11498,12 @@ packages:
       ts-jest: 23.10.5
       tslib: 1.9.3
       tslint: 5.11.0
-      typescript: 3.0.3
+      tslint-microsoft-contrib: /tslint-microsoft-contrib/5.2.1/tslint@5.11.0
+      typescript: 3.1.6
     dev: false
     name: '@rush-temp/tutorial-extractor-tests'
     resolution:
-      integrity: sha512-pKw3gn/cP1yQejt5wdeFM4icZ2MJQpg+EGP/L9f58/8a6qACnbEOsgfGAMLRdQd02n+nr74tugte6R3QUlUJuA==
+      integrity: sha512-aGxjk4TPH3FKDL/lcokQad522sMvFJ6lGC8bVweL2YFPGapvcXO8Zukc+s0qxq7JDIyEE3FiyHm4TbUKtXvlCA==
       tarball: 'file:projects/tutorial-extractor-tests.tgz'
     version: 0.0.0
   'file:projects/tutorial-extractor.tgz':
@@ -11517,11 +11523,11 @@ packages:
       tslib: 1.9.3
       tslint: 5.11.0
       tslint-microsoft-contrib: /tslint-microsoft-contrib/5.2.1/tslint@5.11.0
-      typescript: 3.0.3
+      typescript: 3.1.6
     dev: false
     name: '@rush-temp/tutorial-extractor'
     resolution:
-      integrity: sha512-kck1z01VM0qsnmMooW65ApEhzpkFGMyyIcZDbsjxrH3nDekqMU2rsuvHkybB+/oAk7wbvR38z9bGOm69QmTfNg==
+      integrity: sha512-Dmg6rQXD3bqQx/wsagwr9X6D5acr6zGY29wCOMRTESgBtw2vO7TGbQWTe48BivrKf7vM3GN+U2aVJ/9RGVML6Q==
       tarball: 'file:projects/tutorial-extractor.tgz'
     version: 0.0.0
   'file:projects/web-library-build-test.tgz':

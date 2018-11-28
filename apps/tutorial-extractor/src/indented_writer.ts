@@ -1,9 +1,10 @@
+// tslint:disable-next-line:export-name
 export class IndentedWriter {
     /**
    * The text characters used to create one level of indentation.
    * Two spaces by default.
    */
-    spacing: string;
+    public spacing: string;
 
     private _output: string;
     private _indentStack: string[];
@@ -20,7 +21,7 @@ export class IndentedWriter {
     /**
    * Retrieves the indented output.
    */
-    toString (): string {
+    public toString (): string {
         return this._output;
     }
 
@@ -31,7 +32,7 @@ export class IndentedWriter {
    * Each call to IndentedWriter.increaseIndent() must be followed by a
    * corresponding call to IndentedWriter.decreaseIndent().
    */
-    increaseIndent (): void {
+    public increaseIndent (): void {
         this._indentStack.push(this.spacing);
         this._updateIndentText();
     }
@@ -40,7 +41,7 @@ export class IndentedWriter {
      * Decreases the indentation, reverting the effect of the corresponding call
      * to IndentedWriter.increaseIndent().
      */
-    decreaseIndent (): void {
+    public decreaseIndent (): void {
         this._indentStack.pop();
         this._updateIndentText();
     }
@@ -49,7 +50,7 @@ export class IndentedWriter {
      * Resets the stream, erasing any output and indentation levels.
      * Does not reset the "spacing" configuration.
      */
-    clear (): void {
+    public clear (): void {
         this._output = '';
         this._indentStack = [];
         this._indentText = '';
@@ -60,8 +61,8 @@ export class IndentedWriter {
    * to the current indentation level.  If the string contains multiple newlines,
    * each line will be indented separately.
    */
-    write (message: string): void {
-        let first = true;
+    public write (message: string): void {
+        let first: boolean = true;
         for (const linePart of message.split('\n')) {
             if (!first) {
                 this._writeNewLine();
@@ -78,7 +79,7 @@ export class IndentedWriter {
   * A shorthand for writing an optional message, followed by a newline.
   * Indentation is applied following the semantics of IndentedWriter.write().
   */
-    writeLine (message: string = ''): void {
+    public writeLine (message: string = ''): void {
         this.write(message + '\n');
     }
 

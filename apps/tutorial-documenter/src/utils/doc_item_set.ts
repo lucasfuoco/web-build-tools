@@ -4,15 +4,16 @@ import {
 } from '@ossiaco/tutorial-extractor';
 import {DocItem} from './doc_item';
 
+// tslint:disable-next-line:export-name
 export class DocItemSet {
-    readonly docPackagesByName: Map<string, DocItem> = new Map<string, DocItem>();
-    readonly docPackages: DocItem[] = [];
+    public readonly docPackagesByName: Map<string, DocItem> = new Map<string, DocItem>();
+    public readonly docPackages: DocItem[] = [];
     private _calculated: boolean;
     constructor () {
         this._calculated = false;
     }
 
-    loadApiJsonFile (apiJsonFileName: string): void {
+    public loadApiJsonFile (apiJsonFileName: string): void {
         if (this._calculated) {
             throw new Error('calculatedReferences() was already called');
         }
@@ -23,7 +24,7 @@ export class DocItemSet {
         this.docPackages.push(docItem);
     }
 
-    calculateReferences(): void {
+    public calculateReferences(): void {
         if (this._calculated) {
             return;
         }

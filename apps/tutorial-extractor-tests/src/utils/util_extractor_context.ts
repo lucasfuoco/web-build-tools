@@ -13,9 +13,9 @@ import {
     ParsedCommandLine,
     Program
 } from 'typescript';
-import { ExtractorContext } from '../../../tutorial-extractor/src/index';
 import {
-    MonitoredLogger
+    MonitoredLogger,
+    ExtractorContext
 } from '@ossiaco/tutorial-extractor';
 import colors = require('colors');
 
@@ -42,6 +42,7 @@ const instance: ExtractorContext = new ExtractorContext({
 });
 
 /** Get the instance of ExtractorContext. */
+// tslint:disable-next-line:export-name
 export function UTIL_GetExtractorContext (): ExtractorContext {
     return instance;
 }

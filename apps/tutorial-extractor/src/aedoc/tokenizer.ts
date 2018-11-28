@@ -4,6 +4,7 @@ import {
 import {Token, TokenType} from './token';
 
 /** Handles the tokenizatipon of an AEDoc comment */
+// tslint:disable-next-line:export-name
 export class Tokenizer {
     /**
    * Match AEDoc block tags and inline tags
@@ -24,11 +25,11 @@ export class Tokenizer {
         this._tokenStream = this._tokenizeDocs(docs);
     }
 
-    peekToken(): Token | undefined {
+    public peekToken(): Token | undefined {
         return (!this._tokenStream || this._tokenStream.length === 0) ? undefined : this._tokenStream[0];
     }
 
-    getToken(): Token | undefined {
+    public getToken(): Token | undefined {
         return (!this._tokenStream || this._tokenStream.length === 0) ? undefined : this._tokenStream.shift();
     }
 
@@ -44,11 +45,16 @@ export class Tokenizer {
         let docEntries: string[] = [];
         const commentsAndCode: string[] = docs.split(Tokenizer._commentsAndCodeRegEx);
 
-        for (let i = 0; i < commentsAndCode.length; ++i) {
+        for (let i: number = 0; i < commentsAndCode.length; ++i) {
             if (Tokenizer._commentsRegEx.test(commentsAndCode[i])) {
                 // This will be the AEDoc content, excluding the "/**" characters
                 const aedocs: string = UtilTypescriptHelpers.extractJSDocContent(commentsAndCode[i], this._reportError);
-                docEntries = docEntries.concat(UtilTypescriptHelpers.splitStringWithRegEx(aedocs.replace(/\r/g, ''), Tokenizer._aedocTagsRegex));
+                docEntries = docEntries.concat(
+                    UtilTypescriptHelpers.splitStringWithRegEx(
+                        aedocs.replace(/\r/g, ''),
+                        Tokenizer._aedocTagsRegex
+                    )
+                );
             } else {
                 if (commentsAndCode[i].trim().length === 0) {
                     continue;
@@ -61,7 +67,7 @@ export class Tokenizer {
         // process each sanitized doc string to a Token object
         const tokens: Token[] = [];
 
-        for (let i = 0; i < docEntries.length; i++) {
+        for (let i: number = 0; i < docEntries.length; i++) {
             let token: Token | undefined;
             const untrimmed: string = docEntries[i];
             const trimmed: string = untrimmed.replace(/\s+/g, ' ').trim();

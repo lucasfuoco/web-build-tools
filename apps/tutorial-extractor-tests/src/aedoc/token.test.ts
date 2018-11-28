@@ -1,7 +1,7 @@
 import {
     Token,
      TokenType
-} from '../../../tutorial-extractor/src/index';
+} from '@ossiaco/tutorial-extractor';
 
 describe('Class Token', () => {
     let instance: Token;
@@ -47,7 +47,9 @@ describe('Class Token', () => {
     });
 
     it('method requireType throws error on different token type', () => {
-        expect(() => {instance.requireType(TokenType.InlineTag);}).toThrow(new Error(
+        expect(() => {
+            instance.requireType(TokenType.InlineTag);
+        }).toThrow(new Error(
             `Encountered a token of type \"${TokenType.BlockTag}\" when expecting \"${TokenType.InlineTag}\"`
         ));
     });

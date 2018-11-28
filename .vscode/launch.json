@@ -48,6 +48,23 @@
 			"type": "node",
 			"request": "attach",
 			"port": 5858
+		},
+		{
+			"name": "Debug Jest tutorial-extractor",
+			"type": "node",
+			"request": "launch",
+			"args": [
+				"--inspect-brk",
+				"${workspaceRoot}\\apps\\tutorial-extractor-tests\\node_modules\\jest\\bin\\jest",
+				"--runInBand",
+				"--coverage",
+				"false",
+				"--config",
+				"${workspaceRoot}\\apps\\tutorial-extractor-tests\\jest.config.js"
+			],
+			"cwd": "${workspaceFolder}\\apps\\tutorial-extractor-tests",
+			"console": "integratedTerminal",
+			"internalConsoleOptions": "neverOpen"
 		}
 	]
 }

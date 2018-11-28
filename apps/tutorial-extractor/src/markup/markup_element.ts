@@ -17,7 +17,6 @@ export interface IMarkupText {
 // ---------------------------------------------------------------------------------------------------------------
 export type MarkupLinkTextElement = IMarkupText;
 
-
 /** A hyperlink to an API item */
 export interface IMarkupApiLink {
     /** The kind of markup element */
@@ -56,7 +55,6 @@ export interface IMarkupLineBreak {
 export type MarkupBasicElement = MarkupLinkTextElement | IMarkupApiLink | IMarkupWebLink | IMarkupParagraph
     | IMarkupLineBreak;
 
-
 /** A box containing source code with syntax highlighting */
 export interface IMarkupCodeBox {
     /** The kind of markup element */
@@ -68,7 +66,7 @@ export interface IMarkupCodeBox {
 // ---------------------------------------------------------------------------------------------------------------
 // Represents structured text that contains headings, tables, and boxes. These are the top-level
 // elements of a IMarkupPage
-//----------------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------
 export type MarkupStructuredElement = MarkupBasicElement | IMarkupCodeBox;
 
 // ---------------------------------------------------------------------------------------------------------------

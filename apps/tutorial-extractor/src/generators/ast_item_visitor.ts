@@ -7,6 +7,7 @@ import { AstTutorial } from '../ast/ast_tutorial';
  * This is a helper class that provides a standard way to walk the AstItem
  * abstract syntax tree.
  */
+// tslint:disable-next-line:export-name
 export abstract class AstItemVisitor {
     protected visit (astItem: AstItem, refObject?: Object, index?: number): void {
         if (astItem instanceof AstPackage) {

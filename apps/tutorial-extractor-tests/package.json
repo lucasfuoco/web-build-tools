@@ -17,6 +17,8 @@
         "@microsoft/rush-stack-compiler": "0.4.3",
         "@types/jest": "23.3.9",
         "@types/node": "8.5.8",
+        "colors": "~1.2.1",
+        "jest": "23.6.0",
         "jest-environment-jsdom": "~22.4.3",
         "jest-config": "23.6.0",
         "gulp": "~3.9.1",
@@ -24,7 +26,7 @@
         "ts-jest": "23.10.5",
         "tslint": "~5.11.0",
         "tslint-microsoft-contrib": "~5.2.1",
-        "typescript": "~3.0.3"
+        "typescript": "3.1.6"
     },
     "license": "ISC",
     "main": "lib/index.js",

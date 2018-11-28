@@ -4,6 +4,7 @@ import { AstItemContainer } from './ast_item_container';
 import { AstStep } from './ast_step';
 import { IAstTutorialOptions } from './ast_tutorial.types';
 
+// tslint:disable-next-line:export-name
 export class AstTutorial extends AstItemContainer {
     /** The steps to be processed */
     protected steps: string[];
@@ -15,7 +16,7 @@ export class AstTutorial extends AstItemContainer {
         this._processMember();
     }
 
-    getSortedMemberItems (): AstItem[] {
+    public getSortedMemberItems (): AstItem[] {
         for (const astItem of this.innerItems) {
             if (!astItem.documentation.stepIndex) {
                 continue;
@@ -54,14 +55,14 @@ export class AstTutorial extends AstItemContainer {
     }
 
     private _processMember (): void {
-        for (let i = 0; i < this.steps.length; i++) {
+        for (let i: number = 0; i < this.steps.length; i++) {
             const options: IAstItemOptions = {
                 context: this.context,
                 declaration: this.declaration,
                 declarationSymbol: this.declarationSymbol,
                 exportSymbol: this.exportSymbol,
                 sourceFileText: this.steps[i]
-            }
+            };
             this.addMemberItem(new AstStep(options));
         }
     }

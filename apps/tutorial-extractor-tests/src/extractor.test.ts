@@ -1,4 +1,4 @@
-import { Extractor } from '../../tutorial-extractor/src/index';
+import { Extractor } from '@ossiaco/tutorial-extractor';
 
 describe('Class Extractor', () => {
     let instance: Extractor;

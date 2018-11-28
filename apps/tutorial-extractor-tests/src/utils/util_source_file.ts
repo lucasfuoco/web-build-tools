@@ -2,6 +2,7 @@
  * @public
  */
 
+// tslint:disable-next-line:export-name
 export function UTIL_GetSourceFile(): string {
     return `
         /**

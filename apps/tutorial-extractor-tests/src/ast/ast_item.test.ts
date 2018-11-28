@@ -1,15 +1,16 @@
 
 import { SourceFile } from 'typescript';
-import {ApiDocumentation} from '../../../tutorial-extractor/src/aedoc/api_documentation';
-import {
-    AstItem,
-    AstItemKind,
-    IAstItemOptions
-} from '../../../tutorial-extractor/src/ast/index';
 import {
     UTIL_GetAstItemOptions,
     UTIL_GetExtractorContext
 } from '../index';
+import {
+    ExtractorContext,
+    AstItem,
+    AstItemKind,
+    IAstItemOptions,
+    ApiDocumentation
+} from '@ossiaco/tutorial-extractor';
 
 class AstStepDescription extends AstItem {
     constructor (options: IAstItemOptions) {
@@ -21,8 +22,10 @@ describe('Abstract class AstItem', () => {
     let instance: AstStepDescription;
     let hasAnyIncompleteTags: boolean;
     beforeAll(() => {
-        const extractorContext = UTIL_GetExtractorContext();
-        const rootFile: SourceFile | undefined = extractorContext.program.getSourceFile(extractorContext.entryPointFile);
+        const extractorContext: ExtractorContext = UTIL_GetExtractorContext();
+        const rootFile: SourceFile | undefined = extractorContext.program.getSourceFile(
+            extractorContext.entryPointFile
+        );
         const astItemOptions: IAstItemOptions = UTIL_GetAstItemOptions(extractorContext, rootFile!);
         instance = new AstStepDescription(astItemOptions);
         hasAnyIncompleteTags = instance.hasAnyIncompleteTags();

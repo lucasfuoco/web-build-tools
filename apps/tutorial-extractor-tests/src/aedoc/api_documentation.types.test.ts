@@ -1,19 +1,19 @@
-import {ApiDocumentation} from '../../../tutorial-extractor/src/aedoc/api_documentation';
-import {ExtractorContext} from '../../../tutorial-extractor/src/extractor_context/extractor_context';
+import {UTIL_GetExtractorContext} from '../utils/util_extractor_context';
 import {
     AstPackage,
     IReferenceResolver,
-    ResolvedApiItem
-} from '../../../tutorial-extractor/src/index';
-import {UtilApiDefinitionReference} from '../../../tutorial-extractor/src/utils/util_api_definition_reference';
-import {UTIL_GetExtractorContext} from '../utils/util_extractor_context';
+    ResolvedApiItem,
+    ExtractorContext,
+    ApiDocumentation,
+    UtilApiDefinitionReference
+} from '@ossiaco/tutorial-extractor';
 
 describe('Interface IReferenceResolver', () => {
     let referenceResolver: IReferenceResolver;
     beforeAll(() => {
-        const reportError = (message: string) => new Error(message);
+        const reportError: (message: string) => void = (message: string) => new Error(message);
         const context: ExtractorContext = UTIL_GetExtractorContext();
-        const docs = `
+        const docs: string = `
             /**
              * @tutorial
              * @public
@@ -27,7 +27,7 @@ describe('Interface IReferenceResolver', () => {
             reportError,
             []
         );
-        const text = '@ossiaco/tutorial-extractor-tests:UTIL_GetExtractorContext';
+        const text: string = '@ossiaco/tutorial-extractor-tests:UTIL_GetExtractorContext';
         const apiDefinitionRef: UtilApiDefinitionReference | undefined = UtilApiDefinitionReference.createFromString(
             text,
             documentation.reportError
@@ -39,16 +39,16 @@ describe('Interface IReferenceResolver', () => {
         }
         referenceResolver = {
             resolver(
-                apiDefinitionRef: UtilApiDefinitionReference,
+                definitionRef: UtilApiDefinitionReference,
                 astPackage: AstPackage,
                 warnings: string[]
             ): ResolvedApiItem | undefined {
-                if(!apiDefinitionRef.packageName || apiDefinitionRef.toScopePackageString() === astPackage.name) {
-                    return context.docItemLoader.resolveLocalReferences(apiDefinitionRef, astPackage, warnings);
+                if (!definitionRef.packageName || definitionRef.toScopePackageString() === astPackage.name) {
+                    return context.docItemLoader.resolveLocalReferences(definitionRef, astPackage, warnings);
                 }
                 return undefined;
             }
-        }
+        };
     });
 
     it('is defined', () => {

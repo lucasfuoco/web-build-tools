@@ -1,7 +1,7 @@
 import {
     Token,
     Tokenizer
-} from '../../../tutorial-extractor/src/index';
+} from '@ossiaco/tutorial-extractor';
 
 describe('Class Tokenizer', () => {
     let instance: Tokenizer;
@@ -10,21 +10,23 @@ describe('Class Tokenizer', () => {
     let getToken: Token | undefined;
     let badJsDocTokenizer: () => Tokenizer;
     beforeAll(() => {
-        const jsDocContent = `/**
+        const jsDocContent: string = `/**
             * @public
             * @tutorial
             * @tutorialname Load Context
             * Load the runtime context.
             * @note blah blah blah
         */`;
-        const badJsDocContent = `/**
+        const badJsDocContent: string = `/**
             * @public
             * @tutorial
             * @tutorialname Load Context
             * Load the runtime context.
             * @note {@link}
         */`;
-        reportError = (message: string) => {throw new Error(message)};
+        reportError = (message: string) => {
+            throw new Error(message);
+        };
         instance = new Tokenizer(jsDocContent, reportError);
         peekToken = instance.peekToken();
         getToken = instance.getToken();

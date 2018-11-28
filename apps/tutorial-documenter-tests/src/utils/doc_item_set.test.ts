@@ -1,4 +1,4 @@
-import { DocItemSet } from '../../../tutorial-documenter/src/utils/doc_item_set';
+import { DocItemSet } from '@ossiaco/tutorial-documenter';
 
 describe('Class DocItemSet', () => {
     let instance: DocItemSet;

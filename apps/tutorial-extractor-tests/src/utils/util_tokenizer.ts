@@ -2,12 +2,15 @@
  * @public
  */
 
-import {Tokenizer} from '../../../tutorial-extractor/src/aedoc/tokenizer';
-import {UTIL_GetSourceFile} from '../utils/util_source_file';
+import {Tokenizer} from '@ossiaco/tutorial-extractor';
+import {UTIL_GetSourceFile} from './util_source_file';
 
-const reportError = (message: string) => {throw new Error(message);};
+const reportError: (message: string) => void = (message: string) => {
+    throw new Error(message);
+};
 const instance: Tokenizer = new Tokenizer(UTIL_GetSourceFile(), reportError);
 
+// tslint:disable-next-line:export-name
 export function UTIL_GetTokenizer(): Tokenizer {
     return instance;
 }

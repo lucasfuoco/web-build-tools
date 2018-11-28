@@ -20,37 +20,38 @@ import { AstItemContainer } from './ast_item_container';
  * AstItem is an abstract syntax tree base that represents the Tutorial definitions
  * such as the step description, step index, step name, code description.
  */
+// tslint:disable-next-line:export-name
 export abstract class AstItem {
     /** Name of API items should only contain letters, numbers and underscores. */
     private static _allowedNameRegex: RegExp = /^[a-zA-Z_]+[a-zA-Z_0-9]*$/;
     /** The name of the definition */
-    name: string;
+    public name: string;
     /** The name of an API item should be readable and not contain any special characters. */
-    supportedName: boolean;
+    public supportedName: boolean;
     /** The type of definition represented by this AstItem instance */
-    kind: AstItemKind;
+    public kind: AstItemKind;
     /** A superset of memberItems and AstItems. */
-    innerItems: AstItem[];
+    public innerItems: AstItem[];
     /** True if this AstItem or innerItems are missing tag information */
-    hasIncompleteTags: boolean;
+    public hasIncompleteTags: boolean;
     /**
      * List of extractor warnings that were reported using AstItem.reportWarning.
      */
-    warnings: string[];
+    public warnings: string[];
     /** The parsed AEDoc comment for this item */
-    documentation: ApiDocumentation;
+    public documentation: ApiDocumentation;
     /**
      * The release tag for this item, which may be inherited from a parent.
      * By contrast, ApiDocumentation.releaseTag merely tracks the release tag that was
      * explicitly applied to this item, and does not consider inheritance.
      */
-    inheritedReleaseTag: ReleaseTag = ReleaseTag.None;
+    public inheritedReleaseTag: ReleaseTag = ReleaseTag.None;
     /**
      * The deprecated message for this item, which may be inherited from a parent.
      * By contrast, ApiDocumentation.deprecatedMessage merely tracks the message that was
      * explicitly applied to this item, and does not condider inheritance.
      */
-    inheritedDeprecatedMessage: MarkupElement[] = [];
+    public inheritedDeprecatedMessage: MarkupElement[] = [];
     /**
      * Indicated that this AstItem does not have adequate AEDoc comments. If shouldHaveDocumentation()=true,
      * and there is less than 10 characters of summary text in the AEDoc, then this will be set to true and
@@ -58,7 +59,7 @@ export abstract class AstItem {
      * (The AEDoc text itself is not included in that report, because documentation
      * changes do not require an API review, and thus should not cause a diff for that report.)
      */
-    needsDocumentation: boolean;
+    public needsDocumentation: boolean;
     /** The ExtractorContext instance. */
     protected context: ExtractorContext;
     /**
@@ -117,7 +118,7 @@ export abstract class AstItem {
         );
     }
 
-    notifyAddedToContainer (parentContainer: AstItemContainer): void {
+    public notifyAddedToContainer (parentContainer: AstItemContainer): void {
         if (this._parentContainer) {
             throw new Error(`The API item has already been added to another container: ${this._parentContainer.name}`);
         }
@@ -127,7 +128,7 @@ export abstract class AstItem {
     /**
      * Determine if this AstItem and inner items are missing tag information
      */
-    hasAnyIncompleteTags (): boolean {
+    public hasAnyIncompleteTags (): boolean {
         if (this.hasIncompleteTags) {
             return true;
         }
@@ -141,7 +142,8 @@ export abstract class AstItem {
     }
 
     /**
-     * This function is a second stage that happens after ExtractorContext.analyze() calls AstItem constructor to build up
+     * This function is a second stage that happens after ExtractorContext.analyze()
+     * calls AstItem constructor to build up
      * the abstract syntax tree. In this second stage, we are creating the documentation for each AstItem.
      *
      * This function makes sure we create the documentation for each AstItem in the correct order.
@@ -149,7 +151,7 @@ export abstract class AstItem {
      * has an \@inheritdoc referencing AstItemTwo, and AstItemTwo has an \@inheritdoc referencing AstItemOne then
      * we have a circular dependency and an error will be reported.
      */
-    completeInitialization (): void {
+    public completeInitialization (): void {
         switch (this._state) {
             case InitializationState.Completed:
                 return;
@@ -174,17 +176,18 @@ export abstract class AstItem {
      * Whether this APIItem should have documentation or not. If false then,
      * AstItem.missingDocumentation will never be set.
      */
-    shouldHaveDocumentation (): boolean {
+    public shouldHaveDocumentation (): boolean {
         return true;
     }
 
     /** Return the compiler's underlying Declaration object */
-    getDeclaration (): Declaration {
+    public getDeclaration (): Declaration {
         return this.declaration;
     }
 
     /** Called after the constructor to finish to analysis. */
-    visitTypeReferencesForAstItem (): void {
+    // tslint:disable-next-line:no-empty
+    public visitTypeReferencesForAstItem (): void {
 
     }
 
@@ -238,12 +241,14 @@ export abstract class AstItem {
         if (this.kind === AstItemKind.Package) {
             if (this.documentation.releaseTag !== ReleaseTag.None) {
                 const tag: string = '@' + ReleaseTag[this.documentation.releaseTag].toLowerCase();
-                this.reportError(`The ${tag} tag is now allowed on the package, which is always considered to be @public`);
+                this.reportError(`The ${tag} tag is now allowed on the package, ` +
+                `which is always considered to be @public`);
             }
         }
 
         if (this.documentation.preapproved) {
-            if (!(this.getDeclaration().kind & (SyntaxKind.InterfaceDeclaration | SyntaxKind.ClassDeclaration))) {
+            if (!(this.getDeclaration().kind &&
+                (SyntaxKind.InterfaceDeclaration || SyntaxKind.ClassDeclaration))) {
                 this.reportError('The @preapproved tag may only be applied to classes and interfaces');
                 this.documentation.preapproved = false;
             }
@@ -262,8 +267,8 @@ export abstract class AstItem {
             }
         } else {
             if (this.documentation.releaseTag === ReleaseTag.Internal) {
-                this.reportWarning('Because this definition is explicitly marked as @internal, an underscore prefix ("_")'
-                    + ' should be added to its name');
+                this.reportWarning('Because this definition is explicitly marked as @internal, ' +
+                'an underscore prefix ("_") should be added to its name');
             }
         }
 

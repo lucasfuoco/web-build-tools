@@ -1,11 +1,11 @@
-import {AstTutorial} from '../../../tutorial-extractor/src/index';
-
-import { SourceFile } from 'typescript';
 import {
+    AstTutorial,
+    ExtractorContext,
     AstItem,
     AstItemKind,
     IAstItemOptions
-} from '../../../tutorial-extractor/src/index';
+} from '@ossiaco/tutorial-extractor';
+import { SourceFile } from 'typescript';
 import {
     UTIL_GetAstItemOptions,
     UTIL_GetExtractorContext
@@ -14,8 +14,10 @@ import {
 describe('Class AstTutorial', () => {
     let instance: AstTutorial;
     beforeAll(() => {
-        const extractorContext = UTIL_GetExtractorContext();
-        const rootFile: SourceFile | undefined = extractorContext.program.getSourceFile(extractorContext.entryPointFile);
+        const extractorContext: ExtractorContext = UTIL_GetExtractorContext();
+        const rootFile: SourceFile | undefined = extractorContext.program.getSourceFile(
+            extractorContext.entryPointFile
+        );
         const options: IAstItemOptions = UTIL_GetAstItemOptions(extractorContext, rootFile!);
         instance = new AstTutorial({...options, ...{steps: []}});
     });

@@ -1,4 +1,4 @@
-import { IApiItemReference } from '../../../tutorial-extractor/src/api/api_item';
+import { IApiItemReference } from '@ossiaco/tutorial-extractor';
 
 describe('Interface IApiItemReference', () => {
     let apiItemReference: IApiItemReference;
@@ -8,7 +8,7 @@ describe('Interface IApiItemReference', () => {
             packageName: '',
             exportName: '',
             memberName: ''
-        }
+        };
     });
 
     it('is defined', () => {

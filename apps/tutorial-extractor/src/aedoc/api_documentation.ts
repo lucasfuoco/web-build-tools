@@ -15,11 +15,12 @@ import { ReleaseTag } from './release_tag.types';
 import { Token, TokenType } from './token';
 import { Tokenizer } from './tokenizer';
 
+// tslint:disable-next-line:export-name
 export class ApiDocumentation {
     /** Match AEDoc block tags and inline tags */
-    static readonly _aedocTagsRegex: RegExp = /{\s*@(\\{|\\}|[^{}])*}|(?:^|\s)(\@[a-z_]+)(?=\s|$)/gi;
+    public static readonly _aedocTagsRegex: RegExp = /{\s*@(\\{|\\}|[^{}])*}|(?:^|\s)(\@[a-z_]+)(?=\s|$)/gi;
 
-    static _allowedRegularAedocTags: string[] = [
+    public static _allowedRegularAedocTags: string[] = [
         '@alpha',
         '@beta',
         '@internal',
@@ -39,16 +40,16 @@ export class ApiDocumentation {
         '@codedescription'
     ];
 
-    static _allowedInlineAedocTags: string[] = [
+    public static _allowedInlineAedocTags: string[] = [
         '@inheritdoc',
         '@link'
     ];
 
-    originalAedocs: string;
-    failedToParse: boolean;
-    referenceResolver: IReferenceResolver;
-    context: ExtractorContext;
-    warnings: string[];
+    public originalAedocs: string;
+    public failedToParse: boolean;
+    public referenceResolver: IReferenceResolver;
+    public context: ExtractorContext;
+    public warnings: string[];
     // ---------------------------------------------------- //
     // DocCommentTokens that are parsed into Doc Elements
     // ---------------------------------------------------- //
@@ -57,32 +58,32 @@ export class ApiDocumentation {
      * is considered Public API for third party developers, as well as its release
      * stage (alpha, beta, etc).
      */
-    releaseTag: ReleaseTag;
-    summary: MarkupElement[];
-    deprecatedMessage: MarkupBasicElement[];
-    remarks: MarkupElement[];
+    public releaseTag: ReleaseTag;
+    public summary: MarkupElement[];
+    public deprecatedMessage: MarkupBasicElement[];
+    public remarks: MarkupElement[];
     /** The tutorial name. */
-    tutorialName: MarkupElement[];
+    public tutorialName: MarkupElement[];
     /** The step index */
-    stepIndex: number | null;
+    public stepIndex: number | undefined;
     /** The step name */
-    stepName: MarkupElement[];
+    public stepName: MarkupElement[];
     /** The code */
-    code: MarkupElement[];
+    public code: MarkupElement[];
     /** The code description */
-    codeDescription: MarkupBasicElement[];
+    public codeDescription: MarkupBasicElement[];
     /**
      * True if the "\@preapproved" tag was specified.
      * Indicates that this internal API is exempt from further reviews.
      */
-    preapproved: boolean;
+    public preapproved: boolean;
     /**
      * True if the "\@tutorial" tag was specified.
      * Indicates that this is a valid tutorial
      */
-    isTutorial: boolean;
-    isDocInheritedDeprecated: boolean;
-    isDocInherited: boolean;
+    public isTutorial: boolean;
+    public isDocInheritedDeprecated: boolean;
+    public isDocInherited: boolean;
     /**
    * A list of \@link elements to be post-processed after all basic documentation has been created
    * for all items in the project.  We save the processing for later because we need ReleaseTag
@@ -90,16 +91,16 @@ export class ApiDocumentation {
    * Example: If API item A has a \@link in its documentation to API item B, then B must not
    * have ReleaseTag.Internal.
    */
-    incompleteLinks: IMarkupApiLink[];
+    public incompleteLinks: IMarkupApiLink[];
     /**
    * A list of 'Token' objects that have been recognized as \@inheritdoc tokens that will be processed
    * after the basic documentation for all API items is complete. We postpone the processing
    * because we need ReleaseTag information before we can determine whether an \@inheritdoc token
    * is valid.
    */
-    incompleteInheritdocs: Token[];
+    public incompleteInheritdocs: Token[];
 
-    readonly reportError: (message: string) => void;
+    public readonly reportError: (message: string) => void;
 
     constructor (
         originalAedoc: string,
@@ -111,7 +112,7 @@ export class ApiDocumentation {
         this.reportError = (message: string) => {
             errorLogger(message);
             this.failedToParse = true;
-        }
+        };
         this.originalAedocs = originalAedoc;
         this.referenceResolver = referenceResolver;
         this.failedToParse = false;
@@ -123,7 +124,7 @@ export class ApiDocumentation {
         this.deprecatedMessage = [];
         this.remarks = [];
         this.tutorialName = [];
-        this.stepIndex = null;
+        this.stepIndex = undefined;
         this.stepName = [];
         this.code = [];
         this.codeDescription = [];
@@ -141,7 +142,7 @@ export class ApiDocumentation {
     /**
      * Executes the implementation details involved in completing the documentation initialization.
      */
-    completeInitialization (warnings: string[]): void {
+    public completeInitialization (warnings: string[]): void {
         // Ensure links are valid
         this._completeLinks();
         // Ensure inheritdocs are valid
@@ -150,14 +151,14 @@ export class ApiDocumentation {
 
     protected _parseDocs (): void {
         const tokenizer: Tokenizer = new Tokenizer(this.originalAedocs, this.reportError);
-        let parsing = true;
+        let parsing: boolean = true;
 
-        let releaseTagCount = 0;
-        let tutorialTagCount = 0;
-        let tutorialnameTagCount = 0;
-        let stepStartCount = 0;
-        let stepEndCount = 0;
-        let stepIndexCount = 0;
+        let releaseTagCount: number = 0;
+        let tutorialTagCount: number = 0;
+        let tutorialnameTagCount: number = 0;
+        let stepStartCount: number = 0;
+        let stepEndCount: number = 0;
+        let stepIndexCount: number = 0;
 
         while (parsing) {
             const token: Token | undefined = tokenizer.peekToken();
@@ -279,7 +280,7 @@ export class ApiDocumentation {
 
                 if (token.text.trim().length !== 0) {
                     // Shorten "This is too long text" to "This is..."
-                    const MAX_LENGTH = 40;
+                    const MAX_LENGTH: number = 40;
                     let problemText: string = token.text.trim();
                     if (problemText.length > MAX_LENGTH) {
                         problemText = problemText.substr(0, MAX_LENGTH - 3).trim() + '...';
@@ -339,7 +340,7 @@ export class ApiDocumentation {
                 packageName: codeLink.target.packageName,
                 exportName: codeLink.target.exportName,
                 memberName: codeLink.target.memberName
-            }
+            };
 
             const apiDefinitionRef: UtilApiDefinitionReference = UtilApiDefinitionReference.createFromParts(parts);
             const resolvedAstItem: ResolvedApiItem | undefined = this.referenceResolver.resolver(
@@ -385,7 +386,8 @@ export class ApiDocumentation {
         }
 
         if (token.type === TokenType.InlineTag && !supportsInline) {
-            this.reportError(`The AEDoc tag \"${token.tag}\" must use the inline tag notation (i.e. with curly braces)`);
+            this.reportError(`The AEDoc tag \"${token.tag}\" ` +
+            `must use the inline tag notation (i.e. with curly braces)`);
             return;
         }
 
@@ -400,7 +402,8 @@ export class ApiDocumentation {
 
     private _checkInheritDocStatus (aedocTag: string): void {
         if (this.isDocInherited) {
-            this.reportError(`The ${aedocTag} tag may not be used because this state is provided by the @inheritdoc target`);
+            this.reportError(`The ${aedocTag} tag may not be used ` +
+            `because this state is provided by the @inheritdoc target`);
         }
     }
 }

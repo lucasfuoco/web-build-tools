@@ -2,6 +2,7 @@ import { DocItemSet } from '../utils/doc_item_set';
 import { BaseAction } from './base_action';
 import { TutorialDocumenterCommandLine } from './tutorial_documenter_command_line';
 
+// tslint:disable-next-line:export-name
 export class MarkDownAction extends BaseAction {
     constructor (_parse: TutorialDocumenterCommandLine) {
         super({
@@ -18,6 +19,7 @@ export class MarkDownAction extends BaseAction {
         return Promise.resolve();
     }
 
+    // tslint:disable-next-line:no-empty
     protected onDefineParameters (): void {
 
     }

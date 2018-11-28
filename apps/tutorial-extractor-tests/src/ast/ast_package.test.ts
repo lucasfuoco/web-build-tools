@@ -2,15 +2,18 @@ import { SourceFile } from 'typescript';
 import {
     AstItem,
     AstItemKind,
-    AstPackage
-} from '../../../tutorial-extractor/src/index';
+    AstPackage,
+    ExtractorContext
+} from '@ossiaco/tutorial-extractor';
 import { UTIL_GetExtractorContext } from '../utils/util_extractor_context';
 
 describe('Class AstPackage', () => {
     let instance: AstPackage;
     beforeAll(() => {
-        const extractorContext = UTIL_GetExtractorContext();
-        const rootFile: SourceFile | undefined = extractorContext.program.getSourceFile(extractorContext.entryPointFile);
+        const extractorContext: ExtractorContext = UTIL_GetExtractorContext();
+        const rootFile: SourceFile | undefined = extractorContext.program.getSourceFile(
+            extractorContext.entryPointFile
+        );
         instance = new AstPackage(extractorContext, rootFile!);
     });
 

@@ -9,7 +9,7 @@ import { DocItemSet } from '../utils/doc_item_set';
 
 // tslint:disable-next-line:export-name
 export abstract class BaseAction extends CommandLineAction {
-    options: ICommandLineActionOptions;
+    public options: ICommandLineActionOptions;
     protected inputFolder: string;
     protected outputFolder: string;
     private _inputFolderParameter: CommandLineStringParameter;

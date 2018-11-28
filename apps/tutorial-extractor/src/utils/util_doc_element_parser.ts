@@ -1,4 +1,4 @@
-import {ApiDocumentation} from '../../../tutorial-extractor/src/aedoc/api_documentation';
+import {ApiDocumentation} from '../aedoc/api_documentation';
 import {
     Token,
     Tokenizer,
@@ -12,11 +12,9 @@ import {
     MarkupLinkTextElement
 } from '../markup/index';
 import { ResolvedApiItem } from '../resolved_api_item';
-import {
-    UtilApiDefinitionReference
-} from '../utils/index';
-import { IScopedPackageName } from './util_api_definition_reference';
+import { UtilApiDefinitionReference, IScopedPackageName } from './util_api_definition_reference';
 
+// tslint:disable-next-line:export-name
 export class UtilDocElementParser {
     /**
      * Used to validate the display text for an \@link tag.  The display text can contain any
@@ -45,10 +43,10 @@ export class UtilDocElementParser {
     private static _stepStartRegEx: RegExp = /@stepstart/;
     private static _stepEndRegEx: RegExp = /@stepend/;
 
-    static parseInteger(documentation: ApiDocumentation, tokenizer: Tokenizer): number | null {
+    public static parseInteger(documentation: ApiDocumentation, tokenizer: Tokenizer): number | undefined {
         let token: Token | undefined;
-        let parsing = true;
-        let parsedText: number | null = null;
+        let parsing: boolean = true;
+        let parsedText: number | undefined = undefined;
         while (parsing) {
             token = tokenizer.peekToken();
             if (!token || !token.text.length) {
@@ -64,7 +62,8 @@ export class UtilDocElementParser {
                 tokenizer.getToken();
                 parsedText = JSON.parse(token.text.trim());
                 if (typeof parsedText !== 'number') {
-                    documentation.reportError(`Cannot parse \'${token.text.trim()}\' of type \'${typeof parsedText}\'. It must be of type \'number\'`);
+                    documentation.reportError(`Cannot parse \'${token.text.trim()}\' ` +
+                    `of type \'${typeof parsedText}\'. It must be of type \'number\'`);
                 }
                 break;
             } else {
@@ -74,28 +73,27 @@ export class UtilDocElementParser {
         return parsedText;
     }
 
-    static parse(documentation: ApiDocumentation, tokenizer: Tokenizer): MarkupBasicElement[] {
+    public static parse(documentation: ApiDocumentation, tokenizer: Tokenizer): MarkupBasicElement[] {
         const markupElements: MarkupBasicElement[] = [];
-        let parsing = true;
+        let parsing: boolean = true;
         let token: Token | undefined;
 
-        while(parsing) {
+        while (parsing) {
             token = tokenizer.peekToken();
             if (!token) {
                 parsing = false; // end of stream
                 break;
             }
 
-            if (token.type == TokenType.BlockTag) {
+            if (token.type === TokenType.BlockTag) {
                 parsing = false;
             } else if (token.type === TokenType.InlineTag) {
-                switch(token.tag) {
+                switch (token.tag) {
                     case '@inheritdoc':
                         tokenizer.getToken();
                         if (markupElements.length > 0 || documentation.summary.length > 0) {
-                            documentation.reportError(
-                                'A summary block is not allowed here, because the @inheritdoc target provides the summary'
-                            );
+                            documentation.reportError('A summary block is not allowed here, ' +
+                            'because the @inheritdoc target provides the summary');
                         }
                         documentation.incompleteInheritdocs.push(token);
                         documentation.isDocInherited = true;
@@ -125,9 +123,9 @@ export class UtilDocElementParser {
         return markupElements;
     }
 
-    static parseCode(documentation: ApiDocumentation, tokenizer: Tokenizer): MarkupElement[] {
+    public static parseCode(documentation: ApiDocumentation, tokenizer: Tokenizer): MarkupElement[] {
         const markupElements: MarkupElement[] = [];
-        let parsing = true;
+        let parsing: boolean = true;
         let token: Token | undefined;
 
         while (parsing) {
@@ -137,7 +135,7 @@ export class UtilDocElementParser {
                 break;
             }
 
-            if (token.type == TokenType.BlockTag) {
+            if (token.type === TokenType.BlockTag) {
                 parsing = false;
             } else if (token.type === TokenType.InlineTag) {
                 parsing = false;
@@ -152,7 +150,7 @@ export class UtilDocElementParser {
         return markupElements;
     }
 
-    static parseAndNormalize(documentation: ApiDocumentation, tokenizer: Tokenizer): MarkupBasicElement[] {
+    public static parseAndNormalize(documentation: ApiDocumentation, tokenizer: Tokenizer): MarkupBasicElement[] {
         const markupElements: MarkupBasicElement[] = UtilDocElementParser.parse(documentation, tokenizer);
         Markup.normalize(markupElements);
         return markupElements;
@@ -166,7 +164,7 @@ export class UtilDocElementParser {
      * The format for the \@link tag is {\@link URL or API defintion reference | display text}, where
      * the '|' is only needed if the optional display text is given.
      */
-    static parseLinkTag(documentation: ApiDocumentation, tokenItem: Token): MarkupBasicElement | undefined {
+    public static parseLinkTag(documentation: ApiDocumentation, tokenItem: Token): MarkupBasicElement | undefined {
         if (!tokenItem.text) {
             documentation.reportError('The {@link} tag must include a URL or API item reference');
             return undefined;
@@ -190,7 +188,8 @@ export class UtilDocElementParser {
         if (displayTextPart) {
             const match: RegExpExecArray | null = this._displayTextBadCharacterRegEx.exec(displayTextPart);
             if (match) {
-                documentation.reportError(`The {@link} tag\'s display text contains an unsupported character: "${match[0]}"`);
+                documentation.reportError(`The {@link} tag\'s display text ` +
+                `contains an unsupported character: "${match[0]}"`);
                 return undefined;
             }
             // Full match is valid text
@@ -214,7 +213,8 @@ export class UtilDocElementParser {
             linkMarkupElement = Markup.createWebLink(displayTextElements, addressPart);
         } else {
             // we are processing an API definition reference
-            const apiDefinitionRef: UtilApiDefinitionReference | undefined = UtilApiDefinitionReference.createFromString(
+            const apiDefinitionRef: UtilApiDefinitionReference | undefined =
+            UtilApiDefinitionReference.createFromString(
                 addressPart,
                 documentation.reportError
             );
@@ -248,7 +248,7 @@ export class UtilDocElementParser {
      * all the relevant documentation properties from the inherited doc onto the documentation
      * of the current api item.
      */
-    static parseInheritDoc(documentation: ApiDocumentation, token: Token, warnings: string[]): void {
+    public static parseInheritDoc(documentation: ApiDocumentation, token: Token, warnings: string[]): void {
         // Check to make sure the API definition reference is at most one string
         const tokenChunks: string[] = token.text.split(' ');
         if (tokenChunks.length > 1) {
@@ -305,18 +305,18 @@ export class UtilDocElementParser {
     /**
      * Extracts the steps of a tutorial file and returns them
      */
-    static parseSteps(text: string, reportError: (message: string) => void): string[] {
+    public static parseSteps(text: string, reportError: (message: string) => void): string[] {
         // Split on comments and code
-        const lines = text.split(/(\/\*\*[\s\S]*?\*\/)/gm);
+        const lines: string[] = text.split(/(\/\*\*[\s\S]*?\*\/)/gm);
         if (!lines || (lines.length === 0) || !(UtilDocElementParser._jsdocStartRegEx.test(text))) {
             return [];
         }
         const steps: string[] = [];
         let step: string[] = [];
-        let startMatch = false;
-        let endMatch = true;
+        let startMatch: boolean = false;
+        let endMatch: boolean = true;
 
-        for (let i = 0; i < lines.length; i++) {
+        for (let i: number = 0; i < lines.length; i++) {
             // If a @stepstart match
             if (UtilDocElementParser._stepStartRegEx.test(lines[i])) {
                 // Add the item to the step array

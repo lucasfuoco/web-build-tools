@@ -3,8 +3,10 @@ import { AstPackage } from '../ast/ast_package';
 import { AstItem } from '../ast/index';
 import { IndentedWriter } from '../indented_writer';
 
+// tslint:disable-next-line:export-name
 export class ApiFileGenerator {
     protected _indentedWriter: IndentedWriter = new IndentedWriter();
+    // tslint:disable-next-line:no-empty
     constructor () { }
 
     /**
@@ -13,12 +15,12 @@ export class ApiFileGenerator {
    * @param reportFilename - The output filename
    * @param analyzer       - An Analyzer object representing the input project.
    */
-    writeApiFile (reportFilename: string): void {
+    public writeApiFile (reportFilename: string): void {
         const fileContent: string = this.generateApiFileContent();
         fs.writeFileSync(reportFilename, fileContent);
     }
 
-    generateApiFileContent (): string {
+    public generateApiFileContent (): string {
         const fileContent: string = this._indentedWriter.toString().replace(/\r?\n/g, '\r\n');
         return fileContent;
     }

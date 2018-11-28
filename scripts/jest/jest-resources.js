@@ -13,12 +13,17 @@ const styleMockPath = (module.exports = {
     createConfig: customConfig =>
         merge({
             rootDir: 'src',
+            roots: [
+                '<rootDir>'
+            ],
+            modulePaths: [
+                '<rootDir>'
+            ],
             verbose: true,
             preset: 'ts-jest',
             transform: {
                 ...preset.transform
             },
-
             reporters: [path.resolve(__dirname, './jest-reporter.js')],
 
             testMatch: [
@@ -46,8 +51,9 @@ const styleMockPath = (module.exports = {
                     isolatedModules: true,
                 }
             },
-
             testURL: 'http://localhost',
+            collectCoverage: true,
+            mapCoverage: true
         },
             customConfig
         )

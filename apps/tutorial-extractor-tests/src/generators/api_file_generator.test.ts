@@ -1,4 +1,4 @@
-import {ApiFileGenerator} from '../../../tutorial-extractor/src/index';
+import {ApiFileGenerator} from '@ossiaco/tutorial-extractor';
 
 describe('Class ApiFileGenerator', () => {
     let instance: ApiFileGenerator;

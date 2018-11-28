@@ -1,4 +1,4 @@
-import {IMarkupCreateTextOptions} from '../../../tutorial-extractor/src/markup/markup.types';
+import {IMarkupCreateTextOptions} from '@ossiaco/tutorial-extractor';
 
 describe('Interface IMarkupCreateTextOptions', () => {
     let markupCreateTextOptions: IMarkupCreateTextOptions;
@@ -6,7 +6,7 @@ describe('Interface IMarkupCreateTextOptions', () => {
         markupCreateTextOptions = {
             bold: true,
             italics: true
-        }
+        };
     });
 
     it('is defined', () => {

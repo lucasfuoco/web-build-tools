@@ -5,12 +5,10 @@ import {
 } from 'typescript';
 import {
     IAstItemOptions,
-    IExportedSymbol
-} from '../../../tutorial-extractor/src/ast/index';
-import {
+    IExportedSymbol,
     ExtractorContext,
     UtilTypescriptHelpers
-} from '../../../tutorial-extractor/src/index';
+} from '@ossiaco/tutorial-extractor';
 import { UTIL_GetAstItemOptions } from '../utils/util_ast_item_options';
 import { UTIL_GetExtractorContext } from '../utils/util_extractor_context';
 
@@ -26,7 +24,7 @@ describe('Interface IExportedSymbol', () => {
         exportedSymbol = {
             exportedName: '',
             followedSymbol: followedSymbol
-        }
+        };
     });
 
     it('is defined', () => {

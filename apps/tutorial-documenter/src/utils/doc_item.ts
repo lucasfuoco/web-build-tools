@@ -2,20 +2,21 @@ import {ApiItem} from '@ossiaco/tutorial-extractor';
 import {DocItemKind} from './doc_item.types';
 import {DocItemSet} from './doc_item_set';
 
+// tslint:disable-next-line:export-name
 export class DocItem {
-    readonly kind: DocItemKind;
-    readonly apiItem: ApiItem;
-    readonly name: string;
-    readonly docItemSet: DocItemSet;
-    readonly parent: DocItem | undefined;
-    readonly children: DocItem[];
+    public readonly kind: DocItemKind;
+    public readonly apiItem: ApiItem;
+    public readonly name: string;
+    public readonly docItemSet: DocItemSet;
+    public readonly parent: DocItem | undefined;
+    public readonly children: DocItem[];
     constructor(apiItem: ApiItem, name: string, docItemSet: DocItemSet, parent: DocItem | undefined) {
         this.apiItem = apiItem;
         this.name = name;
         this.docItemSet = docItemSet;
         this.children = [];
 
-        switch(this.apiItem.kind) {
+        switch (this.apiItem.kind) {
             case 'package':
                 this.kind = this.apiItem.kind === 'package' ? DocItemKind.Package : DocItemKind.Default;
                 for (const exportName of Object.keys(this.apiItem.exports)) {

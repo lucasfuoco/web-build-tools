@@ -14,25 +14,26 @@ import {
        MarkupLinkTextElement
 } from './markup_element';
 
+// tslint:disable-next-line:export-name
 export class Markup {
 
     /** A predefined constant for the IMarkupParagraph element. */
-    static PARAGRAPH: IMarkupParagraph = {
+    public static PARAGRAPH: IMarkupParagraph = {
         kind: 'paragraph'
-    }
+    };
 
     /**
      * Constructs an IMarkupText element representing the specified text string, with
      * optional formatting.
     */
-    static createTextElements(text: string, options?: IMarkupCreateTextOptions): IMarkupText[] {
+    public static createTextElements(text: string, options?: IMarkupCreateTextOptions): IMarkupText[] {
         if (!text.length) {
             return [];
         }
         const result: IMarkupText = {
             kind: 'text',
             text: Markup._trimRawText(text)
-        }
+        };
 
         if (options) {
             if (options.bold) {
@@ -47,7 +48,7 @@ export class Markup {
     /**
      * Similar to Markup.createTextElements representing multi line text
      */
-    static createTextParagraphs(text: string, options?: IMarkupCreateTextOptions): MarkupBasicElement[] {
+    public static createTextParagraphs(text: string, options?: IMarkupCreateTextOptions): MarkupBasicElement[] {
         const result: MarkupBasicElement[] = [];
         if (text.length) {
             // Split up the paragraphs
@@ -63,7 +64,7 @@ export class Markup {
     /**
      * Constructs an IMarkupWebLink element that represents a hyperlink an internet URL.
      */
-    static createWebLink(textElements: MarkupLinkTextElement[], targetUrl: string): IMarkupWebLink {
+    public static createWebLink(textElements: MarkupLinkTextElement[], targetUrl: string): IMarkupWebLink {
         if (!textElements.length) {
             throw new Error('Missing text for link');
         }
@@ -75,13 +76,13 @@ export class Markup {
             kind: 'web-link',
             elements: textElements,
             targetUrl: targetUrl
-        }
+        };
     }
     /**
      * Constructs an IMarkupApiLink element that represents a hyperlink to the specified
      * API object. The hyperlink is applied to an existing stream of markup elements
      */
-    static createApiLink(textElements: MarkupLinkTextElement[], target: IApiItemReference): IMarkupApiLink {
+    public static createApiLink(textElements: MarkupLinkTextElement[], target: IApiItemReference): IMarkupApiLink {
         if (!textElements.length) {
             throw new Error('Missing text for link');
         }
@@ -94,14 +95,14 @@ export class Markup {
             kind: 'api-link',
             elements: textElements,
             target: target
-        }
+        };
     }
 
     /**
      * Constructs an IMarkupCodeBox element representing a program code text
      * with specified syntax highlighted
      */
-    static createCodeBox(code: string, highlighter: MarkupHighlighter): IMarkupCodeBox {
+    public static createCodeBox(code: string, highlighter: MarkupHighlighter): IMarkupCodeBox {
         if (!code.length) {
             throw new Error('The code parameter is empty');
         }
@@ -116,10 +117,10 @@ export class Markup {
      * Use this to clean up a MarkupElement sequence, assuming the sequence is now in
      * its final form.
      */
-    static normalize<T extends MarkupElement>(elements: T[]): void {
-        let i = 0;
+    public static normalize<T extends MarkupElement>(elements: T[]): void {
+        let i: number = 0;
 
-        while(i < elements.length) {
+        while (i < elements.length) {
             const element: T = elements[i];
             const previousElement: T | undefined = i - 1 >= 0 ? elements[i - 1] : undefined;
             const nextElement: T | undefined = i + 1 < elements.length ? elements[i + 1] : undefined;
@@ -150,7 +151,7 @@ export class Markup {
     }
 
     /** Extracts plain text from the provided markup elements, discarding any formatting */
-    static extractTextContext(elements: MarkupElement[]): string {
+    public static extractTextContext(elements: MarkupElement[]): string {
         // Pass a buffer, since "+=" uses less memory than "+"
         const buffer: {text: string} = {text: ''};
         Markup._extractTextContent(elements, buffer);
@@ -164,7 +165,7 @@ export class Markup {
 
     private static _extractTextContent(elements: MarkupElement[], buffer: {text: string}): void {
         for (const element of elements) {
-            switch(element.kind) {
+            switch (element.kind) {
                 case 'api-link':
                     buffer.text += Markup.extractTextContext(element.elements);
                     break;

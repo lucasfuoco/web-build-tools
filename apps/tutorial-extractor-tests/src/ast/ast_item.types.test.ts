@@ -6,7 +6,7 @@ import {
     ExtractorContext,
     InitializationState,
     IAstItemOptions
-} from '../../../tutorial-extractor/src/index';
+} from '@ossiaco/tutorial-extractor';
 import {
     UTIL_GetAstItemOptions,
     UTIL_GetExtractorContext
@@ -80,8 +80,10 @@ describe('Enum InitializationState', () => {
 describe('Interface IAstItemOptions', () => {
     let astItemOptions: IAstItemOptions;
     beforeAll(() => {
-        const extractorContext = UTIL_GetExtractorContext();
-        const rootFile: SourceFile | undefined = extractorContext.program.getSourceFile(extractorContext.entryPointFile);
+        const extractorContext: ExtractorContext = UTIL_GetExtractorContext();
+        const rootFile: SourceFile | undefined = extractorContext.program.getSourceFile(
+            extractorContext.entryPointFile
+        );
         astItemOptions = UTIL_GetAstItemOptions(extractorContext, rootFile!);
     });
 

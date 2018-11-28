@@ -3,7 +3,7 @@ import {
     AstItemContainer,
     ExtractorContext,
     IAstItemOptions
-} from '../../../tutorial-extractor/src/index';
+} from '@ossiaco/tutorial-extractor';
 import { UTIL_GetAstItemOptions } from '../utils/util_ast_item_options';
 import { UTIL_GetExtractorContext } from '../utils/util_extractor_context';
 

@@ -42,7 +42,7 @@ export class Token {
     }
 
     /** Determines if the type is not what we expect. */
-    requireType(type: TokenType): void {
+    public requireType(type: TokenType): void {
         if (this._type !== type) {
             throw new Error(`Encountered a token of type \"${this._type}\" when expecting \"${type}\"`);
         }

@@ -6,12 +6,12 @@ import {
     AstModule,
     DocItemLoader,
     ExtractorContext
-} from '../../../tutorial-extractor/src/index';
+} from '@ossiaco/tutorial-extractor';
 import { UTIL_GetExtractorContext } from '../index';
 
 describe('Class ExtractorContext', () => {
     let instance: ExtractorContext;
-    let m_packageName: void;
+    let mPackageName: void;
     beforeAll(() => {
         const diagnostic: Diagnostic = {
             category: DiagnosticCategory.Error,
@@ -22,7 +22,9 @@ describe('Class ExtractorContext', () => {
             messageText: 'This is a test error message.'
         };
         instance = UTIL_GetExtractorContext();
-        m_packageName = instance.reportError('TypeScript: ' + diagnostic.messageText, diagnostic.file, diagnostic.start);
+        mPackageName = instance.reportError(
+            'TypeScript: ' + diagnostic.messageText, diagnostic.file, diagnostic.start
+        );
     });
 
     it('is defined', () => {
@@ -98,6 +100,6 @@ describe('Class ExtractorContext', () => {
     });
 
     it('has method reportError', () => {
-        expect(typeof m_packageName).toBe('undefined');
+        expect(typeof mPackageName).toBe('undefined');
     });
 });

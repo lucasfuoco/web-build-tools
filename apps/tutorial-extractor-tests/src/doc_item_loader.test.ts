@@ -1,4 +1,4 @@
-import {DocItemLoader} from '../../tutorial-extractor/src/doc_item_loader';
+import {DocItemLoader} from '@ossiaco/tutorial-extractor';
 
 describe('Class DocItemLoader', () => {
     let instance: DocItemLoader;

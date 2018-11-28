@@ -11,7 +11,7 @@ import {
     IExtractorTsConfig,
     IProgram,
     ITsConfig
-} from '../../tutorial-extractor/src/index';
+} from '@ossiaco/tutorial-extractor';
 
 describe('Interface IExtractorConfig', () => {
     let extractorConfig: IExtractorConfig;
@@ -21,7 +21,7 @@ describe('Interface IExtractorConfig', () => {
                 rootFolder: process.cwd()
             },
             project: {
-                entryPoint: 'lib/tutorial-extractor-tests/src/index.d.ts'
+                entryPoint: 'lib/index.d.ts'
             },
             apiJsonFile: {
                 enabled: true,
@@ -55,7 +55,7 @@ describe('Interface IExtractorTsConfig', () => {
     beforeAll(() => {
         tsConfig = {
             rootFolder: process.cwd()
-        }
+        };
     });
     it('is defined', () => {
         expect(tsConfig).toBeDefined();
@@ -73,7 +73,7 @@ describe('Interface IExtractorProjectConfig', () => {
     beforeAll(() => {
         projectConfig = {
             entryPoint: 'lib/index.d.ts'
-        }
+        };
     });
     it('is defined', () => {
         expect(projectConfig).toBeDefined();
@@ -92,7 +92,7 @@ describe('Interface IExtractorApiJsonConfig', () => {
         apiJsonConfig = {
             enabled: true,
             outputFolder: 'temp'
-        }
+        };
     });
     it('is defined', () => {
         expect(apiJsonConfig).toBeDefined();
@@ -120,7 +120,7 @@ describe('Interface ITsConfig', () => {
         tsConfig = {
             rootFolder: process.cwd(),
             tsConfig: {}
-        }
+        };
     });
     it('is defined', () => {
         expect(tsConfig).toBeDefined();
@@ -148,7 +148,7 @@ describe('Interface IProgram', () => {
         program = {
             rootFolder: rootFolder,
             program: createProgram([], commandLine.options)
-        }
+        };
     });
 
     it('is defined', () => {

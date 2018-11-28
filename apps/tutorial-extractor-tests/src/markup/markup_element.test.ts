@@ -5,7 +5,7 @@ import {
     IMarkupParagraph,
     IMarkupText,
     IMarkupWebLink
-} from '../../../tutorial-extractor/src/index';
+} from '@ossiaco/tutorial-extractor';
 
 describe('Interface IMarkupText', () => {
     let markupText: IMarkupText;
@@ -15,7 +15,7 @@ describe('Interface IMarkupText', () => {
             text: '',
             bold: true,
             italics: true
-        }
+        };
     });
 
     it('is defined', () => {
@@ -60,7 +60,7 @@ describe('Interface IMarkupApiLink', () => {
                 exportName: '',
                 memberName: ''
             }
-        }
+        };
     });
 
     it('is defined', () => {
@@ -95,7 +95,7 @@ describe('Interface IMarkupWebLink', () => {
             kind: 'web-link',
             elements: [],
             targetUrl: ''
-        }
+        };
     });
 
     it('is defined', () => {
@@ -128,7 +128,7 @@ describe('Interface IMarkupParagraph', () => {
     beforeAll(() => {
         markupParagraph = {
             kind: 'paragraph'
-        }
+        };
     });
 
     it('is defined', () => {
@@ -151,7 +151,7 @@ describe('Interface IMarkupLineBreak', () => {
     beforeAll(() => {
         markupLineBreak = {
             kind: 'break'
-        }
+        };
     });
 
     it('is defined', () => {
@@ -176,7 +176,7 @@ describe('Interface IMarkupCodeBox', () => {
             kind: 'code-box',
             text: '',
             highlighter: 'javascript'
-        }
+        };
     });
 
     it('is defined', () => {

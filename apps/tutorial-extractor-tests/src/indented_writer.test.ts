@@ -1,4 +1,4 @@
-import {IndentedWriter} from '../../tutorial-extractor/src/index';
+import {IndentedWriter} from '@ossiaco/tutorial-extractor';
 
 describe('Class IndentedWriter', () => {
     let instance: IndentedWriter;

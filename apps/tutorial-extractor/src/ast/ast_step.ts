@@ -4,6 +4,7 @@ import {
     IAstItemOptions
 } from './ast_item.types';
 
+// tslint:disable-next-line:export-name
 export class AstStep extends AstItem {
     constructor (options: IAstItemOptions) {
         super(options);

@@ -27,7 +27,7 @@ describe('Interface IExtractorContextOptions', () => {
                 logWarning: (message: string) => console.warn(colors.yellow(message)),
                 logError: (message: string) => console.error(colors.red(message))
             })
-        }
+        };
     });
 
     it('is defined', () => {
@@ -37,7 +37,8 @@ describe('Interface IExtractorContextOptions', () => {
     it('contains the right keys', () => {
         expect(Object.keys(extractorContextOptions)).toEqual([
             'program',
-            'entryPointFile'
+            'entryPointFile',
+            'logger'
         ]);
     });
 
@@ -47,5 +48,9 @@ describe('Interface IExtractorContextOptions', () => {
 
     it('key entryPointFile is type string', () => {
         expect(typeof extractorContextOptions.entryPointFile).toBe('string');
+    });
+
+    it('key logger is an instance of MonitoredLogger', () => {
+        expect(extractorContextOptions.logger instanceof MonitoredLogger).toBeTruthy();
     });
 });
