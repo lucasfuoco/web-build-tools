@@ -15,6 +15,7 @@
         "skipLibCheck": true,
         "sourceMap": true,
         "strict": true,
+        "rootDir": "./src",
         "suppressImplicitAnyIndexErrors": true,
         "types": [
             "node",

@@ -297,21 +297,21 @@
         "@microsoft/rush-stack-compiler"
       ]
     },
-    {
-      "packageName": "@ossiaco/tutorial-extractor-tests",
-      "projectFolder": "apps/tutorial-extractor-tests",
-      "reviewCategory": "libraries",
-      "shouldPublish": false,
-      "cyclicDependencyProjects": [
-        "@microsoft/node-library-build",
-        "@microsoft/rush-stack-compiler"
-      ]
-    },
+    // {
+    //   "packageName": "@ossiaco/tutorial-extractor-tests",
+    //   "projectFolder": "apps/tutorial-extractor-tests",
+    //   "reviewCategory": "libraries",
+    //   "shouldPublish": false,
+    //   "cyclicDependencyProjects": [
+    //     "@microsoft/node-library-build",
+    //     "@microsoft/rush-stack-compiler"
+    //   ]
+    // },
     {
       "packageName": "@microsoft/api-documenter",
       "projectFolder": "apps/api-documenter",
       "reviewCategory": "libraries",
-      "shouldPublish": true,
+      "shouldPublish": true
     },
     {
       "packageName": "@ossiaco/tutorial-documenter",
@@ -319,16 +319,16 @@
       "reviewCategory": "libraries",
       "shouldPublish": true
     },
-    {
-      "packageName": "@ossiaco/tutorial-documenter-tests",
-      "projectFolder": "apps/tutorial-documenter-tests",
-      "reviewCategory": "libraries",
-      "shouldPublish": false,
-      "cyclicDependencyProjects": [
-        "@microsoft/node-library-build",
-        "@microsoft/rush-stack-compiler"
-      ]
-    },
+    // {
+    //   "packageName": "@ossiaco/tutorial-documenter-tests",
+    //   "projectFolder": "apps/tutorial-documenter-tests",
+    //   "reviewCategory": "libraries",
+    //   "shouldPublish": false,
+    //   "cyclicDependencyProjects": [
+    //     "@microsoft/node-library-build",
+    //     "@microsoft/rush-stack-compiler"
+    //   ]
+    // },
     {
       "packageName": "@microsoft/rush",
       "projectFolder": "apps/rush",
