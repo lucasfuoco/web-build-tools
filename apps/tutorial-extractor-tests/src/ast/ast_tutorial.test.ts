@@ -4,7 +4,7 @@ import {
     AstItem,
     AstItemKind,
     IAstItemOptions
-} from '@ossiaco/tutorial-extractor';
+} from '../../../tutorial-extractor/src/index';
 import { SourceFile } from 'typescript';
 import {
     UTIL_GetAstItemOptions,

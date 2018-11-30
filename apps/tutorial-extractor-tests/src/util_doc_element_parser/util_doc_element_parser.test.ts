@@ -1,3 +1,4 @@
+jest.mock('../../../tutorial-extractor/src/index');
 import {
     ApiDocumentation,
     ExtractorContext,
@@ -8,7 +9,7 @@ import {
     MarkupBasicElement,
     MarkupElement,
     UtilDocElementParser
-} from '@ossiaco/tutorial-extractor';
+} from '../../../tutorial-extractor/src/index';
 import {UTIL_GetApiDocumentation} from '../utils/util_api_documentation';
 import {UTIL_GetExtractorContext} from '../utils/util_extractor_context';
 import {UTIL_GetTokenizer} from '../utils/util_tokenizer';

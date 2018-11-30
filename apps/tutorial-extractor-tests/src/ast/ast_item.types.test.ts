@@ -6,7 +6,7 @@ import {
     ExtractorContext,
     InitializationState,
     IAstItemOptions
-} from '@ossiaco/tutorial-extractor';
+} from '../../../tutorial-extractor/src/index';
 import {
     UTIL_GetAstItemOptions,
     UTIL_GetExtractorContext

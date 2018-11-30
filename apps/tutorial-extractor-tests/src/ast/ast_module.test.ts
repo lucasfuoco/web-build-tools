@@ -5,7 +5,7 @@ import {
     ExtractorContext,
     AstItem,
     AstModule
-} from '@ossiaco/tutorial-extractor';
+} from '../../../tutorial-extractor/src/index';
 
 describe('Class AstModule', () => {
     let instance: AstModule;

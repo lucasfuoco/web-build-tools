@@ -16,7 +16,7 @@ import {
 import {
     MonitoredLogger,
     ExtractorContext
-} from '@ossiaco/tutorial-extractor';
+} from '../../../tutorial-extractor/src/index';
 import colors = require('colors');
 
 const rootFolder: string = process.cwd();

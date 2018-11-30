@@ -5,7 +5,7 @@
 import {
     ApiDocumentation,
     ExtractorContext
-} from '@ossiaco/tutorial-extractor';
+} from '../../../tutorial-extractor/src/index';
 import {UTIL_GetExtractorContext} from './util_extractor_context';
 import {UTIL_GetSourceFile} from './util_source_file';
 

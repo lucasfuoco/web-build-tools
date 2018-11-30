@@ -4,7 +4,7 @@ import {
     AstItemKind,
     AstPackage,
     ExtractorContext
-} from '@ossiaco/tutorial-extractor';
+} from '../../../tutorial-extractor/src/index';
 import { UTIL_GetExtractorContext } from '../utils/util_extractor_context';
 
 describe('Class AstPackage', () => {

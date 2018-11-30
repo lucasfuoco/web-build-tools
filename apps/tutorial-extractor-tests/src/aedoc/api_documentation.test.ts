@@ -1,10 +1,11 @@
+jest.mock('../../../tutorial-extractor/src/index');
 import {UTIL_GetExtractorContext} from '../utils/util_extractor_context';
 import {UTIL_GetSourceFile} from '../utils/util_source_file';
 import {
     ApiDocumentation,
     ReleaseTag,
     ExtractorContext
-} from '@ossiaco/tutorial-extractor';
+} from '../../../tutorial-extractor/src/index';
 
 describe('Class ApiDocumentation', () => {
     let instance: ApiDocumentation;

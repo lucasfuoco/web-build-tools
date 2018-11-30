@@ -6,7 +6,7 @@ import {
     AstModule,
     DocItemLoader,
     ExtractorContext
-} from '@ossiaco/tutorial-extractor';
+} from '../../../tutorial-extractor/src/index';
 import { UTIL_GetExtractorContext } from '../index';
 
 describe('Class ExtractorContext', () => {

@@ -6,7 +6,7 @@ import {
     ExtractorContext,
     ApiDocumentation,
     UtilApiDefinitionReference
-} from '@ossiaco/tutorial-extractor';
+} from '../../../tutorial-extractor/src/index';
 
 describe('Interface IReferenceResolver', () => {
     let referenceResolver: IReferenceResolver;

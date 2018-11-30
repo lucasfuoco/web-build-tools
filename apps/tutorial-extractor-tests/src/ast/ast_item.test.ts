@@ -10,7 +10,7 @@ import {
     AstItemKind,
     IAstItemOptions,
     ApiDocumentation
-} from '@ossiaco/tutorial-extractor';
+} from '../../../tutorial-extractor/src/index';
 
 class AstStepDescription extends AstItem {
     constructor (options: IAstItemOptions) {

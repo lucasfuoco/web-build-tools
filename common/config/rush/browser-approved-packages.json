@@ -3,11 +3,55 @@
   "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/approved-packages.schema.json",
   "packages": [
     {
+      "name": "@babel/core",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "@babel/plugin-transform-classes",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "@babel/plugin-transform-runtime",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "@babel/polyfill",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "@babel/preset-env",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "@babel/preset-es2015",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "@babel/preset-react",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "@babel/register",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "@babel/runtime",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
       "name": "@ossiaco/tutorial-documenter",
       "allowedCategories": [ "libraries" ]
     },
     {
       "name": "@ossiaco/tutorial-extractor",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "babel-core",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "babel-jest",
       "allowedCategories": [ "libraries" ]
     },
     {
@@ -28,6 +72,10 @@
     },
     {
       "name": "mkdirp",
+      "allowedCategories": [ "libraries" ]
+    },
+    {
+      "name": "regenerator-runtime",
       "allowedCategories": [ "libraries" ]
     },
     {

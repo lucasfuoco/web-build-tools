@@ -1,6 +1,7 @@
 {
     "extends": "./node_modules/@microsoft/rush-stack-compiler/includes/tsconfig-node.json",
     "compilerOptions": {
+        "declaration": true,
         "noEmitHelpers": true,
         "noEmitOnError": true,
         "noFallthroughCasesInSwitch": true,
@@ -15,7 +16,6 @@
         "sourceMap": true,
         "strict": true,
         "suppressImplicitAnyIndexErrors": true,
-        "rootDir": "./src",
         "types": [
             "node",
             "lodash"

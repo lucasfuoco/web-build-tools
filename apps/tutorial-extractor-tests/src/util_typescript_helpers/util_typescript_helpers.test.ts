@@ -1,5 +1,5 @@
 import { Program, SourceFile, Symbol } from 'typescript';
-import { UtilTypescriptHelpers } from '@ossiaco/tutorial-extractor';
+import { UtilTypescriptHelpers } from '../../../tutorial-extractor/src/index';
 import { UTIL_GetExtractorContext } from '../index';
 
 describe('Class UtilTypescriptHelpers', () => {

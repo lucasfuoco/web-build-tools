@@ -2,7 +2,7 @@
  * @public
  */
 
-import {Tokenizer} from '@ossiaco/tutorial-extractor';
+import {Tokenizer} from '../../../tutorial-extractor/src/index';
 import {UTIL_GetSourceFile} from './util_source_file';
 
 const reportError: (message: string) => void = (message: string) => {

@@ -1,9 +1,6 @@
 const path = require('path');
 const merge = require('./merge');
 const resolve = require('resolve');
-const tsJestPresets = require('ts-jest/presets');
-
-const preset = tsJestPresets.jsWithTs;
 
 const styleMockPath = (module.exports = {
     createRawConfig: () => ({
@@ -12,28 +9,28 @@ const styleMockPath = (module.exports = {
     }),
     createConfig: customConfig =>
         merge({
-            rootDir: 'src',
+            rootDir: './',
             roots: [
                 '<rootDir>'
             ],
             modulePaths: [
                 '<rootDir>'
             ],
+            cache: false,
             verbose: true,
-            preset: 'ts-jest',
             transform: {
-                ...preset.transform
+                "^.+\\.js?$": "<rootDir>/wrapper.js"
             },
             reporters: [path.resolve(__dirname, './jest-reporter.js')],
 
             testMatch: [
-                "<rootDir>/**/__tests__/**/*.{ts,tsx}",
-                "<rootDir>/**/?(*.)(spec|test).{ts,tsx}"
+                "<rootDir>/**/__tests__/**/*.{js,jsx}",
+                "<rootDir>/**/?(*.)(spec|test).{js,jsx}"
             ],
-            moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
+            moduleFileExtensions: ['js', 'jsx', 'json'],
 
             setupFiles: [
-                path.resolve(__dirname, 'jest-setup.js')
+                // path.resolve(__dirname, 'jest-setup.js')
             ],
 
             moduleDirectories: [
@@ -43,17 +40,9 @@ const styleMockPath = (module.exports = {
             ],
             // testResultsProcessor: "<rootDir>/node_modules/ts-jest/coverageprocessor.js",
             globals: {
-                'ts-jest': {
-                    tsConfig: {
-                        allowJs: true,
-                        declaration: false
-                    },
-                    isolatedModules: true,
-                }
             },
             testURL: 'http://localhost',
-            collectCoverage: true,
-            mapCoverage: true
+            collectCoverage: true
         },
             customConfig
         )

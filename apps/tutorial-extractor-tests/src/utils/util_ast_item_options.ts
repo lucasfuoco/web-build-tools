@@ -9,7 +9,7 @@ import {
     ExtractorContext,
     IAstItemOptions,
     UtilTypescriptHelpers
-} from '@ossiaco/tutorial-extractor';
+} from '../../../tutorial-extractor/src/index';
 
 /** Get the abstract syntax tree item options. */
 // tslint:disable-next-line:export-name

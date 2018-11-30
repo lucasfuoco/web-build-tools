@@ -6,7 +6,7 @@ import {
     AstStep,
     AstItem,
     IAstItemOptions
-} from '@ossiaco/tutorial-extractor';
+} from '../../../tutorial-extractor/src/index';
 
 describe('Class AstStep', () => {
     let instance: AstStep;

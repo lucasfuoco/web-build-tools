@@ -1,11 +1,11 @@
+import {UTIL_GetExtractorContext} from '../utils/util_extractor_context';
 import {
-    ApiDocumentation,
-    AstItem,
     ExtractorContext,
     ResolvedApiItem,
-    UtilApiDefinitionReference
-} from '@ossiaco/tutorial-extractor';
-import {UTIL_GetExtractorContext} from '../utils/util_extractor_context';
+    ApiDocumentation,
+    UtilApiDefinitionReference,
+    AstItem
+} from '../../../tutorial-extractor/src/index';
 
 describe('Class ResolvedApiItem', () => {
     let createFromAstItem: ResolvedApiItem;
@@ -27,7 +27,8 @@ describe('Class ResolvedApiItem', () => {
             []
         );
         const text: string = '@ossiaco/tutorial-extractor-tests:UTIL_GetExtractorContext';
-        const apiDefinitionRef: UtilApiDefinitionReference | undefined = UtilApiDefinitionReference.createFromString(
+        const apiDefinitionRef: UtilApiDefinitionReference | undefined =
+        UtilApiDefinitionReference.createFromString(
             text,
             documentation.reportError
         );
@@ -36,7 +37,9 @@ describe('Class ResolvedApiItem', () => {
             documentation.reportError(`Incorrectly formatted API item reference: "${text}"`);
             return;
         }
-        const astItem: AstItem | undefined = documentation.context.package.getMemberItem(apiDefinitionRef.exportName);
+        const astItem: AstItem | undefined = documentation.context.package.getMemberItem(
+            apiDefinitionRef.exportName
+        );
         if (!astItem) {
             throw new Error(`Unable to find referenced export \"${apiDefinitionRef.toExportString()}\"`);
         }

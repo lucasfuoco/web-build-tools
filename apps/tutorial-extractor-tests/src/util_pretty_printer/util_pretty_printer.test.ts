@@ -4,7 +4,7 @@ import {
     Program,
     SourceFile
 } from 'typescript';
-import { UtilPrettyPrinter } from '@ossiaco/tutorial-extractor';
+import { UtilPrettyPrinter } from '../../../tutorial-extractor/src/index';
 import { UTIL_GetExtractorContext } from '../utils/util_extractor_context';
 
 describe('Class UtilPrettyPrinter', () => {
