@@ -1,24 +1,20 @@
 import {
     CommandLineAction,
-    CommandLineStringParameter,
-    ICommandLineActionOptions
+    CommandLineStringParameter
 } from '@microsoft/ts-command-line';
 import * as fsx from 'fs-extra';
 import * as path from 'path';
 import { DocItemSet } from '../utils/doc_item_set';
+import {FileSystem} from '@microsoft/node-core-library';
 
 // tslint:disable-next-line:export-name
 export abstract class BaseAction extends CommandLineAction {
-    public options: ICommandLineActionOptions;
-    protected inputFolder: string;
-    protected outputFolder: string;
-    private _inputFolderParameter: CommandLineStringParameter;
-    private _outputFolderParameter: CommandLineStringParameter;
-    constructor (options: ICommandLineActionOptions) {
-        super(options);
-        this.options = options;
-        this.inputFolder = './input';
-        this.outputFolder = `./${this.options.actionName}`;
+    protected inputFolder: string | undefined = undefined;
+    protected outputFolder: string | undefined = undefined;
+    private _inputFolderParameter: CommandLineStringParameter | undefined = undefined;
+    private _outputFolderParameter: CommandLineStringParameter | undefined = undefined;
+
+    protected onDefineParameters(): void {
         this._inputFolderParameter = this.defineStringParameter({
             parameterLongName: '--input-folder',
             parameterShortName: '-i',
@@ -32,21 +28,19 @@ export abstract class BaseAction extends CommandLineAction {
             argumentName: 'FOLDER2',
             description: 'Specifies the output folder where the documentation will be written.' +
                 ' ANY EXISTING CONTENTS WILL BE DELETED!' +
-                ` If omitted, the default is "./${this.options.actionName}"`
+                ` If omitted, the default is "./${this.actionName}"`
         });
     }
 
     protected buildDocItemSet (): DocItemSet {
         const docItemSet: DocItemSet = new DocItemSet();
-        this.inputFolder = this._inputFolderParameter.value || './input';
-        if (!fsx.existsSync(this.inputFolder)) {
+        this.inputFolder = this._inputFolderParameter!.value || './input';
+        if (!FileSystem.exists(this.inputFolder)) {
             throw new Error('The input folder does not exist: ' + this.inputFolder);
         }
 
-        this.outputFolder = this._outputFolderParameter.value || `./${this.options.actionName}`;
-        if (!fsx.existsSync(this.outputFolder)) {
-            throw new Error('The output folder does not exist: ' + this.outputFolder);
-        }
+        this.outputFolder = this._outputFolderParameter!.value || `./${this.actionName}`;
+        FileSystem.ensureFolder(this.outputFolder);
 
         for (const filename of fsx.readdirSync(this.inputFolder)) {
             if (filename.match(/\.api\.json$/i)) {
@@ -55,7 +49,6 @@ export abstract class BaseAction extends CommandLineAction {
                 docItemSet.loadApiJsonFile(filenamePath);
             }
         }
-        docItemSet.calculateReferences();
         return docItemSet;
     }
 }

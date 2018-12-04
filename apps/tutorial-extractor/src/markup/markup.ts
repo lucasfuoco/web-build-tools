@@ -6,12 +6,20 @@ import {
 import {
     IMarkupApiLink,
     IMarkupCodeBox,
-     IMarkupParagraph,
-      IMarkupText,
-      IMarkupWebLink,
-       MarkupBasicElement,
-       MarkupElement,
-       MarkupLinkTextElement
+    IMarkupParagraph,
+    IMarkupText,
+    IMarkupWebLink,
+    MarkupBasicElement,
+    MarkupElement,
+    MarkupLinkTextElement,
+    IMarkupPage,
+    IMarkupNoteBox,
+    IMarkupParagraphAndElements,
+    IMarkupHtmlTag,
+    IMarkupList,
+    IMarkupListRow,
+    IMarkupListCell,
+    IMarkupSection
 } from './markup_element';
 
 // tslint:disable-next-line:export-name
@@ -21,6 +29,16 @@ export class Markup {
     public static PARAGRAPH: IMarkupParagraph = {
         kind: 'paragraph'
     };
+
+    /** Contructs an IMarkupTable element with the specified title. */
+    public static createPage(title?: string): IMarkupPage {
+        return {
+            kind: 'page',
+            breadcrumb: [],
+            title: title ? Markup._trimRawText(title) : undefined,
+            elements: []
+        } as IMarkupPage;
+    }
 
     /**
      * Constructs an IMarkupText element representing the specified text string, with
@@ -99,6 +117,41 @@ export class Markup {
     }
 
     /**
+     * Constructs an IMarkupApiLink element that represents a hyperlink to the specified
+     * API object. The hyperlink is applied to a plain text string.
+     */
+    public static createApiLinkFromText(text: string, target: IApiItemReference): IMarkupApiLink {
+        return Markup.createApiLink(Markup.createTextElements(text), target);
+    }
+
+    /** Constructs an IMarkupParagraphAndElements element with the specified elements */
+    public static createParagraphAndElements(elements: MarkupBasicElement[]): IMarkupParagraphAndElements {
+        return {
+            kind: 'paragraph&elements',
+            elements: elements
+        };
+    }
+
+    /** Constructs an IMarkupHtmlTag element representing an opening or closing HTML tag */
+    public static createHtmlTag(token: string): IMarkupHtmlTag {
+        if (token.length === 0) {
+            throw new Error('The code parameter is missing');
+        }
+        return {
+            kind: 'html-tag',
+            token: token
+        };
+    }
+
+    /** Constructs an IMarkupSection element with the specified elements */
+    public static createSection(elements: MarkupBasicElement[]): IMarkupSection {
+        return {
+            kind: 'section',
+            elements: elements
+        };
+    }
+
+    /**
      * Constructs an IMarkupCodeBox element representing a program code text
      * with specified syntax highlighted
      */
@@ -110,6 +163,39 @@ export class Markup {
             kind: 'code-box',
             text: code,
             highlighter: highlighter
+        };
+    }
+
+    /** Constructs an IMarkupListRow element that will display the specified plain text string */
+    public static createListRow(
+        cellValues: Array<Array<MarkupElement>> | undefined = undefined
+    ): IMarkupListRow {
+        const row: IMarkupListRow = {
+            kind: 'list-row',
+            cells: []
+        };
+
+        if (cellValues) {
+            for (const cellValue of cellValues) {
+                const cell: IMarkupListCell = {
+                    kind: 'list-cell',
+                    elements: cellValue
+                };
+                row.cells.push(cell);
+            }
+        }
+
+        return row;
+    }
+
+    /**
+     * Constructs an IMarkupList element containing the specified header cells, which each contain
+     * a sequence of MarkupBasicElement content.
+     */
+    public static createList(): IMarkupList {
+        return {
+            kind: 'list',
+            rows: []
         };
     }
 
@@ -150,12 +236,41 @@ export class Markup {
         }
     }
 
+    /** This formats an IApiItemReference as its AEDoc notation. */
+    public static formatApiItemReference(apiItemRefence: IApiItemReference): string {
+        let result: string = apiItemRefence.exportName;
+        if (apiItemRefence.packageName) {
+            result = apiItemRefence.packageName + '#' + result;
+
+            if (apiItemRefence.scopeName) {
+                result = apiItemRefence.scopeName + '/' + result;
+            }
+        }
+        if (apiItemRefence.memberName) {
+            result += '.' + apiItemRefence.memberName;
+        }
+        return result;
+    }
+
     /** Extracts plain text from the provided markup elements, discarding any formatting */
     public static extractTextContext(elements: MarkupElement[]): string {
         // Pass a buffer, since "+=" uses less memory than "+"
         const buffer: {text: string} = {text: ''};
         Markup._extractTextContent(elements, buffer);
         return buffer.text;
+    }
+
+    /** Constructs an IMarkupNoteBox element that will display the specified markup content */
+    public static createNoteBox(textElements: MarkupBasicElement[]): IMarkupNoteBox {
+        return {
+            kind: 'note-box',
+            elements: textElements
+        };
+    }
+
+    /** Constructs an IMarkupNoteBox element that will display the specified plain text string */
+    public static createNoteBoxFromText(text: string): IMarkupNoteBox {
+        return Markup.createNoteBox(Markup.createTextElements(text));
     }
 
     private static _trimRawText(text: string): string {

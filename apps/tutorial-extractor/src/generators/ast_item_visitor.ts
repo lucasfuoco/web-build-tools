@@ -9,13 +9,14 @@ import { AstTutorial } from '../ast/ast_tutorial';
  */
 // tslint:disable-next-line:export-name
 export abstract class AstItemVisitor {
-    protected visit (astItem: AstItem, refObject?: Object, index?: number): void {
+    // tslint:disable-next-line:no-any
+    protected visit (astItem: AstItem, refObject?: any): void {
         if (astItem instanceof AstPackage) {
             this.visitAstPackage(astItem as AstPackage, refObject);
         } else if (astItem instanceof AstTutorial) {
             this.visitAstTutorial(astItem as AstTutorial, refObject);
         } else if (astItem instanceof AstStep) {
-            this.visitAstStep(astItem as AstStep, refObject, index);
+            this.visitAstStep(astItem as AstStep, refObject);
         } else {
             throw new Error('Not implemented');
         }
@@ -23,5 +24,5 @@ export abstract class AstItemVisitor {
 
     protected abstract visitAstPackage (astPackage: AstPackage, refObject?: Object): void;
     protected abstract visitAstTutorial (astTutorial: AstTutorial, refObject?: Object): void;
-    protected abstract visitAstStep (astStep: AstStep, refObject?: Object, index?: number): void;
+    protected abstract visitAstStep (astStep: AstStep, refObject?: Array<Object>): void;
 }

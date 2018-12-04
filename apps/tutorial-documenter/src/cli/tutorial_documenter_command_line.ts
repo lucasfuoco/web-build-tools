@@ -1,12 +1,11 @@
 import {
-    CommandLineParser,
-    ICommandLineParserOptions
+    CommandLineParser
 } from '@microsoft/ts-command-line';
 import { MarkDownAction } from './mardown_action';
 
 // tslint:disable-next-line:export-name
 export class TutorialDocumenterCommandLine extends CommandLineParser {
-    constructor (_parse?: ICommandLineParserOptions) {
+    constructor () {
         super({
             toolFilename: 'tutorial-documenter',
             toolDescription: 'Reads *.api.json files produced by tutorial-extractor, '
@@ -16,7 +15,7 @@ export class TutorialDocumenterCommandLine extends CommandLineParser {
     }
 
     protected onDefineParameters (): void { // override
-        // No parameters
+
     }
 
     private _populateActions (): void {

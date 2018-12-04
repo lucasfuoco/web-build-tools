@@ -31,7 +31,8 @@ export class TutorialJsonGenerator extends AstItemVisitor {
         JsonFile.save(this.jsonOutput, reportFilename);
     }
 
-    protected visit (astItem: AstItem, refObject?: Object, index?: number): void {
+    protected visit (astItem: AstItem, refObject?: Object): void {
+
         switch (astItem.inheritedReleaseTag) {
             case ReleaseTag.None:
             case ReleaseTag.Beta:
@@ -41,7 +42,7 @@ export class TutorialJsonGenerator extends AstItemVisitor {
                 return; // skip @alpha and @internal definitions
         }
 
-        super.visit(astItem, refObject, index);
+        super.visit(astItem, refObject);
     }
 
     protected visitAstPackage (astPackage: AstPackage, refObject?: Object): void {
@@ -63,7 +64,12 @@ export class TutorialJsonGenerator extends AstItemVisitor {
             return;
         }
 
-        const childrenNode: Object = {};
+        const children: Array<Object> = new Array<Object>();
+        const members: AstItem[] = astTutorial.getSortedMemberItems();
+        for (let i: number = 0; i < members.length; ++i) {
+            this.visit(members[i], children);
+        }
+
         const tutorialNode: Object = {
             kind: ApiJsonConverter.convertKindToJson(astTutorial.kind),
             deprecatedMessage: astTutorial.inheritedDeprecatedMessage || [],
@@ -71,23 +77,15 @@ export class TutorialJsonGenerator extends AstItemVisitor {
             summary: astTutorial.documentation.summary || [],
             remarks: astTutorial.documentation.remarks || [],
             isBeta: astTutorial.inheritedReleaseTag === ReleaseTag.Beta,
-            children: childrenNode
+            children: children
         };
-
         refObject![astTutorial.name] = tutorialNode;
-
-        const members: AstItem[] = astTutorial.getSortedMemberItems();
-        for (let i: number = 0; i < members.length; ++i) {
-            this.visit(members[i], childrenNode, i);
-        }
     }
 
-    protected visitAstStep (astStep: AstStep, refObject?: Object, index?: number): void {
-        if (!astStep.supportedName ||
-            !index) {
+    protected visitAstStep (astStep: AstStep, refObject: Array<Object>): void {
+        if (!astStep.supportedName) {
             return;
         }
-        const key: string = `step_${index}`;
         const stepNode: Object = {
             kind: ApiJsonConverter.convertKindToJson(astStep.kind),
             deprecatedMessage: astStep.inheritedDeprecatedMessage || [],
@@ -97,6 +95,6 @@ export class TutorialJsonGenerator extends AstItemVisitor {
             code: astStep.documentation.code || [],
             codeDescription: astStep.documentation.codeDescription || []
         };
-        refObject![key] = stepNode;
+        refObject.push(stepNode);
     }
 }

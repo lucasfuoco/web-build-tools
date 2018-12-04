@@ -1,10 +1,11 @@
 import { DocItemSet } from '../utils/doc_item_set';
 import { BaseAction } from './base_action';
 import { TutorialDocumenterCommandLine } from './tutorial_documenter_command_line';
+import { MarkdownDocumenter } from '../markdown/markdown_documenter';
 
 // tslint:disable-next-line:export-name
 export class MarkDownAction extends BaseAction {
-    constructor (_parse: TutorialDocumenterCommandLine) {
+    constructor (_parser: TutorialDocumenterCommandLine) {
         super({
             actionName: 'markdown',
             summary: 'Generate documentation as Markdown files (*.md)',
@@ -15,12 +16,13 @@ export class MarkDownAction extends BaseAction {
 
     protected onExecute (): Promise<void> {
         const docItemSet: DocItemSet = this.buildDocItemSet();
-        console.log(docItemSet);
+        const markdownDocumenter: MarkdownDocumenter = new MarkdownDocumenter(docItemSet);
+        markdownDocumenter.generateFiles(this.outputFolder!);
         return Promise.resolve();
     }
 
     // tslint:disable-next-line:no-empty
     protected onDefineParameters (): void {
-
+        super.onDefineParameters();
     }
 }

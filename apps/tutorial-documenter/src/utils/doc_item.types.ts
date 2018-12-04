@@ -1,4 +1,6 @@
 export enum DocItemKind {
     Default,
-    Package
+    Package,
+    Tutorial,
+    Step
 }

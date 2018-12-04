@@ -1,6 +1,7 @@
 import {
     MarkupBasicElement,
-    MarkupStructuredElement
+    MarkupStructuredElement,
+    MarkupElement
 } from '../markup/index';
 
 /** Represents a reference to an ApiItem */
@@ -24,6 +25,24 @@ export interface IApiNameMap<T> {
      * For a given name, returns the object with that name.
      */
     [name: string]: T;
+}
+
+/** A property of a tutorial step */
+export interface IApiStep {
+    kind: 'step';
+    stepName: MarkupElement[];
+    summary: MarkupBasicElement[];
+    remarks: MarkupStructuredElement[];
+    code: MarkupElement[];
+    codeDescription: MarkupBasicElement[];
+    /**
+     * The following are needed so that this interface and can share
+     * common properties with others that extend IApiBaseDefinition. The IApiPackage
+     * does not extend the IApiBaseDefinition because a summary is not required for
+     * a package.
+     */
+    isBeta: boolean;
+    deprecatedMessage?: MarkupBasicElement[];
 }
 
 /**
@@ -62,4 +81,22 @@ export interface IApiPackage {
     deprecatedMessage?: MarkupBasicElement[];
 }
 
-export type ApiItem = IApiPackage;
+export interface IApiTutorial {
+    kind: 'tutorial';
+    tutorialName: MarkupElement[];
+    summary: MarkupBasicElement[];
+    remarks: MarkupStructuredElement[];
+    /**
+     * The following are needed so that this interface and can share
+     * common properties with others that extend IApiBaseDefinition. The IApiPackage
+     * does not extend the IApiBaseDefinition because a summary is not required for
+     * a package.
+     */
+    isBeta: boolean;
+    children: ApiMember[];
+    deprecatedMessage?: MarkupBasicElement[];
+}
+
+export type ApiMember = IApiStep;
+
+export type ApiItem = IApiPackage | IApiTutorial | ApiMember;
