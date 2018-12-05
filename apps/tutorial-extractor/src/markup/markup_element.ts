@@ -32,7 +32,7 @@ export interface IMarkupApiLink {
     /** The kind of markup element */
     kind: 'api-link';
     /** The link text */
-    elements: MarkupLinkTextElement[];
+    elements: MarkupElement[];
     /** The API item that will serve as the hyperlink target */
     target: IApiItemReference;
 }
@@ -136,7 +136,8 @@ export interface IMarkupListRow {
     /** The kind of markup element */
     kind: 'list-row';
     cells: IMarkupListCell[];
-    elements?: MarkupElement[];
+    elements: MarkupElement[];
+    category: MarkupElement[];
 }
 
 export type MarkupElement = MarkupStructuredElement | IMarkupPage | IMarkupListCell | IMarkupListRow;

@@ -32,6 +32,7 @@ export class ApiDocumentation {
         '@remarks',
         '@tutorial',
         '@tutorialname',
+        '@category',
         '@stepstart',
         '@stepend',
         '@stepindex',
@@ -64,6 +65,8 @@ export class ApiDocumentation {
     public remarks: MarkupElement[];
     /** The tutorial name. */
     public tutorialName: MarkupElement[];
+    /** The tutorial category */
+    public category: MarkupElement[];
     /** The step index */
     public stepIndex: number | undefined;
     /** The step name */
@@ -124,6 +127,7 @@ export class ApiDocumentation {
         this.deprecatedMessage = [];
         this.remarks = [];
         this.tutorialName = [];
+        this.category = [];
         this.stepIndex = undefined;
         this.stepName = [];
         this.code = [];
@@ -155,6 +159,7 @@ export class ApiDocumentation {
 
         let releaseTagCount: number = 0;
         let tutorialTagCount: number = 0;
+        let categoryTagCount: number = 0;
         let tutorialnameTagCount: number = 0;
         let stepStartCount: number = 0;
         let stepEndCount: number = 0;
@@ -202,6 +207,11 @@ export class ApiDocumentation {
                         tokenizer.getToken();
                         this.releaseTag = ReleaseTag.Public;
                         ++releaseTagCount;
+                        break;
+                    case '@category':
+                        tokenizer.getToken();
+                        this.category = UtilDocElementParser.parse(this, tokenizer);
+                        ++categoryTagCount;
                         break;
                     case '@internal':
                         tokenizer.getToken();
@@ -300,6 +310,10 @@ export class ApiDocumentation {
 
         if (tutorialTagCount > 1) {
             this.reportError('More than one tutorial tag (@tutorial) was specified');
+        }
+
+        if (categoryTagCount > 1) {
+            this.reportError('More than one category tag (@category) was specified');
         }
 
         if (tutorialnameTagCount > 1) {

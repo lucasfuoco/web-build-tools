@@ -19,7 +19,8 @@ import {
     IMarkupList,
     IMarkupListRow,
     IMarkupListCell,
-    IMarkupSection
+    IMarkupSection,
+    MarkupStructuredElement
 } from './markup_element';
 
 // tslint:disable-next-line:export-name
@@ -34,9 +35,9 @@ export class Markup {
     public static createPage(title?: string): IMarkupPage {
         return {
             kind: 'page',
-            breadcrumb: [],
+            breadcrumb: new Array<MarkupBasicElement>(),
             title: title ? Markup._trimRawText(title) : undefined,
-            elements: []
+            elements: new Array<MarkupStructuredElement>()
         } as IMarkupPage;
     }
 
@@ -46,7 +47,7 @@ export class Markup {
     */
     public static createTextElements(text: string, options?: IMarkupCreateTextOptions): IMarkupText[] {
         if (!text.length) {
-            return [];
+            return new Array<IMarkupText>();
         }
         const result: IMarkupText = {
             kind: 'text',
@@ -61,13 +62,13 @@ export class Markup {
                 result.italics = true;
             }
         }
-        return [result];
+        return new Array<IMarkupText>(result);
     }
     /**
      * Similar to Markup.createTextElements representing multi line text
      */
     public static createTextParagraphs(text: string, options?: IMarkupCreateTextOptions): MarkupBasicElement[] {
-        const result: MarkupBasicElement[] = [];
+        const result: MarkupBasicElement[] = new Array<MarkupBasicElement>();
         if (text.length) {
             // Split up the paragraphs
             for (const paragraph of text.split(/\n\s*\n/g)) {
@@ -100,7 +101,7 @@ export class Markup {
      * Constructs an IMarkupApiLink element that represents a hyperlink to the specified
      * API object. The hyperlink is applied to an existing stream of markup elements
      */
-    public static createApiLink(textElements: MarkupLinkTextElement[], target: IApiItemReference): IMarkupApiLink {
+    public static createApiLink(textElements: MarkupElement[], target: IApiItemReference): IMarkupApiLink {
         if (!textElements.length) {
             throw new Error('Missing text for link');
         }
@@ -168,24 +169,31 @@ export class Markup {
 
     /** Constructs an IMarkupListRow element that will display the specified plain text string */
     public static createListRow(
-        cellValues: Array<Array<MarkupElement>> | undefined = undefined
+        cellValues: Array<Array<MarkupElement>> | undefined = undefined,
+        elements: MarkupElement[] = new Array<MarkupElement>(),
+        category: MarkupElement[] = new Array<MarkupElement>()
     ): IMarkupListRow {
         const row: IMarkupListRow = {
             kind: 'list-row',
-            cells: []
+            cells: new Array<IMarkupListCell>(),
+            elements: elements,
+            category: category
         };
 
         if (cellValues) {
             for (const cellValue of cellValues) {
-                const cell: IMarkupListCell = {
-                    kind: 'list-cell',
-                    elements: cellValue
-                };
-                row.cells.push(cell);
+                row.cells.push(Markup.createListCell(cellValue));
             }
         }
 
         return row;
+    }
+
+    public static createListCell(cellValue: Array<MarkupElement>): IMarkupListCell {
+        return {
+            kind: 'list-cell',
+            elements: cellValue
+        };
     }
 
     /**
@@ -195,7 +203,7 @@ export class Markup {
     public static createList(): IMarkupList {
         return {
             kind: 'list',
-            rows: []
+            rows: new Array<IMarkupListRow>()
         };
     }
 

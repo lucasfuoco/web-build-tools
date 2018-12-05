@@ -84,6 +84,7 @@ export interface IApiPackage {
 export interface IApiTutorial {
     kind: 'tutorial';
     tutorialName: MarkupElement[];
+    category: MarkupElement[];
     summary: MarkupBasicElement[];
     remarks: MarkupStructuredElement[];
     /**

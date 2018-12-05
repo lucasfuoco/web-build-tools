@@ -5,16 +5,15 @@ import {
   PackageName
 } from '@microsoft/node-core-library';
 import {
-  // IMarkupPage,
   Markup,
   ApiItem,
-  MarkupBasicElement,
   IApiTutorial,
   IMarkupPage,
   MarkupStructuredElement,
   MarkupElement,
   ApiMember,
-  IMarkupList
+  IMarkupList,
+  IMarkupListRow
 } from '@ossiaco/tutorial-extractor';
 import * as path from 'path';
 import {dirname} from 'path';
@@ -48,42 +47,70 @@ export class MarkdownDocumenter {
     console.log(`Writing ${docPackage.name} package`);
 
     const markupTutorials: IMarkupPage = Markup.createPage();
-    const tutorialList: IMarkupList = Markup.createList();
+    const categoryList: IMarkupList = Markup.createList();
 
     for (const docChild of docPackage.children) {
         const apiChild: ApiItem = docChild.apiItem;
 
-        const docItemTitleLink: MarkupBasicElement[] = [
-          Markup.createHtmlTag('<h3>'),
-          Markup.createApiLinkFromText(docChild.name, docChild.getApiReference()),
-          Markup.createHtmlTag('</h3>')
-        ];
-        const docChildDescription: MarkupBasicElement[] = [];
-
-        if (apiChild.isBeta) {
-          docChildDescription.push(...Markup.createTextElements('(BETA)', { italics: true, bold: true }));
-          docChildDescription.push(...Markup.createTextElements(' '));
-        }
-        docChildDescription.push(...apiChild.summary);
-
         switch (apiChild.kind) {
           case 'tutorial':
-            tutorialList.rows.push(Markup.createListRow([
-              docItemTitleLink,
-              [Markup.createSection(docChildDescription)]
-            ]));
+            let categoryIndex: number = -1;
+            const filterCategory: IMarkupListRow[] = categoryList.rows.filter((row: IMarkupListRow, index: number) => {
+              categoryIndex = index;
+              return row.category === apiChild.category;
+            });
+
+            const categoryListItem: MarkupElement[] = new Array<MarkupElement>(
+              Markup.createHtmlTag('<li>'),
+                Markup.createApiLink(new Array<MarkupElement>(
+                    Markup.createHtmlTag('<i class="glyphicon glyphicon-triangle-right"/>'),
+                    ...apiChild.tutorialName
+                ),
+                  docChild.getApiReference()
+                ),
+              Markup.createHtmlTag('</li>')
+            );
+
+            // If the category doesn't exist, create it.
+            if (filterCategory.length <= 0) {
+              categoryList.rows.push(Markup.createListRow(new Array<Array<MarkupElement>>(
+                  new Array<MarkupElement>(
+                    Markup.createHtmlTag('<div class="chorus_typescript_item">'),
+                    Markup.createHtmlTag('<h3>'),
+                    ...apiChild.category,
+                    Markup.createHtmlTag('</h3>'),
+                    Markup.createHtmlTag('<ul class="chorus_typescript_list">'),
+                    Markup.createHtmlTag('</ul>'),
+                    Markup.createHtmlTag('</div>')
+                  )
+              )));
+              categoryList.rows[categoryList.rows.length - 1].cells[0].elements.splice(
+                categoryList.rows[categoryList.rows.length - 1].cells[0].elements.length - 2,
+                0,
+                ...categoryListItem
+              );
+            } else {
+              const existingCategory: IMarkupListRow = categoryList.rows[categoryIndex];
+              categoryList.rows[categoryIndex].cells[0].elements.splice(
+                existingCategory.cells[0].elements.length - 2,
+                0,
+                ...categoryListItem
+              );
+            }
             this._writeTutorialPage(docChild);
             break;
         }
     }
 
-    if (tutorialList.rows.length > 0) {
+    if (categoryList.rows.length > 0) {
       markupTutorials.elements.push(
-        Markup.createHtmlTag('<h1>'),
+        Markup.createHtmlTag('<h2>'),
         ...Markup.createTextElements('Tutorials'),
-        Markup.createHtmlTag('</h1>')
+        Markup.createHtmlTag('</h2>')
       );
-      markupTutorials.elements.push(tutorialList);
+      markupTutorials.elements.push(Markup.createHtmlTag('<div class="chorus_typescript_wrapper">'));
+      markupTutorials.elements.push(categoryList);
+      markupTutorials.elements.push(Markup.createHtmlTag('</div>'));
     }
 
     this._writePage(markupTutorials, docPackage);

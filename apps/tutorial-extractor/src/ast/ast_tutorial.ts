@@ -52,6 +52,10 @@ export class AstTutorial extends AstItemContainer {
         if (!this.documentation.tutorialName.length) {
             this.reportError('The @tutorialname tag needs to be applied to the AEDoc file');
         }
+
+        if (!this.documentation.category.length) {
+            this.reportError('The @category tag needs to be applied to the AEDoc file');
+        }
     }
 
     private _processMember (): void {

@@ -74,6 +74,7 @@ export class TutorialJsonGenerator extends AstItemVisitor {
             kind: ApiJsonConverter.convertKindToJson(astTutorial.kind),
             deprecatedMessage: astTutorial.inheritedDeprecatedMessage || [],
             tutorialName: astTutorial.documentation.tutorialName || [],
+            category: astTutorial.documentation.category || [],
             summary: astTutorial.documentation.summary || [],
             remarks: astTutorial.documentation.remarks || [],
             isBeta: astTutorial.inheritedReleaseTag === ReleaseTag.Beta,
