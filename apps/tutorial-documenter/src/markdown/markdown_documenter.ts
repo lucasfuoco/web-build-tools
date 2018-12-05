@@ -105,7 +105,7 @@ export class MarkdownDocumenter {
     if (categoryList.rows.length > 0) {
       markupTutorials.elements.push(
         Markup.createHtmlTag('<h2>'),
-        ...Markup.createTextElements('Tutorials'),
+        ...Markup.createTextElements('Chorus Typescript'),
         Markup.createHtmlTag('</h2>')
       );
       markupTutorials.elements.push(Markup.createHtmlTag('<div class="chorus_typescript_wrapper">'));
